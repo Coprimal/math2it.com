@@ -1,0 +1,87 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(to bottom, transparent, rgb(var(--background-end-rgb)))
+    rgb(var(--background-start-rgb));
+}
+
+@layer base {
+  .m2it-link-hover {
+    @apply text-pink-600;
+  }
+
+  .m2it-link {
+    @apply hover:m2it-link-hover text-sky-600 no-underline;
+  }
+
+  .m2it-prose-headings {
+    @apply mb-0 mt-6 font-semibold;
+  }
+
+  .m2it-prose-img {
+    @apply my-0;
+  }
+
+  .m2it-prose {
+    @apply prose max-w-none text-[1.05rem] leading-7;
+    @apply prose-a:m2it-link;
+    @apply prose-headings:m2it-prose-headings;
+    @apply prose-img:m2it-prose-img;
+  }
+
+  .m2it-box-shadow {
+    box-shadow: 8px 14px 38px #272c310f, 1px 3px 8px #272c3108;
+  }
+
+  .m2it-scrollbar {
+    &::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: #ced4da;
+      border-radius: 10px;
+      &:hover {
+        background: #adb5bd;
+      }
+    }
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &.m2it-scrollbar-small {
+      &::-webkit-scrollbar {
+        width: 7px;
+        height: 7px;
+      }
+      &::-webkit-scrollbar-thumb {
+        border-radius: 7px;
+      }
+    }
+  }
+
+  // Hide webkit search cancel button
+  .m2it-hide-wscb {
+    &::-webkit-search-cancel-button {
+      -webkit-appearance: none;
+      display: none;
+    }
+  }
+}

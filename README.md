@@ -1,34 +1,117 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Math2IT with Next.js
 
-## Getting Started
+## Infos & setting up
 
-First, run the development server:
+- Vercel site: https://math2it-nextjs.vercel.app
+- Site built in dev branch:
+- [Project on Notion](https://www.notion.so/math2it/4f043a41b36c4e09a0c915af847f1224?v=e09c3a2b734041ab8dfdcbabf18abae6).
+- Env vars: check [this file](./example.env.local).
+- Check quota Vercel: https://vercel.com/dashboard/usage
+- **Notes**: Trong trường hợp cái ý tưởng dùng get all posts trong `getStaticProps()` để phân trang (pagination) mà không hiệu quả (khi luợng bài quá nhiều chẳng hạn) -> Có thể dùng đến ý tưởng là đánh số thư tự cho rows trên Notion. Sau đó chỉ cần fetch theo STT này thui. Nhuợc điểm của cách này là khi luợng bài trên Notion quá nhiều thì load trang database khá chậm!
+
+## ‼️ Rules
+
+1. Using `id` (or `slug`) for `key={}`.
+2. Query only neccessary fields, not all!
+3. Types in `additional.d.ts` for customized types.
+4. **BEFORE PUSHING**: run `yarn run check` to check if there are errors!
+5. **DON'T** comment on the right side of the variable in `.env.local`!!!
+6. Change something in `.env.local`, MUST restart manually the `yarn dev`!
+
+## Installation & Dev
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+# Global tools
+npm install -g yarn
+npm install -g fontello-cli
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+```bash
+# install
+yarn
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+# run dev server
+yarn dev
+yarn dev --turbo
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+# build
+yarn build
+yarn buuld --turbo
 
-## Learn More
+# run production server
+yarn start
 
-To learn more about Next.js, take a look at the following resources:
+# lint
+yarn lint
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# prettier
+yarn prettier
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+# clean
+yarn clean
 
-## Deploy on Vercel
+# reinstall
+yarn reinstall
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Fontello
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+For a custom font, use [fontello](https://fontello.com/).
+
+```bash
+# ud fontello
+# (update file fontello/config.json)
+yarn ud-fontello
+```
+
+Usage (`ng` is the field `css` in the config file),
+
+```html
+<i className="icon-ng"></i>
+```
+
+🚸 Make sure the codes are unique! You can check the tab "Customize Codes" on the fontello page.
+
+**Custom svg icon**:
+
+- Drag and drop svg to fontello.
+- If having problem "If image looks not as expected please convert to compound path manually" -> use [this site](https://jakearchibald.github.io/svgomg/) to fix the svg and then download the fixed svg and try again!
+
+## Api (`src/api/`)
+
+For an example of an api request, let's make a `GET` to `http://localhost:3001/api/hello`.
+
+## React Icons
+
+[Official website & used to search icons](https://react-icons.github.io/react-icons/).
+
+How to use?
+
+```tsx
+import { BiRightArrow } from 'react-icons/bi'
+
+<BiRightArrow className="mr-1 text-lg" />
+```
+
+## Update package version
+
+```bash
+# Version: 1.2.3
+# means: breaking.feature.fix
+
+npm version patch # 1.0.0 -> 1.0.1 (fixes)
+npm version minor # 1.0.1 -> 1.1.0 (new features )
+npm version major # 1.1.0 -> 2.0.0 (completely new APIs)
+```
+
+### Unofficial Notion API for Search
+
+File `pages/api/search-notion.ts` use the api of Notion on the notion page/app, this is not [the official notion api](https://developers.notion.com/). In case there are changes from their side, we can adapt the changes by checking:
+
+1. Open the notion page and open developer mode, go to the Network tab and type "seach" in the filter.
+2. On the Notion page, in the root database, press Search (or `cmd` + `K`), type something.
+3. On the Network panel, there will be a new "search" item which appears. All the neccessary information are there!
+
+## 🧰 Troubleshooting
+
+Check [Notion Note](https://www.notion.so/math2it/Math2IT-Notes-a3b8e234fabc4e2c86c07355097303f3?pvs=4).
