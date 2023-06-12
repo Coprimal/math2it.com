@@ -2,7 +2,7 @@
   "name": "math2it-nextjs",
   "description": "A Next.js version of Math2IT",
   "version": "0.0.1",
-  "author": "Anh-Thi Dinh",
+  "author": "Math2IT Team",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@headlessui/react": "^1.7.15",
+    "@matejmazur/react-katex": "^3.1.3",
     "@notionhq/client": "^2.2.5",
     "@tippyjs/react": "^4.2.6",
     "@types/node": "20.2.5",
@@ -36,8 +37,9 @@
     "katex": "^0.16.7",
     "lodash": "^4.17.21",
     "mermaid": "^10.2.3",
+    "moment": "^2.29.4",
     "next": "13.4.4",
-    "p-memoize": "^7.1.1",
+    "node-fetch": "^3.3.1",
     "plaiceholder": "^3.0.0",
     "prismjs": "^1.29.0",
     "react": "18.2.0",

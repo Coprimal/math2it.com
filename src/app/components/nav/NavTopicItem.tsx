@@ -12,21 +12,25 @@ export const menuItemCommonClass = cn(
 )
 
 type NavTopicItemProps = {
-  url: string
+  uri: string
   label: string
   customClass?: string
 }
 
 export default function NavTopicItem(props: NavTopicItemProps) {
-  const { url, label, customClass } = props
+  const { uri, label, customClass } = props
   const pathname = usePathname()
   const currentRoute = pathname.split('page/')[0]
 
   return (
     <Link
-      className={cn(isActiveClass(currentRoute === url), menuItemCommonClass, customClass)}
-      aria-current={currentRoute === url ? 'page' : undefined}
-      href={url}
+      className={cn(
+        isActiveClass(areSameUris(uri, currentRoute)),
+        menuItemCommonClass,
+        customClass
+      )}
+      aria-current={areSameUris(uri, currentRoute) ? 'page' : undefined}
+      href={uri}
     >
       {label}
     </Link>
@@ -38,3 +42,7 @@ export const isActiveClass = (isCurrent: boolean) =>
     'bg-slate-800 text-white border border-slate-600': isCurrent,
     [`${textClass}`]: !isCurrent
   })
+
+export const areSameUris = (uri: string, currentRoute: string) => {
+  return uri === currentRoute || uri === currentRoute + '/'
+}

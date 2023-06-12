@@ -1,11 +1,11 @@
 'use client'
 
+import { MenuAbout } from '@app/lib/config'
 import { Popover, Transition } from '@headlessui/react'
 import Link from 'next/link'
 import { Fragment } from 'react'
 import { FiChevronDown } from 'react-icons/fi'
 
-import { MenuAbout } from '../lib/config'
 import { menus } from './Nav'
 import { menuItemCommonClass } from './NavTopicItem'
 
@@ -49,7 +49,7 @@ export default function NavTopicsDropdown() {
                     bg-[#323541] px-3 py-1 lg:grid-cols-2`}
                 >
                   {menus.map(item => (
-                    <Link key={item.id} href={item.url} className={dropdownItemClass}>
+                    <Link key={item.id} href={item.uri} className={dropdownItemClass}>
                       <div className="flex gap-2">
                         <i className={item.navigationItems?.navIcon}></i>
                         {item.label}
@@ -58,7 +58,7 @@ export default function NavTopicsDropdown() {
                   ))}
                   <Link
                     key={MenuAbout.id}
-                    href={MenuAbout.url}
+                    href={MenuAbout.uri}
                     className={`${dropdownItemClass} sm:hidden`}
                   >
                     <div className="flex gap-2">

@@ -5,7 +5,7 @@ import cn from 'classnames'
 import { useEffect, useState } from 'react'
 import { FiSearch } from 'react-icons/fi'
 
-import SearchModal from './SearchModal'
+import SearchModal from '../SearchModal'
 
 export default function NavSearch() {
   const [isSearchOpen, setIsSearchOpen] = useState(false)

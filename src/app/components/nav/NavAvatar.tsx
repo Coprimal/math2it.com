@@ -1,7 +1,6 @@
+import Avatar from '@root/public/avatar.png'
 import Image from 'next/image'
 import Link from 'next/link'
-
-import Avatar from '../../../public/avatar.png'
 
 export default function NavAvatar() {
   return (

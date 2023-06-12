@@ -1,5 +1,6 @@
-import { MenuItem } from '../../../interface'
-import { MENUS, MenuAbout, MenuHome } from '../lib/config'
+import { MENUS, MenuAbout, MenuHome } from '@app/lib/config'
+import { MenuItem } from '@src/interface'
+
 import NavAvatar from './NavAvatar'
 import NavSearch from './NavSearch'
 import NavTopicItem from './NavTopicItem'
@@ -33,13 +34,13 @@ export default function Nav() {
                   <div className={groupSpaceClass}>
                     <div className="flex items-center sm:space-x-2">
                       <NavTopicItem
-                        url={MenuHome.url}
+                        uri={MenuHome.uri}
                         label={MenuHome.label}
                         customClass="hidden sm:flex"
                       />
                       {menus?.map((item: MenuItem) => (
                         <NavTopicItem
-                          url={item?.url as string}
+                          uri={item?.uri as string}
                           label={item?.label}
                           key={item?.id}
                           customClass="hidden lg:flex"
@@ -47,7 +48,7 @@ export default function Nav() {
                       ))}
                       <NavTopicsDropdown />
                       <NavTopicItem
-                        url={MenuAbout.url}
+                        uri={MenuAbout.uri}
                         label={MenuAbout.label}
                         customClass="hidden sm:flex"
                       />

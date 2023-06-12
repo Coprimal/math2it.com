@@ -17,8 +17,15 @@
 4. **BEFORE PUSHING**: run `yarn run check` to check if there are errors!
 5. **DON'T** comment on the right side of the variable in `.env.local`!!!
 6. Change something in `.env.local`, MUST restart manually the `yarn dev`!
+7. **Dev tags** (used to search globally in the project)
+   1. `###M`: useful in dev mode, not prod mode.
+   2. `###TODO`: to to.
+   3. `###R`: remarks!
+   4. `###Thi` or `###R`: should be removed before building.
 
 ## Installation & Dev
+
+Make sure to enable [TypeScript Plugin](https://nextjs.org/docs/app/building-your-application/configuring/typescript#typescript-plugin).
 
 ```bash
 # Global tools
@@ -79,7 +86,17 @@ Usage (`ng` is the field `css` in the config file),
 
 ## Api (`src/api/`)
 
-For an example of an api request, let's make a `GET` to `http://localhost:3001/api/hello`.
+1. Search posts with the unofficial notion api.
+
+   **POST** `http://localhost:3000/api/search-notion`
+
+    ```bash
+    # body
+    {
+        "query": "check",
+        "limit": 5
+    }
+    ```
 
 ## React Icons
 

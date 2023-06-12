@@ -1,6 +1,7 @@
 'use client'
 
 import { Dialog, Transition } from '@headlessui/react'
+import { SearchResult } from '@src/interface'
 import cn from 'classnames'
 import parse from 'html-react-parser'
 import { debounce, get } from 'lodash'
@@ -12,8 +13,6 @@ import { BsArrowReturnLeft } from 'react-icons/bs'
 import { FiSearch } from 'react-icons/fi'
 import { IoCloseCircle, IoDocumentTextOutline } from 'react-icons/io5'
 import useSWR from 'swr'
-
-import { SearchResult } from '../../../interface'
 
 type SearchModalProps = {
   isOpen: boolean

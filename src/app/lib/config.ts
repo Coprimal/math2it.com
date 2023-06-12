@@ -3,7 +3,7 @@
  * Only add settings that are used in more than 2 components.
  * Otherwise, add the settings inside this component!
  */
-import { Category, EnvMode, Page } from '../../../interface'
+import { Category, EnvMode, Page } from '@src/interface'
 
 export const usePlaceholder = false // use placeholder for cover images?
 // 👇 use external plaiceholder service in case usePlaiceholder is true
@@ -23,13 +23,6 @@ export const authorSlugPrefix = 'author'
 export const numPostsPerPage = 5 // ###Thi <- Change this
 // 👇 Don't change this! By default, notion's page_size is 100, but we only need 10
 export const defaultNumPostsRequest = 10
-export const revalidateTime = 10 // in seconds (just for testing)
-// export const revalidateTime = 60 * 60 * 24, // <--- ISR cache: once a day
-
-// 👇 For pages that use pagination, you should preset the number of pages when
-// you create them. Since we get all the pages to find the correct cursor_urls,
-// we do not want to make too many requests to the Notion API at build time.
-export const numPagePrerendered = 3
 
 // Single post settings
 export const postWidthContainer = 'max-w-3xl'
@@ -41,19 +34,21 @@ export const defaultFeaturedImageUrl = '/featured-images/default_bg.png'
 export const defaultCodeLanguage = 'typescript'
 
 export const minNumHeadingsToShowToc = 4 // from this number of headings, show toc
+export const mathFontSize = 'text-base'
 
 /**
  * NOTION
  */
 export const notionMaxRequest = 100
 export const ENV_MODE = (process.env.ENV_MODE || 'dev') as EnvMode
-export const NOTION_DB_POSTS = process.env.NOTION_DB_POSTS
-export const NOTION_DB_AUTHORS = process.env.NOTION_DB_AUTHORS
-export const NOTION_DB_TAGS = process.env.NOTION_DB_TAGS
-export const NOTION_TOKEN = process.env.NOTION_TOKEN
+export const NOTION_DB_POSTS = process.env.NOTION_DB_POSTS as string
+export const NOTION_DB_AUTHORS = process.env.NOTION_DB_AUTHORS as string
+export const NOTION_DB_TAGS = process.env.NOTION_DB_TAGS as string
+export const NOTION_TOKEN = process.env.NOTION_TOKEN as string
+export const NOTION_VERSION = process.env.NOTION_VERSION as string
 // 👇 Read this: https://github.com/NotionX/react-notion-x#private-pages
-export const NOTION_ACTIVE_USER = process.env.NOTION_ACTIVE_USER
-export const NOTION_TOKEN_V2 = process.env.NOTION_TOKEN_V2
+export const NOTION_ACTIVE_USER = process.env.NOTION_ACTIVE_USER as string
+export const NOTION_TOKEN_V2 = process.env.NOTION_TOKEN_V2 as string
 
 // 👇 It's used to sort posts by date
 export const notionDateName = 'finalCreatedDate'
@@ -79,7 +74,7 @@ export const postCoverCustomSizeFM = `
  */
 export const MenuHome = {
   id: 'id-home',
-  url: '/',
+  uri: '/',
   label: 'Math2IT',
   navigationItems: {
     navColor: '#ffeead',
@@ -88,7 +83,7 @@ export const MenuHome = {
 }
 export const MenuAbout = {
   id: 'id-about',
-  url: '/about/',
+  uri: '/about/',
   label: 'Giới thiệu',
   navigationItems: {
     navColor: '#ff8094',
@@ -98,7 +93,7 @@ export const MenuAbout = {
 export const MENUS = [
   {
     id: 'id-math',
-    url: '/category/math/',
+    uri: '/category/math/',
     label: 'Toán học',
     navigationItems: {
       navColor: '#72b5fb',
@@ -107,7 +102,7 @@ export const MENUS = [
   },
   {
     id: 'id-it',
-    url: '/category/technology/',
+    uri: '/category/technology/',
     label: 'Công nghệ',
     navigationItems: {
       navColor: '#f5c175',
@@ -116,7 +111,7 @@ export const MENUS = [
   },
   {
     id: 'id-translated-articles',
-    url: '/category/translated-articles/',
+    uri: '/category/translated-articles/',
     label: 'Bài dịch',
     navigationItems: {
       navColor: '#d6baff',
@@ -125,7 +120,7 @@ export const MENUS = [
   },
   {
     id: 'id-tool',
-    url: '/category/tool/',
+    uri: '/category/tool/',
     label: 'Công cụ',
     navigationItems: {
       navColor: '#ef92b1',

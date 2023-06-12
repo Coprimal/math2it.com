@@ -1,17 +1,3 @@
-import { get, intersectionWith } from 'lodash'
-import { getPlaiceholder } from 'plaiceholder'
-
-import {
-  Author,
-  Category,
-  FeaturedImage,
-  NotionAuthor,
-  NotionPost,
-  NotionTag,
-  Post,
-  SearchResult,
-  Tag
-} from '../../../interface'
 // import { getAuthors, getKind, getKinds, getPosts, getPostsBy, getTags } from './api'
 import {
   UNOFFICIAL_NOTION_KEYS,
@@ -25,7 +11,21 @@ import {
   defaultPostTitle,
   predefinedCategories,
   usePlaiceholder
-} from './config'
+} from '@app/lib/config'
+import {
+  Author,
+  Category,
+  FeaturedImage,
+  GroupTypeLabels,
+  NotionAuthor,
+  NotionPost,
+  NotionTag,
+  Post,
+  SearchResult,
+  Tag
+} from '@src/interface'
+import { get, intersectionWith } from 'lodash'
+import { getPlaiceholder } from 'plaiceholder'
 
 /**
  * Convert "Nguyễn Văn Đông" to "nguyen-van-dong"
@@ -552,33 +552,33 @@ export function getStartCursorForCurrentPage(
 //   return paths
 // }
 
-// export function getFilterOf(type: GroupTypeLabels, key: string): unknown {
-//   switch (type) {
-//     case 'author':
-//       return {
-//         property: 'authors',
-//         relation: {
-//           contains: key
-//         }
-//       }
-//     case 'category':
-//       return {
-//         property: 'categories',
-//         multi_select: {
-//           contains: key
-//         }
-//       }
-//     case 'tag':
-//       return {
-//         property: 'tags',
-//         relation: {
-//           contains: key
-//         }
-//       }
-//     default:
-//       return null
-//   }
-// }
+export function getFilterOf(type: GroupTypeLabels, key: string): unknown {
+  switch (type) {
+    case 'author':
+      return {
+        property: 'authors',
+        relation: {
+          contains: key
+        }
+      }
+    case 'category':
+      return {
+        property: 'categories',
+        multi_select: {
+          contains: key
+        }
+      }
+    case 'tag':
+      return {
+        property: 'tags',
+        relation: {
+          contains: key
+        }
+      }
+    default:
+      return null
+  }
+}
 
 // export async function transformPostHeader(
 //   notionHeader: NotionHeader,

@@ -6,7 +6,7 @@ export type EnvMode = 'dev' | 'prod'
 
 export type MenuItem = {
   id: string
-  url: string
+  uri: string
   label: string
   navigationItems: {
     navColor: string
@@ -21,14 +21,17 @@ export type FeaturedImage = {
   blurDataURL?: string
 } | null
 
+export type OptionalCatchAllProps = { params: OptionalCatchAllParams }
+export type OptionalCatchAllParams = { slug: string[] }
+
 export type Category = {
-  name: string | null
+  name: string
+  uri: string
   // "slug" is obligatory but we set it "optional" here because the categories taken
   // from Notion don't have slug
   slug?: string | null
   id?: string
   description?: string
-  uri?: string
   style?: {
     bgColor: string
     textColor: string
