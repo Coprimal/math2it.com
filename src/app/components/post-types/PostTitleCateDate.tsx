@@ -1,9 +1,9 @@
+import { defaultCategoryBgColor, defaultCategoryTextColor } from '@app/lib/config'
 import { comfortaa } from '@app/lib/fonts'
 import { Post } from '@src/interface'
 import cn from 'classnames'
 import Link from 'next/link'
 
-import { defaultCategoryBgColor, defaultCategoryTextColor } from '../../lib/config'
 import Date from '../Date'
 import PostFeaturedImage from '../PostFeaturedImage'
 

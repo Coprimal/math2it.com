@@ -1,8 +1,7 @@
 import { generateTextAnnotationClasses } from '@app/lib/block-helpers'
+import { mathFontSize } from '@app/lib/config'
 import Katex from '@matejmazur/react-katex'
 import { EquationRichTextItemResponse } from '@notionhq/client/build/src/api-endpoints'
-
-import { mathFontSize } from '../../lib/config'
 
 type BlockInlineEquationProps = {
   equation: EquationRichTextItemResponse

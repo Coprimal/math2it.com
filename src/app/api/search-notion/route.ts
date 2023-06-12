@@ -1,6 +1,5 @@
+import { idToUuid, parseSearchResults } from '@app/lib/helpers'
 import got from 'got'
-
-import { idToUuid, parseSearchResults } from '../../lib/helpers'
 
 export async function POST(request: Request) {
   const searchParams = await request.json()

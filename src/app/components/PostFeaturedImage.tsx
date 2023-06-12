@@ -1,12 +1,11 @@
 'use client'
 
+import { postCoverCustomSizeFM } from '@app/lib/config'
 import defaultFeaturedImage from '@root/public/featured-images/default_bg.png'
 import { Category, FeaturedImage } from '@src/interface'
 import cn from 'classnames'
 import Image from 'next/image'
 import { useState } from 'react'
-
-import { postCoverCustomSizeFM } from '../lib/config'
 
 type PostFeaturedImageProps = {
   title: string

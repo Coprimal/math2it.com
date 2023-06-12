@@ -1,6 +1,6 @@
+import { defaultPostExcerpt } from '@app/lib/config'
 import { RichTextItemResponse } from '@notionhq/client/build/src/api-endpoints'
 
-import { defaultPostExcerpt } from '../lib/config'
 import BlockRichText from './notion-blocks/BlockRichText'
 
 type ExcerptProps = {

@@ -1,11 +1,10 @@
 import { categorySlugPrefix, notionMaxRequest, numPostsPerPage } from '@app/lib/config'
+import { getAuthors, getCategories, getPostsByCategory, getTags } from '@app/lib/fetcher'
 import { getFilterOf, getStartCursorForCurrentPage } from '@app/lib/helpers'
 import PageOfPostsListTemplate from '@app/templates/PageOfPostsListTemplate'
 import { OptionalCatchAllParams, OptionalCatchAllProps } from '@src/interface'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-
-import { getAuthors, getCategories, getPostsByCategory, getTags } from '../../lib/fetcher'
 
 export const revalidate = 10 // ###R: change when done developing
 
