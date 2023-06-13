@@ -34,6 +34,15 @@ const nextConfig = {
         hostname: '**.amazonaws.com'
       }
     ]
+  },
+  redirects: async () => {
+    return [
+      {
+        source: '/choice/:path*',
+        destination: '/tuyen-chon/:path*',
+        permanent: true
+      }
+    ]
   }
 }
 

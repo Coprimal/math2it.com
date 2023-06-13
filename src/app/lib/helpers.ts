@@ -741,6 +741,6 @@ export function getSlugPrefix(type: GroupTypeLabels): string {
   if (type === 'tag') return 'tag'
   if (type === 'author') return 'author'
   if (type === 'all') return 'all'
-  if (type === 'selected') return 'choice'
+  if (type === 'selected') return 'tuyen-chon'
   return ''
 }
