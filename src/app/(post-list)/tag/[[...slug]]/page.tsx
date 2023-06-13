@@ -1,5 +1,5 @@
-import { categorySlugPrefix, notionMaxRequest, numPostsPerPage } from '@app/lib/config'
-import { getAuthors, getCategories, getPostsByCategory, getTags } from '@app/lib/fetcher'
+import { notionMaxRequest, numPostsPerPage, tagSlugPrefix } from '@app/lib/config'
+import { getAuthors, getCategories, getPostsBy, getTags } from '@app/lib/fetcher'
 import { getFilterOf, getStartCursorForCurrentPage } from '@app/lib/helpers'
 import PageOfPostsListTemplate from '@app/templates/PageOfPostsListTemplate'
 import { OptionalCatchAllParams, OptionalCatchAllProps } from '@src/interface'
@@ -9,15 +9,15 @@ import { notFound } from 'next/navigation'
 export const revalidate = 10 // ###R: change when done developing
 
 export async function generateMetadata({ params }: OptionalCatchAllProps): Promise<Metadata> {
-  const categories = getCategories()
+  const tags = await getTags()
   const slug = params.slug[0] || ''
-  const category = categories.find(c => c.slug === slug)
-  if (!category)
+  const tag = tags.find(t => t.slug === slug)
+  if (!tag)
     return {
-      title: 'Không rõ chủ đề | Math2IT'
+      title: 'Thẻ không xác định | Math2IT'
     }
   return {
-    title: `Chủ đề "${category?.name}" | Math2IT`
+    title: `Thẻ "${tag.name}" | Math2IT`
   }
 }
 
@@ -28,13 +28,12 @@ export async function generateStaticParams() {
   const [tags, authors] = await Promise.all([tagsData, authorsData])
 
   const params = [] as OptionalCatchAllParams[]
-  for (const category of categories) {
-    const filter = getFilterOf('category', category.name)
-    const allPosts = await getPostsByCategory({
+  for (const tag of tags) {
+    const allPosts = await getPostsBy({
       categories,
       tags,
       authors,
-      filter,
+      filter: getFilterOf('tag', tag),
       pageSize: notionMaxRequest
     })
     const numPosts = allPosts?.length || 0
@@ -42,15 +41,15 @@ export async function generateStaticParams() {
     for (let i = 1; i <= totalPages; i++) {
       const path =
         i === 1
-          ? { slug: [categorySlugPrefix, category.slug!] }
-          : { slug: [categorySlugPrefix, category.slug!, 'page', i.toString()] }
+          ? { slug: [tagSlugPrefix, tag.slug!] }
+          : { slug: [tagSlugPrefix, tag.slug!, 'page', i.toString()] }
       params.push(path)
     }
   }
   return params
 }
 
-export default async function CategoryPage({ params }: OptionalCatchAllProps) {
+export default async function TagPage({ params }: OptionalCatchAllProps) {
   const currentPage = +(params?.slug?.[2] || 1)
 
   if (
@@ -62,25 +61,22 @@ export default async function CategoryPage({ params }: OptionalCatchAllProps) {
     notFound()
   }
 
+  const notRootPage = params.slug.length > 1
+  const slug = params.slug[0] || ''
+
   const categories = getCategories()
   const tagsData = getTags()
   const authorsData = getAuthors()
-
-  const notRootPage = params.slug.length > 1
-  const slug = params.slug[0] || ''
-  const category = categories.find(c => c.slug === slug)
-
-  if (!category) notFound()
-
   const [tags, authors] = await Promise.all([tagsData, authorsData])
-  const filter = getFilterOf('category', category.name)
+  const tag = tags.find(t => t.slug === slug)
+  if (!tag) notFound()
 
   // All posts in that category, we need these to find the number of pages
-  const allPosts = await getPostsByCategory({
+  const allPosts = await getPostsBy({
     categories,
     tags,
     authors,
-    filter,
+    filter: getFilterOf('tag', tag),
     pageSize: notionMaxRequest
   })
   const totalPages = Math.ceil(allPosts.length / numPostsPerPage)
@@ -88,7 +84,7 @@ export default async function CategoryPage({ params }: OptionalCatchAllProps) {
   if (notRootPage && currentPage === 1) {
     return {
       redirect: {
-        destination: `/${categorySlugPrefix}/${slug}/`,
+        destination: `/${tagSlugPrefix}/${slug}/`,
         permanent: true
       }
     }
@@ -101,19 +97,19 @@ export default async function CategoryPage({ params }: OptionalCatchAllProps) {
   const startCursor = getStartCursorForCurrentPage(currentPage, allPosts, numPostsPerPage)
   const postsOnThisPage = !allPosts.length
     ? []
-    : await getPostsByCategory({
+    : await getPostsBy({
         categories,
         tags,
         authors,
-        filter,
+        filter: getFilterOf('tag', tag),
         startCursor,
         pageSize: numPostsPerPage
       })
 
   return (
     <PageOfPostsListTemplate
-      title={`Category ${category.name}`}
-      uri={category.uri}
+      title={`Tag ${tag.name}`}
+      uri={tag.uri}
       posts={postsOnThisPage}
       totalPages={totalPages}
       currentPage={currentPage}

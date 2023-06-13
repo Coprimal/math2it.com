@@ -42,10 +42,10 @@ export type Category = {
 }
 
 export type Tag = {
+  id: string
+  name: string
+  uri: string
   slug: string | null
-  name: string | null
-  id?: string | null
-  uri: string | null
   description?: string | null
   icon?: string | null
   fontello?: string | null
@@ -100,7 +100,7 @@ export type NotionSorts = {
   direction: 'ascending' | 'descending'
 }
 
-export type GroupTypeLabels = 'author' | 'category' | 'tag'
+export type GroupTypeLabels = 'author' | 'category' | 'tag' | 'selected'
 export type GroupTypeReturn = { categories: Category[] } | { tags: Tag[] } | { authors: Author[] }
 
 /**

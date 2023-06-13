@@ -1,8 +1,3 @@
-/**
- * 👍 RULES OF THUMB
- * Only add settings that are used in more than 2 components.
- * Otherwise, add the settings inside this component!
- */
 import { Category, EnvMode, Page } from '@src/interface'
 
 export const usePlaceholder = false // use placeholder for cover images?
@@ -275,20 +270,6 @@ export const singlePages: Page[] = [
 ]
 
 /**
- * Filters
- */
-export const selectedPostsFilter = {
-  and: [
-    {
-      property: 'selected',
-      checkbox: {
-        equals: true
-      }
-    }
-  ]
-}
-
-/**
  * Below keys are used for the unofficial notion API. We first use it to get the search results
  * from /api/search-notion.
  */
@@ -303,13 +284,3 @@ export const UNOFFICIAL_NOTION_KEYS = {
   boldSearchKey: '<gzkNfoUU>',
   boldSearchKeyClose: '</gzkNfoUU>'
 }
-
-// 👇 For pagination (archived)
-// export const NOTION_PAGI_PAGE_ID = process.env.NOTION_PAGI_PAGE_ID
-// export const notionPaginationIds = 'HuIv'
-// export const notionPaginationCats = 'KF%5By'
-// export const notionPaginationTags = '%5EiSb'
-// export const notionPaginationAuthors = 'oRpP'
-// export const notionPaginationSelected = '%60duV'
-// export const notionPaginationPublished = 'A%3ATN'
-// end pagination

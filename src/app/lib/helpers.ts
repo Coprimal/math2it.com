@@ -1,4 +1,3 @@
-// import { getAuthors, getKind, getKinds, getPosts, getPostsBy, getTags } from './api'
 import {
   UNOFFICIAL_NOTION_KEYS,
   categorySlugPrefix,
@@ -82,12 +81,12 @@ export function transformNotionTagsData(data?: NotionTag[]): Tag[] {
   return (
     data?.map(tag => {
       const properties = tag?.properties || null
-      const name = properties?.name?.title[0]?.plain_text || null
+      const name = properties?.name?.title[0]?.plain_text
       const description = properties?.description?.rich_text[0]?.plain_text || null
       const slug = properties?.slug?.rich_text[0]?.plain_text || makeSlugText(name) || null
-      const uri = `/tag/${slug}/` || null
+      const uri = `/tag/${slug}/`
       const fontello = properties?.fontello?.rich_text[0]?.plain_text || null
-      const id = tag?.id || uri || null
+      const id = tag?.id || uri
       const icon = properties?.icon?.files[0]?.file.url || null
       return { id, name, uri, description, fontello, icon, slug }
     }) || []
@@ -338,6 +337,45 @@ export function getStartCursorForCurrentPage(
   return posts[(currentPage - 1) * postsPerPage]?.id
 }
 
+export function getFilterOf(type: GroupTypeLabels, data?: Category | Tag | Author): unknown {
+  switch (type) {
+    case 'author':
+      return {
+        property: 'authors',
+        relation: {
+          contains: data?.id
+        }
+      }
+    case 'category':
+      return {
+        property: 'categories',
+        multi_select: {
+          contains: data?.name
+        }
+      }
+    case 'tag':
+      return {
+        property: 'tags',
+        relation: {
+          contains: data?.id
+        }
+      }
+    case 'selected':
+      return {
+        and: [
+          {
+            property: 'selected',
+            checkbox: {
+              equals: true
+            }
+          }
+        ]
+      }
+    default:
+      return null
+  }
+}
+
 // /**
 //  * Get paths of getStaticProps() for different kinds of pages, eg. posts, tags,
 //  * categories, authors, etc (pages with the paths like /author/page/2).
@@ -551,34 +589,6 @@ export function getStartCursorForCurrentPage(
 //   }
 //   return paths
 // }
-
-export function getFilterOf(type: GroupTypeLabels, key: string): unknown {
-  switch (type) {
-    case 'author':
-      return {
-        property: 'authors',
-        relation: {
-          contains: key
-        }
-      }
-    case 'category':
-      return {
-        property: 'categories',
-        multi_select: {
-          contains: key
-        }
-      }
-    case 'tag':
-      return {
-        property: 'tags',
-        relation: {
-          contains: key
-        }
-      }
-    default:
-      return null
-  }
-}
 
 // export async function transformPostHeader(
 //   notionHeader: NotionHeader,

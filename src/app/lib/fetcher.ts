@@ -82,20 +82,15 @@ export const getNotionData = cache(async function getNotionData(
  * Get posts from Notion. If the requested `pageSize` is >= `notionMaxRequest`, it will
  * automatically request the next page.
  *
- * For params "categories", "tags", "authors", you can pass them to prevent
- * another request to the Notion API.
- * @param options.dbId - the id of the database you want to get posts from. If it's not
- * passed, it will use the db id from env.
- * @param options.categories
- * @param options.tags
- * @param options.authors
+ * categories, tags, authors are required to be used in transformNotionPostsData()
+ *
+ * Below are some notable parameters:
+ *
  * @param options.filter - (optional) beside the main filter, you can add more filters
  * @param options.startCursor - (optional) if you want to get more posts, you can pass the
  * next_cursor from the previous request.
  * @param options.pageSize - (optional) the number of posts you want to get. If you want to
  * get all available posts, you can pass `notionMaxRequest`.
- * @param options.sorts - (optional) if you want to sort the posts, you can pass the sorts
- * @returns posts, categories, tags, authors
  */
 export async function getPosts(options: {
   dbId: string
@@ -140,7 +135,10 @@ export async function getPosts(options: {
   return posts
 }
 
-export async function getPostsByCategory(options: {
+/**
+ * Depending on the filter, we can use this function to get posts by categories, tags, authors
+ */
+export async function getPostsBy(options: {
   categories: Category[]
   tags: Tag[]
   authors: Author[]
@@ -161,16 +159,25 @@ export async function getPostsByCategory(options: {
   return posts
 }
 
+/**
+ * Get all predefined categories (not from Notion database)
+ */
 export const getCategories = cache(() => {
   return predefinedCategories
 })
 
+/**
+ * Get all tags from Notion database (NOTION_DB_TAGS)
+ */
 export const getTags = cache(async () => {
   if (!NOTION_DB_TAGS) throw new Error('NOTION_DB_TAGS is not defined')
   const data = await getNotionData(NOTION_DB_TAGS)
   return transformNotionTagsData(data?.['results'] as any[])
 })
 
+/**
+ * Get all authors from Notion database (NOTION_DB_AUTHORS)
+ */
 export const getAuthors = cache(async () => {
   if (!NOTION_DB_AUTHORS) throw new Error('NOTION_DB_AUTHORS is not defined')
   const data = await getNotionData(NOTION_DB_AUTHORS)
