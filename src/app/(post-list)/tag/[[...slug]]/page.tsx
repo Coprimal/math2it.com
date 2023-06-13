@@ -4,20 +4,21 @@ import { getFilterOf, getSlugPrefix, getStartCursorForCurrentPage } from '@app/l
 import PageOfPostsListTemplate from '@app/templates/PageOfPostsListTemplate'
 import { OptionalCatchAllParams, OptionalCatchAllProps } from '@src/interface'
 import { Metadata } from 'next'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 
 export const revalidate = 10 // ###R: change when done developing
 
 export async function generateMetadata({ params }: OptionalCatchAllProps): Promise<Metadata> {
-  const tags = await getTags()
   const slug = params.slug[0] || ''
+  const currentPage = +(params?.slug?.[2] || 1)
+  const tags = await getTags()
   const tag = tags.find(t => t.slug === slug)
   if (!tag)
     return {
       title: 'Thẻ không xác định | Math2IT'
     }
   return {
-    title: `Thẻ "${tag.name}" | Math2IT`
+    title: `Thẻ "${tag.name}" - trang ${currentPage} | Math2IT`
   }
 }
 
@@ -82,12 +83,7 @@ export default async function TagPage({ params }: OptionalCatchAllProps) {
   const totalPages = Math.ceil(allPosts.length / numPostsPerPage)
 
   if (notRootPage && currentPage === 1) {
-    return {
-      redirect: {
-        destination: `/${getSlugPrefix('tag')}/${slug}/`,
-        permanent: true
-      }
-    }
+    redirect(`/${getSlugPrefix('tag')}/${slug}/`)
   }
 
   if (currentPage !== 1 && currentPage > totalPages) {

@@ -4,20 +4,21 @@ import { getFilterOf, getSlugPrefix, getStartCursorForCurrentPage } from '@app/l
 import PageOfPostsListTemplate from '@app/templates/PageOfPostsListTemplate'
 import { OptionalCatchAllParams, OptionalCatchAllProps } from '@src/interface'
 import { Metadata } from 'next'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 
 export const revalidate = 10 // ###R: change when done developing
 
 export async function generateMetadata({ params }: OptionalCatchAllProps): Promise<Metadata> {
-  const categories = getCategories()
   const slug = params.slug[0] || ''
+  const currentPage = +(params?.slug?.[2] || 1)
+  const categories = getCategories()
   const category = categories.find(c => c.slug === slug)
   if (!category)
     return {
       title: 'Chủ đề không xác định | Math2IT'
     }
   return {
-    title: `Chủ đề "${category?.name}" | Math2IT`
+    title: `Chủ đề "${category?.name}" - trang ${currentPage} | Math2IT`
   }
 }
 
@@ -51,6 +52,7 @@ export async function generateStaticParams() {
 
 export default async function CategoryPage({ params }: OptionalCatchAllProps) {
   const currentPage = +(params?.slug?.[2] || 1)
+  /* ###Thi */ console.log(' 😇 params: ', params)
 
   if (
     !params ||
@@ -82,12 +84,7 @@ export default async function CategoryPage({ params }: OptionalCatchAllProps) {
   const totalPages = Math.ceil(allPosts.length / numPostsPerPage)
 
   if (notRootPage && currentPage === 1) {
-    return {
-      redirect: {
-        destination: `/${getSlugPrefix('category')}/${slug}/`,
-        permanent: true
-      }
-    }
+    redirect(`/${getSlugPrefix('category')}/${slug}/`)
   }
 
   if (currentPage !== 1 && currentPage > totalPages) {

@@ -1,24 +1,24 @@
 import { notionMaxRequest, numPostsPerPage } from '@app/lib/config'
 import { getAuthors, getCategories, getPostsBy, getTags } from '@app/lib/fetcher'
 import { getFilterOf, getSlugPrefix, getStartCursorForCurrentPage } from '@app/lib/helpers'
+import PageOfPostsListTemplate from '@app/templates/PageOfPostsListTemplate'
 import { OptionalCatchAllParams, OptionalCatchAllProps } from '@src/interface'
 import { Metadata } from 'next'
-import { notFound } from 'next/navigation'
-
-import PageOfPostsListTemplate from '../../../templates/PageOfPostsListTemplate'
+import { notFound, redirect } from 'next/navigation'
 
 export const revalidate = 10 // ###R: change when done developing
 
 export async function generateMetadata({ params }: OptionalCatchAllProps): Promise<Metadata> {
-  const authors = await getAuthors()
   const slug = params.slug[0] || ''
+  const currentPage = +(params?.slug?.[2] || 1)
+  const authors = await getAuthors()
   const author = authors.find(a => a.slug === slug)
   if (!author)
     return {
       title: 'Tác giả không xác định | Math2IT'
     }
   return {
-    title: `Tác giả "${author?.name}" | Math2IT`
+    title: `Tác giả "${author?.name}" - trang ${currentPage} | Math2IT`
   }
 }
 
@@ -83,12 +83,7 @@ export default async function AuthorPage({ params }: OptionalCatchAllProps) {
   const totalPages = Math.ceil(allPosts.length / numPostsPerPage)
 
   if (notRootPage && currentPage === 1) {
-    return {
-      redirect: {
-        destination: `/${getSlugPrefix('author')}/${slug}/`,
-        permanent: true
-      }
-    }
+    redirect(`/${getSlugPrefix('author')}/${slug}/`)
   }
 
   if (currentPage !== 1 && currentPage > totalPages) {
