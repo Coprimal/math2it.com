@@ -233,10 +233,16 @@ export const singlePages: Page[] = [
     id: 'about'
   },
   {
-    slug: 'all',
-    uri: '/all/',
+    slug: 'tat-ca-bai-viet',
+    uri: '/tat-ca-bai-viet/',
     title: 'Tất cả bài viết',
     id: 'all'
+  },
+  {
+    slug: 'tuyen-chon',
+    uri: '/tuyen-chon/',
+    title: 'Bài viết tuyển chọn',
+    id: 'selected'
   },
   {
     slug: 'thanks',

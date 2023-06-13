@@ -499,7 +499,7 @@ export function getFilterOf(type: GroupTypeLabels, data?: Category | Tag | Autho
 
 // /**
 //  * Get the paths of getStaticProps() for page "all", "selected",... (pages
-//  * with the path like "/all/page/2/")
+//  * with the path like "/tat-ca-bai-viet/page/2/")
 //  */
 // export async function getStaticPropsOfAllPages(options: {
 //   type: 'all' | 'selected'
@@ -568,7 +568,7 @@ export function getFilterOf(type: GroupTypeLabels, data?: Category | Tag | Autho
 
 // /**
 //  * Get the paths of getStaticPaths() for page "all", "selected",... (pages
-//  * with the path like "/all/page/2/")
+//  * with the path like "/tat-ca-bai-viet/page/2/")
 //  */
 // export async function getStaticPathsOfAllPages(options: {
 //   filter?: unknown
@@ -740,7 +740,7 @@ export function getSlugPrefix(type: GroupTypeLabels): string {
   if (type === 'category') return 'chuyen-muc'
   if (type === 'tag') return 'chu-de'
   if (type === 'author') return 'author'
-  if (type === 'all') return 'all'
+  if (type === 'all') return 'tat-ca-bai-viet'
   if (type === 'selected') return 'tuyen-chon'
   return ''
 }

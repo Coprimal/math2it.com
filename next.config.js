@@ -51,6 +51,11 @@ const nextConfig = {
         source: '/tag/:path*',
         destination: '/chu-de/:path*',
         permanent: true
+      },
+      {
+        source: '/all/:path*',
+        destination: '/tat-ca-bai-viet/:path*',
+        permanent: true
       }
     ]
   }
