@@ -15,10 +15,10 @@ export async function generateMetadata({ params }: OptionalCatchAllProps): Promi
   const category = categories.find(c => c.slug === slug)
   if (!category)
     return {
-      title: 'Chủ đề không xác định | Math2IT'
+      title: 'Chuyên mục không xác định | Math2IT'
     }
   return {
-    title: `Chủ đề "${category?.name}" - trang ${currentPage} | Math2IT`
+    title: `Chuyên mục "${category?.name}" - trang ${currentPage} | Math2IT`
   }
 }
 
@@ -105,7 +105,7 @@ export default async function CategoryPage({ params }: OptionalCatchAllProps) {
 
   return (
     <PageOfPostsListTemplate
-      title={`Category ${category.name}`}
+      title={`Chuyên mục ${category.name}`}
       uri={category.uri}
       posts={postsOnThisPage}
       totalPages={totalPages}

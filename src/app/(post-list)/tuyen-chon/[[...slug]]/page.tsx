@@ -43,7 +43,7 @@ export async function generateStaticParams() {
 }
 
 export default async function SelectedPostsPage({ params }: OptionalCatchAllProps) {
-  // Different from category page (/category/slug/page/1)
+  // Different from category page (/chuyen-muc/slug/page/1)
   // the selected posts page has no slug (/tuyen-chon/page/1)
   const currentPage = +(params?.slug?.[1] || 1)
 

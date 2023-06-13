@@ -41,6 +41,11 @@ const nextConfig = {
         source: '/choice/:path*',
         destination: '/tuyen-chon/:path*',
         permanent: true
+      },
+      {
+        source: '/category/:path*',
+        destination: '/chuyen-muc/:path*',
+        permanent: true
       }
     ]
   }

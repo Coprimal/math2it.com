@@ -225,7 +225,7 @@ export function getPredefinedCategories(categories: Category[] = []): Category[]
         : {
             slug: makeSlugText(category?.name),
             name: category!.name,
-            uri: `/category/${makeSlugText(category!.name)}/`,
+            uri: `/${getSlugPrefix('category')}/${makeSlugText(category!.name)}/`,
             style: {
               bgColor: defaultCategoryBgColor,
               textColor: defaultCategoryTextColor
@@ -737,7 +737,7 @@ export function parseSearchResults(data: any): SearchResult[] {
 }
 
 export function getSlugPrefix(type: GroupTypeLabels): string {
-  if (type === 'category') return 'category'
+  if (type === 'category') return 'chuyen-muc'
   if (type === 'tag') return 'tag'
   if (type === 'author') return 'author'
   if (type === 'all') return 'all'
