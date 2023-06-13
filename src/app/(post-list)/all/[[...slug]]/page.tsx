@@ -1,0 +1,105 @@
+import { NOTION_DB_POSTS, notionMaxRequest, numPostsPerPage } from '@app/lib/config'
+import { getAuthors, getCategories, getPosts, getTags } from '@app/lib/fetcher'
+import { getSlugPrefix, getStartCursorForCurrentPage } from '@app/lib/helpers'
+import PageOfPostsListTemplate from '@app/templates/PageOfPostsListTemplate'
+import { OptionalCatchAllParams, OptionalCatchAllProps } from '@src/interface'
+import { Metadata } from 'next'
+import { notFound, redirect } from 'next/navigation'
+
+export const revalidate = 10 // ###R: change when done developing
+
+export async function generateMetadata({ params }: OptionalCatchAllProps): Promise<Metadata> {
+  const currentPage = +(params?.slug?.[1] || 1)
+  return {
+    title: `Tất cả bài viết - trang ${currentPage} | Math2IT`
+  }
+}
+
+export async function generateStaticParams() {
+  const categories = getCategories()
+  const tagsData = getTags()
+  const authorsData = getAuthors()
+  const [tags, authors] = await Promise.all([tagsData, authorsData])
+
+  const params = [] as OptionalCatchAllParams[]
+  const allPosts = await getPosts({
+    dbId: NOTION_DB_POSTS,
+    categories,
+    tags,
+    authors,
+    pageSize: notionMaxRequest
+  })
+  const numPosts = allPosts?.length || 0
+  const totalPages = Math.ceil(numPosts / numPostsPerPage)
+  for (let i = 1; i <= totalPages; i++) {
+    const path =
+      i === 1
+        ? { slug: [getSlugPrefix('all')] }
+        : { slug: [getSlugPrefix('all'), 'page', i.toString()] }
+    params.push(path)
+  }
+  return params
+}
+
+export default async function AllPostsPage({ params }: OptionalCatchAllProps) {
+  // Different from category page (/category/slug/page/1)
+  // the all posts page has no slug (/all/page/1)
+  const currentPage = +(params?.slug?.[1] || 1)
+  /* ###Thi */ console.log('👺👺👺 params: ', params)
+
+  if (
+    !params ||
+    (params.slug?.length > 0 && params.slug?.[0] !== 'page') ||
+    params.slug?.length > 2
+  ) {
+    /* ###Thi */ console.log('👺👺👺 notFound 1')
+    notFound()
+  }
+
+  const notRootPage = !!params.slug
+
+  const categories = getCategories()
+  const tagsData = getTags()
+  const authorsData = getAuthors()
+  const [tags, authors] = await Promise.all([tagsData, authorsData])
+
+  const allPosts = await getPosts({
+    dbId: NOTION_DB_POSTS,
+    categories,
+    tags,
+    authors,
+    pageSize: notionMaxRequest
+  })
+  const totalPages = Math.ceil(allPosts.length / numPostsPerPage)
+  /* ###Thi */ console.log('👺👺👺 allPosts.length: ', allPosts.length)
+
+  if (notRootPage && currentPage === 1) {
+    redirect(`/${getSlugPrefix('all')}/`)
+  }
+
+  if (currentPage !== 1 && currentPage > totalPages) {
+    notFound()
+  }
+
+  const startCursor = getStartCursorForCurrentPage(currentPage, allPosts, numPostsPerPage)
+  const postsOnThisPage = !allPosts.length
+    ? []
+    : await getPosts({
+        dbId: NOTION_DB_POSTS,
+        categories,
+        tags,
+        authors,
+        startCursor,
+        pageSize: numPostsPerPage
+      })
+
+  return (
+    <PageOfPostsListTemplate
+      title={'Tất cả bài viết'}
+      uri={`/${getSlugPrefix('all')}/`}
+      posts={postsOnThisPage}
+      totalPages={totalPages}
+      currentPage={currentPage}
+    />
+  )
+}

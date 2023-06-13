@@ -1,7 +1,7 @@
 // https://nextjs.org/docs/app/api-reference/file-conventions/not-found
 import Link from 'next/link'
 
-export default function NotFound() {
+export default function NotFoundPage() {
   return (
     <div>
       <h1>Not found – 404!</h1>

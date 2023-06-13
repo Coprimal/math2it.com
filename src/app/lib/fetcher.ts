@@ -184,6 +184,9 @@ export const getAuthors = cache(async () => {
   return transformNotionAuthorsData(data?.['results'] as any[])
 })
 
+/**
+ * Filter to be used in getPosts()
+ */
 function getFilter(filter?: any): QueryDatabaseParameters['filter'] {
   const defaultFilter = [] as any[]
   // Ignore sandbox posts in production
