@@ -1,6 +1,6 @@
-import { categorySlugPrefix, notionMaxRequest, numPostsPerPage } from '@app/lib/config'
+import { notionMaxRequest, numPostsPerPage } from '@app/lib/config'
 import { getAuthors, getCategories, getPostsBy, getTags } from '@app/lib/fetcher'
-import { getFilterOf, getStartCursorForCurrentPage } from '@app/lib/helpers'
+import { getFilterOf, getSlugPrefix, getStartCursorForCurrentPage } from '@app/lib/helpers'
 import PageOfPostsListTemplate from '@app/templates/PageOfPostsListTemplate'
 import { OptionalCatchAllParams, OptionalCatchAllProps } from '@src/interface'
 import { Metadata } from 'next'
@@ -41,8 +41,8 @@ export async function generateStaticParams() {
     for (let i = 1; i <= totalPages; i++) {
       const path =
         i === 1
-          ? { slug: [categorySlugPrefix, category.slug!] }
-          : { slug: [categorySlugPrefix, category.slug!, 'page', i.toString()] }
+          ? { slug: [getSlugPrefix('category'), category.slug!] }
+          : { slug: [getSlugPrefix('category'), category.slug!, 'page', i.toString()] }
       params.push(path)
     }
   }
@@ -84,7 +84,7 @@ export default async function CategoryPage({ params }: OptionalCatchAllProps) {
   if (notRootPage && currentPage === 1) {
     return {
       redirect: {
-        destination: `/${categorySlugPrefix}/${slug}/`,
+        destination: `/${getSlugPrefix('category')}/${slug}/`,
         permanent: true
       }
     }

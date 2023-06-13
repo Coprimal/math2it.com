@@ -7,11 +7,6 @@ export const defaultBlurDataURL =
   'data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwC' +
   'AAAAC0lEQVR42mN8XA8AAksBZG7LpHYAAAAASUVORK5CYII='
 export const homeOgImageUrl = ''
-export const selectedPostsSlug = 'choice'
-export const allPostsSlug = 'all'
-export const categorySlugPrefix = 'category'
-export const tagSlugPrefix = 'tag'
-export const authorSlugPrefix = 'author'
 // 👇 ❗❗ Shouldn't change this! Otherwise, change the "next_cursor" list in the
 // later of this file as well. Read more in the "next_cursor" section!
 // export const numPostsPerPage = 20

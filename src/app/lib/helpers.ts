@@ -1,6 +1,5 @@
 import {
   UNOFFICIAL_NOTION_KEYS,
-  categorySlugPrefix,
   defaultBlurDataURL,
   defaultCategoryBgColor,
   defaultCategoryTextColor,
@@ -53,7 +52,7 @@ export function transformNotionAuthorsData(data: NotionAuthor[]): Author[] {
       const properties = author?.properties || null
       const name = properties?.name?.title[0]?.plain_text || null
       const slug = properties?.slug?.rich_text[0]?.plain_text || makeSlugText(name) || null
-      const uri = slug ? `/author/${slug}/` : `/author/${makeSlugText(name)}/` || null
+      const uri = slug ? `/author/${slug}/` : `/author/${makeSlugText(name)}/`
       const avatarUrl = properties?.avatar?.files[0]?.file.url || null
       const description = properties?.description?.rich_text[0]?.plain_text || null
       const icon = author?.icon?.emoji || null
@@ -138,7 +137,7 @@ export async function transformNotionPostsData(options: {
               ? foundCategory
               : {
                   name: category.name,
-                  uri: `/${categorySlugPrefix}/${makeSlugText(category.name)}/`
+                  uri: `/${getSlugPrefix('category')}/${makeSlugText(category.name)}/`
                 }
           })
         : defaultCategory
@@ -735,4 +734,13 @@ export function parseSearchResults(data: any): SearchResult[] {
     }
   }
   return results
+}
+
+export function getSlugPrefix(type: GroupTypeLabels): string {
+  if (type === 'category') return 'category'
+  if (type === 'tag') return 'tag'
+  if (type === 'author') return 'author'
+  if (type === 'all') return 'all'
+  if (type === 'selected') return 'choice'
+  return ''
 }

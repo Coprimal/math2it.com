@@ -78,7 +78,7 @@ export type Author = {
   slug?: string | null
   id: string
   name?: string | null
-  uri: string | null
+  uri: string
   description?: string | null
   avatarUrl?: string | null
   icon?: string | null
@@ -100,7 +100,7 @@ export type NotionSorts = {
   direction: 'ascending' | 'descending'
 }
 
-export type GroupTypeLabels = 'author' | 'category' | 'tag' | 'selected'
+export type GroupTypeLabels = 'author' | 'category' | 'tag' | 'selected' | 'all'
 export type GroupTypeReturn = { categories: Category[] } | { tags: Tag[] } | { authors: Author[] }
 
 /**
