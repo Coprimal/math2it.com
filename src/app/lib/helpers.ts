@@ -379,7 +379,7 @@ export function getFilterOf(type: GroupTypeLabels, data?: Category | Tag | Autho
 
 // /**
 //  * Get paths of getStaticProps() for different kinds of pages, eg. posts, tags,
-//  * categories, authors, etc (pages with the paths like /tac-gia/page/2).
+//  * categories, authors, etc (pages with the paths like /tac-gia/trang/2).
 //  * @param type
 //  * @param filterKey Use in the filter, eg. "id" for author.id, "slug" for tag.slug
 //  * @param slugPrefix
@@ -402,7 +402,7 @@ export function getFilterOf(type: GroupTypeLabels, data?: Category | Tag | Autho
 
 //     if (
 //       !params?.slug ||
-//       (params.slug.length > 1 && params.slug[1] !== 'page') ||
+//       (params.slug.length > 1 && params.slug[1] !== 'trang') ||
 //       params.slug.length > 3
 //     ) {
 //       return { notFound: true }
@@ -467,7 +467,7 @@ export function getFilterOf(type: GroupTypeLabels, data?: Category | Tag | Autho
 
 // /**
 //  * Get paths of getStaticPaths() for different kinds of pages, eg. posts, tags,
-//  * categories, authors, etc (pages with the paths like /tac-gia/page/2).
+//  * categories, authors, etc (pages with the paths like /tac-gia/trang/2).
 //  * @param type
 //  * @param filterKey Use in the filter, eg. "id" for author.id, "slug" for tag.slug
 //  * @param slugPrefix
@@ -492,7 +492,7 @@ export function getFilterOf(type: GroupTypeLabels, data?: Category | Tag | Autho
 //     const numPosts = posts?.length || 0
 //     const totalPages = Math.ceil(numPosts / numPostsPerPage)
 //     for (let i = 1; i <= Math.min(totalPages, numPagePrerendered); i++) {
-//       const path = i === 1 ? `/${slugPrefix}/${slug}/` : `/${slugPrefix}/${slug}/page/${i}/`
+//       const path = i === 1 ? `/${slugPrefix}/${slug}/` : `/${slugPrefix}/${slug}/trang/${i}/`
 //       paths.push(path)
 //     }
 //   }
@@ -501,7 +501,7 @@ export function getFilterOf(type: GroupTypeLabels, data?: Category | Tag | Autho
 
 // /**
 //  * Get the paths of getStaticProps() for page "all", "selected",... (pages
-//  * with the path like "/tat-ca-bai-viet/page/2/")
+//  * with the path like "/tat-ca-bai-viet/trang/2/")
 //  */
 // export async function getStaticPropsOfAllPages(options: {
 //   type: 'all' | 'selected'
@@ -515,7 +515,7 @@ export function getFilterOf(type: GroupTypeLabels, data?: Category | Tag | Autho
 //     if (
 //       !params ||
 //       !params.slug ||
-//       (params.slug && params.slug?.length > 0 && params.slug[0] !== 'page') ||
+//       (params.slug && params.slug?.length > 0 && params.slug[0] !== 'trang') ||
 //       params.slug?.length > 2
 //     ) {
 //       return { notFound: true }
@@ -570,7 +570,7 @@ export function getFilterOf(type: GroupTypeLabels, data?: Category | Tag | Autho
 
 // /**
 //  * Get the paths of getStaticPaths() for page "all", "selected",... (pages
-//  * with the path like "/tat-ca-bai-viet/page/2/")
+//  * with the path like "/tat-ca-bai-viet/trang/2/")
 //  */
 // export async function getStaticPathsOfAllPages(options: {
 //   filter?: unknown
@@ -585,7 +585,7 @@ export function getFilterOf(type: GroupTypeLabels, data?: Category | Tag | Autho
 //   const numPosts = posts?.length || 0
 //   const totalPages = Math.ceil(numPosts / numPostsPerPage)
 //   for (let i = 1; i <= Math.min(totalPages, numPagePrerendered); i++) {
-//     const path = i === 1 ? `/${slug}/` : `/${slug}/page/${i}/`
+//     const path = i === 1 ? `/${slug}/` : `/${slug}/trang/${i}/`
 //     paths.push(path)
 //   }
 //   return paths

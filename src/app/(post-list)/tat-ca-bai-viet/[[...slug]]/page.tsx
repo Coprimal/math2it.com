@@ -35,20 +35,20 @@ export async function generateStaticParams() {
     const path =
       i === 1
         ? { slug: [getSlugPrefix('all')] }
-        : { slug: [getSlugPrefix('all'), 'page', i.toString()] }
+        : { slug: [getSlugPrefix('all'), 'trang', i.toString()] }
     params.push(path)
   }
   return params
 }
 
 export default async function AllPostsPage({ params }: OptionalCatchAllProps) {
-  // Different from category page (/chuyen-muc/slug/page/1)
-  // the all posts page has no slug (/tat-ca-bai-viet/page/1)
+  // Different from category page (/chuyen-muc/slug/trang/1)
+  // the all posts page has no slug (/tat-ca-bai-viet/trang/1)
   const currentPage = +(params?.slug?.[1] || 1)
 
   if (
     !params ||
-    (params.slug?.length > 0 && params.slug?.[0] !== 'page') ||
+    (params.slug?.length > 0 && params.slug?.[0] !== 'trang') ||
     params.slug?.length > 2
   ) {
     notFound()

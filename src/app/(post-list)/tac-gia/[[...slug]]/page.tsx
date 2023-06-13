@@ -43,7 +43,7 @@ export async function generateStaticParams() {
       const path =
         i === 1
           ? { slug: [getSlugPrefix('author'), author.slug!] }
-          : { slug: [getSlugPrefix('author'), author.slug!, 'page', i.toString()] }
+          : { slug: [getSlugPrefix('author'), author.slug!, 'trang', i.toString()] }
       params.push(path)
     }
   }
@@ -56,7 +56,7 @@ export default async function AuthorPage({ params }: OptionalCatchAllProps) {
   if (
     !params ||
     !params?.slug ||
-    (params.slug.length > 1 && params.slug[1] !== 'page') ||
+    (params.slug.length > 1 && params.slug[1] !== 'trang') ||
     params.slug.length > 3
   ) {
     notFound()

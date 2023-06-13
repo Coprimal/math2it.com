@@ -43,7 +43,7 @@ export async function generateStaticParams() {
       const path =
         i === 1
           ? { slug: [getSlugPrefix('category'), category.slug!] }
-          : { slug: [getSlugPrefix('category'), category.slug!, 'page', i.toString()] }
+          : { slug: [getSlugPrefix('category'), category.slug!, 'trang', i.toString()] }
       params.push(path)
     }
   }
@@ -57,7 +57,7 @@ export default async function CategoryPage({ params }: OptionalCatchAllProps) {
   if (
     !params ||
     !params?.slug ||
-    (params.slug.length > 1 && params.slug[1] !== 'page') ||
+    (params.slug.length > 1 && params.slug[1] !== 'trang') ||
     params.slug.length > 3
   ) {
     notFound()

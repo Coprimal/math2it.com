@@ -61,6 +61,12 @@ const nextConfig = {
         source: '/author/:path*',
         destination: '/tac-gia/:path*',
         permanent: true
+      },
+      // for redirect /chuyen-muc/page/* or /category/page/* to /chuyen-muc/trang/*
+      {
+        source: '/:slug*/page/:path*',
+        destination: '/:slug*/trang/:path*',
+        permanent: true
       }
     ]
   }

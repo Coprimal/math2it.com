@@ -122,4 +122,4 @@ export default function Pagination(props: PaginationProps) {
 }
 
 const getPagePath = (pageNumber: number, taxUri: string) =>
-  pageNumber === 1 ? taxUri : `${taxUri}page/${pageNumber}/`
+  pageNumber === 1 ? taxUri : `${taxUri}trang/${pageNumber}/`

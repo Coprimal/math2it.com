@@ -20,7 +20,7 @@ type NavTopicItemProps = {
 export default function NavTopicItem(props: NavTopicItemProps) {
   const { uri, label, customClass } = props
   const pathname = usePathname()
-  const currentRoute = pathname.split('page/')[0]
+  const currentRoute = pathname.split('trang/')[0]
 
   return (
     <Link
