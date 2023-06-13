@@ -83,7 +83,7 @@ export function transformNotionTagsData(data?: NotionTag[]): Tag[] {
       const name = properties?.name?.title[0]?.plain_text
       const description = properties?.description?.rich_text[0]?.plain_text || null
       const slug = properties?.slug?.rich_text[0]?.plain_text || makeSlugText(name) || null
-      const uri = `/tag/${slug}/`
+      const uri = `/${getSlugPrefix('tag')}/${slug}/`
       const fontello = properties?.fontello?.rich_text[0]?.plain_text || null
       const id = tag?.id || uri
       const icon = properties?.icon?.files[0]?.file.url || null
@@ -738,7 +738,7 @@ export function parseSearchResults(data: any): SearchResult[] {
 
 export function getSlugPrefix(type: GroupTypeLabels): string {
   if (type === 'category') return 'chuyen-muc'
-  if (type === 'tag') return 'tag'
+  if (type === 'tag') return 'chu-de'
   if (type === 'author') return 'author'
   if (type === 'all') return 'all'
   if (type === 'selected') return 'tuyen-chon'

@@ -15,10 +15,10 @@ export async function generateMetadata({ params }: OptionalCatchAllProps): Promi
   const tag = tags.find(t => t.slug === slug)
   if (!tag)
     return {
-      title: 'Thẻ không xác định | Math2IT'
+      title: 'Chủ đề không xác định | Math2IT'
     }
   return {
-    title: `Thẻ "${tag.name}" - trang ${currentPage} | Math2IT`
+    title: `Chủ đề "${tag.name}" - trang ${currentPage} | Math2IT`
   }
 }
 
@@ -104,7 +104,7 @@ export default async function TagPage({ params }: OptionalCatchAllProps) {
 
   return (
     <PageOfPostsListTemplate
-      title={`Tag ${tag.name}`}
+      title={`Chủ đề ${tag.name}`}
       uri={tag.uri}
       posts={postsOnThisPage}
       totalPages={totalPages}

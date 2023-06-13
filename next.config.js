@@ -46,6 +46,11 @@ const nextConfig = {
         source: '/category/:path*',
         destination: '/chuyen-muc/:path*',
         permanent: true
+      },
+      {
+        source: '/tag/:path*',
+        destination: '/chu-de/:path*',
+        permanent: true
       }
     ]
   }
