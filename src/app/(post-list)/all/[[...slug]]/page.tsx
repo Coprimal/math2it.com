@@ -45,14 +45,12 @@ export default async function AllPostsPage({ params }: OptionalCatchAllProps) {
   // Different from category page (/category/slug/page/1)
   // the all posts page has no slug (/all/page/1)
   const currentPage = +(params?.slug?.[1] || 1)
-  /* ###Thi */ console.log('👺👺👺 params: ', params)
 
   if (
     !params ||
     (params.slug?.length > 0 && params.slug?.[0] !== 'page') ||
     params.slug?.length > 2
   ) {
-    /* ###Thi */ console.log('👺👺👺 notFound 1')
     notFound()
   }
 
@@ -71,7 +69,6 @@ export default async function AllPostsPage({ params }: OptionalCatchAllProps) {
     pageSize: notionMaxRequest
   })
   const totalPages = Math.ceil(allPosts.length / numPostsPerPage)
-  /* ###Thi */ console.log('👺👺👺 allPosts.length: ', allPosts.length)
 
   if (notRootPage && currentPage === 1) {
     redirect(`/${getSlugPrefix('all')}/`)

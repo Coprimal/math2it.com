@@ -1,0 +1,105 @@
+import { NOTION_DB_POSTS, notionMaxRequest, numPostsPerPage } from '@app/lib/config'
+import { getAuthors, getCategories, getPosts, getTags } from '@app/lib/fetcher'
+import { getFilterOf, getSlugPrefix, getStartCursorForCurrentPage } from '@app/lib/helpers'
+import PageOfPostsListTemplate from '@app/templates/PageOfPostsListTemplate'
+import { OptionalCatchAllParams, OptionalCatchAllProps } from '@src/interface'
+import { Metadata } from 'next'
+import { notFound, redirect } from 'next/navigation'
+
+export const revalidate = 10 // ###R: change when done developing
+
+export async function generateMetadata({ params }: OptionalCatchAllProps): Promise<Metadata> {
+  const currentPage = +(params?.slug?.[1] || 1)
+  return {
+    title: `Bài viết tuyển chọn - trang ${currentPage} | Math2IT`
+  }
+}
+
+export async function generateStaticParams() {
+  const categories = getCategories()
+  const tagsData = getTags()
+  const authorsData = getAuthors()
+  const [tags, authors] = await Promise.all([tagsData, authorsData])
+
+  const params = [] as OptionalCatchAllParams[]
+  const allPosts = await getPosts({
+    dbId: NOTION_DB_POSTS,
+    categories,
+    tags,
+    authors,
+    pageSize: notionMaxRequest,
+    filter: getFilterOf('selected')
+  })
+  const numPosts = allPosts?.length || 0
+  const totalPages = Math.ceil(numPosts / numPostsPerPage)
+  for (let i = 1; i <= totalPages; i++) {
+    const path =
+      i === 1
+        ? { slug: [getSlugPrefix('selected')] }
+        : { slug: [getSlugPrefix('selected'), 'page', i.toString()] }
+    params.push(path)
+  }
+  return params
+}
+
+export default async function SelectedPostsPage({ params }: OptionalCatchAllProps) {
+  // Different from category page (/category/slug/page/1)
+  // the selected posts page has no slug (/choice/page/1)
+  const currentPage = +(params?.slug?.[1] || 1)
+
+  if (
+    !params ||
+    (params.slug?.length > 0 && params.slug?.[0] !== 'page') ||
+    params.slug?.length > 2
+  ) {
+    notFound()
+  }
+
+  const notRootPage = !!params.slug
+
+  const categories = getCategories()
+  const tagsData = getTags()
+  const authorsData = getAuthors()
+  const [tags, authors] = await Promise.all([tagsData, authorsData])
+
+  const allPosts = await getPosts({
+    dbId: NOTION_DB_POSTS,
+    categories,
+    tags,
+    authors,
+    pageSize: notionMaxRequest,
+    filter: getFilterOf('selected')
+  })
+  const totalPages = Math.ceil(allPosts.length / numPostsPerPage)
+
+  if (notRootPage && currentPage === 1) {
+    redirect(`/${getSlugPrefix('selected')}/`)
+  }
+
+  if (currentPage !== 1 && currentPage > totalPages) {
+    notFound()
+  }
+
+  const startCursor = getStartCursorForCurrentPage(currentPage, allPosts, numPostsPerPage)
+  const postsOnThisPage = !allPosts.length
+    ? []
+    : await getPosts({
+        dbId: NOTION_DB_POSTS,
+        filter: getFilterOf('selected'),
+        categories,
+        tags,
+        authors,
+        startCursor,
+        pageSize: numPostsPerPage
+      })
+
+  return (
+    <PageOfPostsListTemplate
+      title={'Bài viết tuyển chọn'}
+      uri={`/${getSlugPrefix('selected')}/`}
+      posts={postsOnThisPage}
+      totalPages={totalPages}
+      currentPage={currentPage}
+    />
+  )
+}
