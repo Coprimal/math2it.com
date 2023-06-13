@@ -56,6 +56,11 @@ const nextConfig = {
         source: '/all/:path*',
         destination: '/tat-ca-bai-viet/:path*',
         permanent: true
+      },
+      {
+        source: '/author/:path*',
+        destination: '/tac-gia/:path*',
+        permanent: true
       }
     ]
   }

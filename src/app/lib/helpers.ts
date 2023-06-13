@@ -52,7 +52,9 @@ export function transformNotionAuthorsData(data: NotionAuthor[]): Author[] {
       const properties = author?.properties || null
       const name = properties?.name?.title[0]?.plain_text || null
       const slug = properties?.slug?.rich_text[0]?.plain_text || makeSlugText(name) || null
-      const uri = slug ? `/author/${slug}/` : `/author/${makeSlugText(name)}/`
+      const uri = slug
+        ? `/${getSlugPrefix('author')}/${slug}/`
+        : `/${getSlugPrefix('author')}/${makeSlugText(name)}/`
       const avatarUrl = properties?.avatar?.files[0]?.file.url || null
       const description = properties?.description?.rich_text[0]?.plain_text || null
       const icon = author?.icon?.emoji || null
@@ -377,7 +379,7 @@ export function getFilterOf(type: GroupTypeLabels, data?: Category | Tag | Autho
 
 // /**
 //  * Get paths of getStaticProps() for different kinds of pages, eg. posts, tags,
-//  * categories, authors, etc (pages with the paths like /author/page/2).
+//  * categories, authors, etc (pages with the paths like /tac-gia/page/2).
 //  * @param type
 //  * @param filterKey Use in the filter, eg. "id" for author.id, "slug" for tag.slug
 //  * @param slugPrefix
@@ -465,7 +467,7 @@ export function getFilterOf(type: GroupTypeLabels, data?: Category | Tag | Autho
 
 // /**
 //  * Get paths of getStaticPaths() for different kinds of pages, eg. posts, tags,
-//  * categories, authors, etc (pages with the paths like /author/page/2).
+//  * categories, authors, etc (pages with the paths like /tac-gia/page/2).
 //  * @param type
 //  * @param filterKey Use in the filter, eg. "id" for author.id, "slug" for tag.slug
 //  * @param slugPrefix
@@ -739,7 +741,7 @@ export function parseSearchResults(data: any): SearchResult[] {
 export function getSlugPrefix(type: GroupTypeLabels): string {
   if (type === 'category') return 'chuyen-muc'
   if (type === 'tag') return 'chu-de'
-  if (type === 'author') return 'author'
+  if (type === 'author') return 'tac-gia'
   if (type === 'all') return 'tat-ca-bai-viet'
   if (type === 'selected') return 'tuyen-chon'
   return ''

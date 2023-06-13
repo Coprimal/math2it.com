@@ -122,7 +122,7 @@ export const MENUS = [
 // Below value should be the same as on Notion
 export const anonymAuthor = {
   name: 'Ẩn danh',
-  uri: '/author/an-danh/'
+  uri: '/tac-gia/an-danh/'
 }
 
 /**
