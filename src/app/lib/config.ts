@@ -82,8 +82,8 @@ export const MenuAbout = {
 }
 export const MENUS = [
   {
-    id: 'id-math',
-    uri: '/chuyen-muc/math/',
+    id: 'id-toan-hoc',
+    uri: '/chuyen-muc/toan-hoc/',
     label: 'Toán học',
     navigationItems: {
       navColor: '#72b5fb',
@@ -91,8 +91,8 @@ export const MENUS = [
     }
   },
   {
-    id: 'id-it',
-    uri: '/chuyen-muc/technology/',
+    id: 'id-cong-nghe',
+    uri: '/chuyen-muc/cong-nghe/',
     label: 'Công nghệ',
     navigationItems: {
       navColor: '#f5c175',
@@ -100,8 +100,8 @@ export const MENUS = [
     }
   },
   {
-    id: 'id-translated-articles',
-    uri: '/chuyen-muc/translated-articles/',
+    id: 'id-bai-dich',
+    uri: '/chuyen-muc/bai-dich/',
     label: 'Bài dịch',
     navigationItems: {
       navColor: '#d6baff',
@@ -109,8 +109,8 @@ export const MENUS = [
     }
   },
   {
-    id: 'id-tool',
-    uri: '/chuyen-muc/tool/',
+    id: 'id-cong-cu',
+    uri: '/chuyen-muc/cong-cu/',
     label: 'Công cụ',
     navigationItems: {
       navColor: '#ef92b1',
@@ -131,8 +131,8 @@ export const anonymAuthor = {
 export const predefinedCategories: Category[] = [
   // Bài dịch
   {
-    slug: 'translated-articles',
-    uri: '/chuyen-muc/translated-articles/',
+    slug: 'bai-dich',
+    uri: '/chuyen-muc/bai-dich/',
     name: 'Bài dịch',
     style: {
       bgColor: '#e6d6ff',
@@ -146,8 +146,8 @@ export const predefinedCategories: Category[] = [
   },
   // Công cụ
   {
-    slug: 'tool',
-    uri: '/chuyen-muc/tool/',
+    slug: 'cong-cu',
+    uri: '/chuyen-muc/cong-cu/',
     name: 'Công cụ',
     style: {
       bgColor: '#ffe3e3', // old: #ffe4ee
@@ -161,8 +161,8 @@ export const predefinedCategories: Category[] = [
   },
   // Công nghệ
   {
-    slug: 'technology',
-    uri: '/chuyen-muc/technology/',
+    slug: 'cong-nghe',
+    uri: '/chuyen-muc/cong-nghe/',
     name: 'Công nghệ',
     style: {
       bgColor: '#ffeacc',
@@ -176,8 +176,8 @@ export const predefinedCategories: Category[] = [
   },
   // Giáo dục
   {
-    slug: 'education',
-    uri: '/chuyen-muc/education/',
+    slug: 'giao-duc',
+    uri: '/chuyen-muc/giao-duc/',
     name: 'Giáo dục',
     style: {
       bgColor: 'rgb(218 255 227)',
@@ -191,8 +191,8 @@ export const predefinedCategories: Category[] = [
   },
   // Sách hay
   {
-    slug: 'book',
-    uri: '/chuyen-muc/book/',
+    slug: 'sach-hay',
+    uri: '/chuyen-muc/sach-hay/',
     name: 'Sách hay',
     style: {
       bgColor: 'rgb(220 252 254)',
@@ -207,8 +207,8 @@ export const predefinedCategories: Category[] = [
   },
   // Toán học
   {
-    slug: 'math',
-    uri: '/chuyen-muc/math/',
+    slug: 'toan-hoc',
+    uri: '/chuyen-muc/toan-hoc/',
     name: 'Toán học',
     style: {
       bgColor: 'rgb(215 235 255)',

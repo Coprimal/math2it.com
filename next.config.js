@@ -67,6 +67,37 @@ const nextConfig = {
         source: '/:slug*/page/:path*',
         destination: '/:slug*/trang/:path*',
         permanent: true
+      },
+      // for categories
+      {
+        source: '/:slug*/math/:path*',
+        destination: '/:slug*/toan-hoc/:path*',
+        permanent: true
+      },
+      {
+        source: '/:slug*/translated-articles/:path*',
+        destination: '/:slug*/bai-dich/:path*',
+        permanent: true
+      },
+      {
+        source: '/:slug*/tool/:path*',
+        destination: '/:slug*/cong-cu/:path*',
+        permanent: true
+      },
+      {
+        source: '/:slug*/technology/:path*',
+        destination: '/:slug*/cong-nghe/:path*',
+        permanent: true
+      },
+      {
+        source: '/:slug*/book/:path*',
+        destination: '/:slug*/sach-hay/:path*',
+        permanent: true
+      },
+      {
+        source: '/:slug*/education/:path*',
+        destination: '/:slug*/giao-duc/:path*',
+        permanent: true
       }
     ]
   }
