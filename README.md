@@ -33,6 +33,8 @@ npm install -g yarn
 npm install -g fontello-cli
 ```
 
+🚨 `--turbo`: For a momment (14/6/23), it's not working on MacOS because of this error: "*something went wrong installing the "sharp" module Cannot find module 'relative "../build/Release/sharp-" \<dynamic\> ".node"'*"
+
 ```bash
 # install
 yarn
