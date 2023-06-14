@@ -95,13 +95,16 @@ export function transformNotionTagsData(data?: NotionTag[]): Tag[] {
 }
 
 /**
- * Transform data fetched from Notion to format Post[]
+ * Transform data fetched from Notion to format Post[].
+ *
+ * Note that, in some cases, we don't need all the properties of Post, so we ignore the fields
+ * categories, tags and authors.
  */
 export async function transformNotionPostsData(options: {
   data: NotionPost[]
-  categories: Category[]
-  tags: Tag[]
-  authors: Author[]
+  categories?: Category[]
+  tags?: Tag[]
+  authors?: Author[]
 }): Promise<Post[]> {
   const { data, categories: categoriesList, tags: tagsList, authors: authorsList } = options
   return Promise.all(
@@ -122,33 +125,42 @@ export async function transformNotionPostsData(options: {
       const date = new Date(gotDate).toISOString()
 
       // Tags
-      const tagIdsList = get(post, 'properties.tags.relation', []).map(
-        (tag: { id: string }) => tag.id
-      )
-      const tags = parseTagsForPost(tagIdsList, tagsList)
+      let tags
+      if (tagsList) {
+        const tagIdsList = get(post, 'properties.tags.relation', []).map(
+          (tag: { id: string }) => tag.id
+        )
+        tags = parseTagsForPost(tagIdsList, tagsList)
+      }
 
       // Categories
-      const defaultCategory = categoriesList[0]
-      const gotCategories = post.properties?.categories?.multi_select
-      const categories = gotCategories
-        ? gotCategories.map(category => {
-            const foundCategory = categoriesList.find(
-              cat => makeSlugText(cat?.name) === makeSlugText(category.name)
-            )
-            return foundCategory
-              ? foundCategory
-              : {
-                  name: category.name,
-                  uri: `/${getSlugPrefix('category')}/${makeSlugText(category.name)}/`
-                }
-          })
-        : defaultCategory
+      let categories
+      if (categoriesList) {
+        const defaultCategory = categoriesList[0]
+        const gotCategories = post.properties?.categories?.multi_select
+        categories = gotCategories
+          ? gotCategories.map(category => {
+              const foundCategory = categoriesList.find(
+                cat => makeSlugText(cat?.name) === makeSlugText(category.name)
+              )
+              return foundCategory
+                ? foundCategory
+                : {
+                    name: category.name,
+                    uri: `/${getSlugPrefix('category')}/${makeSlugText(category.name)}/`
+                  }
+            })
+          : defaultCategory
+      }
 
       // Author
-      const authorIdsList = get(post, 'properties.authors.relation', []).map(
-        (author: { id: string }) => author.id
-      )
-      const authors = parseAuthorsForPost(authorIdsList, authorsList)
+      let authors
+      if (authorsList) {
+        const authorIdsList = get(post, 'properties.authors.relation', []).map(
+          (author: { id: string }) => author.id
+        )
+        authors = parseAuthorsForPost(authorIdsList, authorsList)
+      }
 
       // Featured image
       const coverUrl = get(post, 'cover.external.url') || get(post, 'cover.file.url')
@@ -213,7 +225,7 @@ export function parseTagsForPost(tagIdsList: string[], tagsList: Tag[]): Tag[] {
  * Sometimes, error "Module not found" when we call this method somewhere else.
  * Solution: Just put it inside "getStaticProps" function!
  */
-export function getPredefinedCategories(categories: Category[] = []): Category[] {
+export function getPredefinedCategories(categories: { name: string }[] = []): Category[] {
   if (categories?.length === 0) return []
 
   return categories
@@ -589,74 +601,6 @@ export function getFilterOf(type: GroupTypeLabels, data?: Category | Tag | Autho
 //     paths.push(path)
 //   }
 //   return paths
-// }
-
-// export async function transformPostHeader(
-//   notionHeader: NotionHeader,
-//   pageIdwithDash: string
-// ): Promise<PostHeaderType> {
-//   const properties = notionHeader?.properties
-
-//   // title
-//   const title = properties?.name?.title?.[0]?.plain_text || defaultPostTitle
-
-//   // date
-//   // Because we migrate from WP to Notion, a lot of posts need to use the old created date
-//   const finalCreatedDate =
-//     properties?.finalCreatedDate?.formula?.date?.start || new Date().toISOString()
-//   const date = new Date(finalCreatedDate).toISOString()
-
-//   // categories
-//   const categories = getPredefinedCategories(properties?.categories?.multi_select)
-
-//   // tags
-//   const tagIdsList = properties?.tags?.relation?.map(item => item.id) || []
-//   const tagsList = await getTags()
-//   const tags = parseTagsForPost(tagIdsList, tagsList)
-
-//   // authors
-//   const authorIdsList = properties?.authors?.relation?.map(item => item.id) || []
-//   const authorsList = await getAuthors()
-//   const authors = parseAuthorsForPost(authorIdsList, authorsList)
-
-//   // featured image
-//   const sourceUrl = notionHeader?.cover?.external?.url || notionHeader?.cover?.file?.url
-//   const featuredImage = sourceUrl
-//     ? parseFeaturedImage({ sourceUrl }, `Ảnh đại diện cho bài viết "${title}"`, pageIdwithDash)
-//     : null
-//   // create place holder for featured image
-//   if (featuredImage) {
-//     if (sourceUrl) {
-//       const { base64 } = await getPlaiceholder(sourceUrl, { size: 20 })
-//       featuredImage.blurDataURL = base64
-//     } else {
-//       featuredImage.blurDataURL = defaultBlurDataURL
-//     }
-//   }
-
-//   // selected
-//   const selected = properties?.selected?.checkbox || false
-
-//   // bookCover
-//   const bookCoverUrl =
-//     properties?.bookCover?.files?.[0]?.external?.url || properties?.bookCover?.files?.[0]?.file?.url
-//   const bookCover = bookCoverUrl
-//     ? parseFeaturedImage({ sourceUrl: bookCoverUrl }, `Ảnh bìa sách "${title}"`, pageIdwithDash)
-//     : null
-//   // create place holder for book cover
-//   if (bookCover) {
-//     if (bookCoverUrl) {
-//       const { base64 } = await getPlaiceholder(bookCoverUrl, { size: 20 })
-//       bookCover.blurDataURL = base64
-//     } else {
-//       bookCover.blurDataURL = defaultBlurDataURL
-//     }
-//   }
-
-//   // showToc
-//   const showToc = properties?.showToc?.checkbox || false
-
-//   return { title, date, categories, tags, authors, featuredImage, selected, bookCover, showToc }
 // }
 
 /**

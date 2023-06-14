@@ -42,13 +42,13 @@ export default function PostTitleCateDate({ post, options }: PostTitleCateDatePr
                 backgroundColor: `${category.style?.bgColor || defaultCategoryBgColor}`,
                 color: `${category.style?.textColor || defaultCategoryTextColor}`
               }}
-              className="rounded-b-md px-2 py-1 text-xs font-bold"
+              className={cn('rounded-b-md px-2 py-1 text-xs font-semibold')}
             >
               {category?.name}
             </div>
           )}
         </div>
-        <div className={'group-hover:m2it-link-hover p-2 text-base font-bold'}>{title}</div>
+        <div className={cn('group-hover:m2it-link-hover p-2 text-base font-semibold')}>{title}</div>
         {!options?.hideDate && (
           <div className="text-sm opacity-80">
             <i className="icon-clock mr-1"></i>

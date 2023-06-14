@@ -27,11 +27,11 @@ import {
 /**
  * Get data from Notion using the official Notion APIs. We use React cache() to cache the data.
  *
- * @see {@link https://developers.notion.com/reference/post-database-query Notion API}
+ * @see {@link https://developers.notion.com/reference/post-database-query Query a database - Notion API}
  * @see {@link https://nextjs.org/docs/app/building-your-application/data-fetching/caching#react-cache React cache()}
  * @see {@link https://developers.notion.com/reference/request-limits Notion API request limits}
  */
-export const getNotionData = cache(async function getNotionData(
+export const getNotionDatabase = cache(async function getNotionDatabase(
   dataId: string,
   filter?: QueryDatabaseParameters['filter'],
   startCursor?: string,
@@ -39,7 +39,7 @@ export const getNotionData = cache(async function getNotionData(
   sorts?: NotionSorts[]
 ): Promise<QueryDatabaseResponse | undefined> {
   // console.log(
-  //   `😇 getNotionData() called with args: ${JSON.stringify({
+  //   `😇 getNotionDatabase() called with args: ${JSON.stringify({
   //     dataId,
   //     filter,
   //     startCursor,
@@ -72,7 +72,7 @@ export const getNotionData = cache(async function getNotionData(
     if (retryAfter) {
       console.log(`Retrying after ${retryAfter} seconds`)
       await new Promise(resolve => setTimeout(resolve, retryAfter * 1000 + 500))
-      return await getNotionData(dataId, filter, startCursor, pageSize, sorts)
+      return await getNotionDatabase(dataId, filter, startCursor, pageSize, sorts)
     }
     return
   }
@@ -82,7 +82,7 @@ export const getNotionData = cache(async function getNotionData(
  * Get posts from Notion. If the requested `pageSize` is >= `notionMaxRequest`, it will
  * automatically request the next page.
  *
- * categories, tags, authors are required to be used in transformNotionPostsData()
+ * categories, tags, authors aren't required but they're required if you want to use transformNotionPostsData()
  *
  * Below are some notable parameters:
  *
@@ -94,9 +94,9 @@ export const getNotionData = cache(async function getNotionData(
  */
 export async function getPosts(options: {
   dbId: string
-  categories: Category[]
-  tags: Tag[]
-  authors: Author[]
+  categories?: Category[]
+  tags?: Tag[]
+  authors?: Author[]
   filter?: unknown
   startCursor?: string
   pageSize?: number
@@ -111,14 +111,14 @@ export async function getPosts(options: {
   const sortsToUse: any = sorts?.length ? sorts.push(defaultSort) : [defaultSort]
   const filterToUse = getFilter(filter)
 
-  let data = await getNotionData(dbId, filterToUse, startCursor, pageSize, sortsToUse)
+  let data = await getNotionDatabase(dbId, filterToUse, startCursor, pageSize, sortsToUse)
   let postsList = get(data, 'results', []) as NotionPost[]
 
   if (data && pageSize && pageSize >= notionMaxRequest && data['has_more']) {
     let newStartCursor = startCursor
     while (data!['has_more']) {
       newStartCursor = data!['next_cursor'] as string
-      data = await getNotionData(dbId, filterToUse, newStartCursor, pageSize, sortsToUse)
+      data = await getNotionDatabase(dbId, filterToUse, newStartCursor, pageSize, sortsToUse)
       if (get(data, 'results')) {
         const lst = data!['results'] as any[]
         postsList = [...postsList, ...lst]
@@ -137,14 +137,16 @@ export async function getPosts(options: {
 
 /**
  * Depending on the filter, we can use this function to get posts by categories, tags, authors
+ *
+ * The categories, tags and authors are otional because sometimes, we don't need them in the return.
  */
 export async function getPostsBy(options: {
-  categories: Category[]
-  tags: Tag[]
-  authors: Author[]
   filter: unknown
   pageSize: number
   startCursor?: string
+  categories?: Category[]
+  tags?: Tag[]
+  authors?: Author[]
 }) {
   const { categories, tags, authors, filter, pageSize, startCursor } = options
   const posts = await getPosts({
@@ -171,7 +173,7 @@ export const getCategories = cache(() => {
  */
 export const getTags = cache(async () => {
   if (!NOTION_DB_TAGS) throw new Error('NOTION_DB_TAGS is not defined')
-  const data = await getNotionData(NOTION_DB_TAGS)
+  const data = await getNotionDatabase(NOTION_DB_TAGS)
   return transformNotionTagsData(data?.['results'] as any[])
 })
 
@@ -180,7 +182,7 @@ export const getTags = cache(async () => {
  */
 export const getAuthors = cache(async () => {
   if (!NOTION_DB_AUTHORS) throw new Error('NOTION_DB_AUTHORS is not defined')
-  const data = await getNotionData(NOTION_DB_AUTHORS)
+  const data = await getNotionDatabase(NOTION_DB_AUTHORS)
   return transformNotionAuthorsData(data?.['results'] as any[])
 })
 

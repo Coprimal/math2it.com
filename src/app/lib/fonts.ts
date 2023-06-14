@@ -2,7 +2,7 @@ import { Comfortaa, Nunito } from 'next/font/google'
 
 // How to use? Comfortaa.className inside className
 export const comfortaa = Comfortaa({
-  subsets: ['latin', 'vietnamese'],
+  subsets: ['latin'],
   display: 'swap',
   weight: ['400', '700']
 })

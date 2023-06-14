@@ -16,17 +16,9 @@ export async function generateMetadata({ params }: OptionalCatchAllProps): Promi
 }
 
 export async function generateStaticParams() {
-  const categories = getCategories()
-  const tagsData = getTags()
-  const authorsData = getAuthors()
-  const [tags, authors] = await Promise.all([tagsData, authorsData])
-
   const params = [] as OptionalCatchAllParams[]
   const allPosts = await getPosts({
     dbId: NOTION_DB_POSTS,
-    categories,
-    tags,
-    authors,
     pageSize: notionMaxRequest
   })
   const numPosts = allPosts?.length || 0
