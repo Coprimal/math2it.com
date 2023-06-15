@@ -1,5 +1,6 @@
 'use client'
 
+import { getSlugPrefix } from '@app/lib/helpers'
 import { Dialog, Transition } from '@headlessui/react'
 import { SearchResult } from '@src/interface'
 import cn from 'classnames'
@@ -52,7 +53,7 @@ export default function SearchModal(props: SearchModalProps) {
       if (data?.length && selected >= 0 && selected < data?.length) {
         e.preventDefault()
         props.closeModal()
-        router.push(`/${data[selected].slug}/`)
+        router.push(`${getSlugPrefix('singlePost')}/${data[selected].slug}/`)
       } else {
         // trigger search
         triggerSearch(inputRef.current?.value || '')
