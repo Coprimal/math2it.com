@@ -1,3 +1,5 @@
+'use client'
+
 import { generateTextAnnotationClasses } from '@app/lib/block-helpers'
 import { mathFontSize } from '@app/lib/config'
 import Katex from '@matejmazur/react-katex'

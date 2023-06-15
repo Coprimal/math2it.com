@@ -1,4 +1,5 @@
 import {
+  ENV_MODE,
   UNOFFICIAL_NOTION_KEYS,
   defaultBlurDataURL,
   defaultCategoryBgColor,
@@ -10,6 +11,7 @@ import {
   predefinedCategories,
   usePlaiceholder
 } from '@app/lib/config'
+import { QueryDatabaseParameters } from '@notionhq/client/build/src/api-endpoints'
 import {
   Author,
   Category,
@@ -172,7 +174,7 @@ export async function transformNotionPostsData(options: {
 
       if (featuredImage && usePlaiceholder) {
         if (coverUrl) {
-          const { base64 } = await getPlaiceholder(Buffer.from(coverUrl), { size: 20 })
+          const { base64 } = await getPlaceholderImage(coverUrl, 20)
           featuredImage.blurDataURL = base64
         } else {
           featuredImage.blurDataURL = defaultBlurDataURL
@@ -184,7 +186,7 @@ export async function transformNotionPostsData(options: {
       let bookCover: FeaturedImage = null
       if (bookCoverUrl && usePlaiceholder) {
         bookCover = { sourceUrl: bookCoverUrl }
-        const { base64 } = await getPlaiceholder(Buffer.from(bookCoverUrl), { size: 20 })
+        const { base64 } = await getPlaceholderImage(bookCoverUrl, 20)
         bookCover.blurDataURL = base64
       }
 
@@ -200,7 +202,7 @@ export async function transformNotionPostsData(options: {
         id,
         title,
         slug,
-        uri: `/${slug}/`,
+        uri: `/${getSlugPrefix('singlePost')}/${slug}/`,
         date,
         tags,
         excerpt,
@@ -389,220 +391,6 @@ export function getFilterOf(type: GroupTypeLabels, data?: Category | Tag | Autho
   }
 }
 
-// /**
-//  * Get paths of getStaticProps() for different kinds of pages, eg. posts, tags,
-//  * categories, authors, etc (pages with the paths like /tac-gia/trang/2).
-//  * @param type
-//  * @param filterKey Use in the filter, eg. "id" for author.id, "slug" for tag.slug
-//  * @param slugPrefix
-//  * @param params
-//  * @returns paths
-//  */
-// export async function getStaticPropsOfGroupPage<
-//   Ts,
-//   T extends { slug?: string | null; id?: string | null }
-// >(options: {
-//   type: GroupTypeLabels
-//   filterKey: 'name' | 'id'
-//   slugPrefix: string
-//   params: GetStaticPropsContext['params']
-// }): Promise<any> {
-//   const { type, filterKey, slugPrefix, params } = options
-
-//   try {
-//     const currentPage = +(params?.slug?.[2] || 1)
-
-//     if (
-//       !params?.slug ||
-//       (params.slug.length > 1 && params.slug[1] !== 'trang') ||
-//       params.slug.length > 3
-//     ) {
-//       return { notFound: true }
-//     }
-
-//     const notRootPage = params?.slug.length > 1
-//     const slug = params?.slug[0] || ''
-
-//     const { kinds, kind } = await getKind<Ts, T>(type, slug)
-
-//     if (!kind) return { notFound: true }
-
-//     const { posts: allPosts } = await getPostsBy({
-//       type,
-//       filter: getFilterOf(type, kind[filterKey]),
-//       slug,
-//       pageSize: notionMaxRequest,
-//       kinds
-//     })
-//     const totalPages = Math.ceil(allPosts.length / numPostsPerPage)
-
-//     if (notRootPage && currentPage === 1) {
-//       return {
-//         redirect: {
-//           destination: `/${slugPrefix}/${slug}/`,
-//           permanent: true
-//         }
-//       }
-//     }
-
-//     if (currentPage !== 1 && currentPage > totalPages) {
-//       return { notFound: true }
-//     }
-
-//     let newPosts = [] as Post[]
-//     if (allPosts.length) {
-//       const startCursor = getStartCursorForCurrentPage(currentPage, allPosts, numPostsPerPage)
-//       const { posts } = await getPostsBy<Ts, T>({
-//         type,
-//         filter: getFilterOf(type, kind[filterKey]),
-//         slug,
-//         startCursor,
-//         pageSize: numPostsPerPage
-//       })
-//       newPosts = posts
-//     }
-
-//     return {
-//       props: {
-//         posts: newPosts,
-//         kind,
-//         totalPages,
-//         currentPage
-//       },
-//       revalidate: revalidateTime
-//     }
-//   } catch (e) {
-//     console.log(`🚨 Error when loading page ${type}: `, e)
-//     return { notFound: true }
-//   }
-// }
-
-// /**
-//  * Get paths of getStaticPaths() for different kinds of pages, eg. posts, tags,
-//  * categories, authors, etc (pages with the paths like /tac-gia/trang/2).
-//  * @param type
-//  * @param filterKey Use in the filter, eg. "id" for author.id, "slug" for tag.slug
-//  * @param slugPrefix
-//  * @returns paths
-//  */
-// export async function getStaticPathsOfGroupPage<
-//   Ts,
-//   T extends { slug?: string | null; id?: string | null }
-// >(options: { type: GroupTypeLabels; filterKey: string; slugPrefix: string }): Promise<string[]> {
-//   const { type, filterKey, slugPrefix } = options
-//   const kinds = (await getKinds<Ts>(type)) as any
-//   const paths: string[] = []
-//   for (const kind of Object.values(kinds)[0] as T[]) {
-//     const slug = kind.slug
-//     const { posts } = await getPostsBy({
-//       type,
-//       filter: getFilterOf(type, kind[filterKey]),
-//       slug,
-//       pageSize: notionMaxRequest,
-//       kinds
-//     })
-//     const numPosts = posts?.length || 0
-//     const totalPages = Math.ceil(numPosts / numPostsPerPage)
-//     for (let i = 1; i <= Math.min(totalPages, numPagePrerendered); i++) {
-//       const path = i === 1 ? `/${slugPrefix}/${slug}/` : `/${slugPrefix}/${slug}/trang/${i}/`
-//       paths.push(path)
-//     }
-//   }
-//   return paths
-// }
-
-// /**
-//  * Get the paths of getStaticProps() for page "all", "selected",... (pages
-//  * with the path like "/tat-ca-bai-viet/trang/2/")
-//  */
-// export async function getStaticPropsOfAllPages(options: {
-//   type: 'all' | 'selected'
-//   slug: string
-//   params: GetStaticPropsContext['params']
-//   filter?: unknown
-// }): Promise<any> {
-//   const { type, filter, slug, params } = options
-//   try {
-//     const currentPage = params?.slug ? +params?.slug[1] : 1
-//     if (
-//       !params ||
-//       !params.slug ||
-//       (params.slug && params.slug?.length > 0 && params.slug[0] !== 'trang') ||
-//       params.slug?.length > 2
-//     ) {
-//       return { notFound: true }
-//     }
-
-//     const notRootPage = !!params?.slug
-
-//     const { posts: allPosts } = await getPosts({
-//       filter,
-//       pageSize: notionMaxRequest
-//     })
-//     const totalPages = Math.ceil(allPosts.length / numPostsPerPage)
-
-//     if (notRootPage && currentPage === 1) {
-//       return {
-//         redirect: {
-//           destination: `/${slug}/`,
-//           permanent: false
-//         }
-//       }
-//     }
-
-//     if (currentPage !== 1 && currentPage > totalPages) {
-//       return { notFound: true }
-//     }
-
-//     let newPosts = [] as Post[]
-
-//     if (allPosts.length) {
-//       const startCursor = getStartCursorForCurrentPage(currentPage, allPosts, numPostsPerPage)
-//       const { posts } = await getPosts({
-//         filter,
-//         startCursor,
-//         pageSize: numPostsPerPage
-//       })
-//       newPosts = posts
-//     }
-
-//     return {
-//       props: {
-//         posts: newPosts,
-//         totalPages,
-//         currentPage
-//       },
-//       revalidate: revalidateTime
-//     }
-//   } catch (e) {
-//     console.log(`🚨 Error when loading page ${type}: `, e)
-//     return { notFound: true }
-//   }
-// }
-
-// /**
-//  * Get the paths of getStaticPaths() for page "all", "selected",... (pages
-//  * with the path like "/tat-ca-bai-viet/trang/2/")
-//  */
-// export async function getStaticPathsOfAllPages(options: {
-//   filter?: unknown
-//   slug: string
-// }): Promise<string[]> {
-//   const { filter, slug } = options
-//   const paths: string[] = []
-//   const { posts } = await getPosts({
-//     filter,
-//     pageSize: notionMaxRequest
-//   })
-//   const numPosts = posts?.length || 0
-//   const totalPages = Math.ceil(numPosts / numPostsPerPage)
-//   for (let i = 1; i <= Math.min(totalPages, numPagePrerendered); i++) {
-//     const path = i === 1 ? `/${slug}/` : `/${slug}/trang/${i}/`
-//     paths.push(path)
-//   }
-//   return paths
-// }
-
 /**
  * Convert "7c2e54318e52416ca5769831454bf08d" or "7c2e5431-8e52-416c-a576-9831454bf08d"
  * to "7c2e5431-8e52-416c-a576-9831454bf08d"
@@ -688,5 +476,56 @@ export function getSlugPrefix(type: GroupTypeLabels): string {
   if (type === 'author') return 'tac-gia'
   if (type === 'all') return 'tat-ca-bai-viet'
   if (type === 'selected') return 'tuyen-chon'
+  if (type === 'singlePost') return 'bai-viet'
   return ''
+}
+
+/**
+ * Since plaiceholder is upgraded to v3.0.0 and it needs this function to work
+ *
+ * This method returns the placeholder image of a given image
+ * It also returns the real size of the image, we can use this size to set the width and height of the image
+ * in Next.js' Image component.
+ *
+ * Another way to get the real size of an external image is to use "probe-image-size" package.
+ *
+ * @see {@link https://plaiceholder.co/docs/upgrading-to-3#plaiceholder}
+ */
+export const getPlaceholderImage = async (src: string, size: number) => {
+  const buffer = await fetch(src).then(async res => Buffer.from(await res.arrayBuffer()))
+
+  const {
+    metadata: { height, width },
+    ...plaiceholder
+  } = await getPlaiceholder(buffer, { size })
+
+  return {
+    ...plaiceholder,
+    img: { src, height, width }
+  }
+}
+
+/**
+ * Filter to be used in getPosts()
+ */
+export function getFilter(filter?: any): QueryDatabaseParameters['filter'] {
+  const defaultFilter = [] as any[]
+  // Ignore sandbox posts in production
+  if (ENV_MODE === 'prod') {
+    defaultFilter.push({
+      property: 'published',
+      checkbox: {
+        equals: true
+      }
+    })
+  }
+  if (!filter) return { and: defaultFilter }
+  if (!filter?.and)
+    return {
+      and: [...defaultFilter, filter]
+    }
+  if (filter?.and)
+    return {
+      and: [...defaultFilter, ...(filter?.and ?? [])]
+    }
 }

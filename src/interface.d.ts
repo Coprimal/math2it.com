@@ -23,6 +23,8 @@ export type FeaturedImage = {
 
 export type OptionalCatchAllProps = { params: OptionalCatchAllParams }
 export type OptionalCatchAllParams = { slug: string[] }
+export type DynamicSegmentParamsProps = { params: DynamicSegmentParams }
+export type DynamicSegmentParams = { slug: string }
 
 export type Category = {
   name: string
@@ -100,7 +102,7 @@ export type NotionSorts = {
   direction: 'ascending' | 'descending'
 }
 
-export type GroupTypeLabels = 'author' | 'category' | 'tag' | 'selected' | 'all'
+export type GroupTypeLabels = 'author' | 'category' | 'tag' | 'selected' | 'all' | 'singlePost'
 export type GroupTypeReturn = { categories: Category[] } | { tags: Tag[] } | { authors: Author[] }
 
 /**

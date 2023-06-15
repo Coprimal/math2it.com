@@ -1,0 +1,56 @@
+'use client'
+
+import { getIndentLevelClass, mapColorClass } from '@app/lib/block-helpers'
+import { Disclosure } from '@headlessui/react'
+import { ToggleBlockObjectResponse } from '@notionhq/client/build/src/api-endpoints'
+import cn from 'classnames'
+import { BsFillCaretRightFill } from 'react-icons/bs'
+
+import BlockRichText from './BlockRichText'
+
+export default function BlockToggle(props: {
+  block: ToggleBlockObjectResponse
+  level: number
+  children: React.ReactNode
+  className?: string
+}) {
+  const { block, level, children, className } = props
+  return (
+    <div
+      className={cn(
+        getIndentLevelClass(level),
+        mapColorClass(block?.toggle?.color),
+        'rounded-md border-[0.5px] border-slate-200',
+        className
+      )}
+    >
+      <Disclosure defaultOpen={false}>
+        {({ open }) => (
+          <>
+            <Disclosure.Button
+              className={cn('flex gap-2 w-full items-center p-2 rounded-md', {
+                'bg-gray-100 hover:bg-gray-200': open,
+                'bg-gray-50 hover:bg-gray-100': !open
+              })}
+            >
+              <BsFillCaretRightFill
+                className={cn('text-base transform ease-in-out transition-all duration-[400ms]', {
+                  'rotate-90': open,
+                  'rotate-0': !open
+                })}
+              />
+              <div>
+                {block?.toggle?.rich_text.map((richText, index) => (
+                  <BlockRichText key={index} richText={richText} />
+                ))}
+              </div>
+            </Disclosure.Button>
+            <Disclosure.Panel className="rounded-b-md bg-gray-50 py-4 pr-4">
+              <div className="-my-2">{children}</div>
+            </Disclosure.Panel>
+          </>
+        )}
+      </Disclosure>
+    </div>
+  )
+}

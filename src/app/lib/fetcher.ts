@@ -1,88 +1,60 @@
 import {
+  BlockObjectResponse,
+  ListBlockChildrenResponse,
+  ParagraphBlockObjectResponse,
   QueryDatabaseParameters,
-  QueryDatabaseResponse
+  RichTextItemResponse
 } from '@notionhq/client/build/src/api-endpoints'
-import { Author, Category, NotionPost, NotionSorts, Post, Tag } from '@src/interface'
-import { get } from 'lodash'
+import {
+  Author,
+  Category,
+  NotionHeader,
+  NotionPost,
+  NotionSorts,
+  Post,
+  PostHeaderType,
+  Tag
+} from '@src/interface'
+import { get, set } from 'lodash'
+import probe from 'probe-image-size'
 import { cache } from 'react'
 
 import {
-  ENV_MODE,
   NOTION_DB_AUTHORS,
   NOTION_DB_POSTS,
   NOTION_DB_TAGS,
-  NOTION_TOKEN,
-  NOTION_VERSION,
-  defaultNumPostsRequest,
+  defaultBlurDataURL,
+  defaultPostTitle,
   notionDateName,
   notionMaxRequest,
   predefinedCategories
 } from './config'
 import {
+  getNotionBlocksWithoutCache,
+  getNotionDatabaseWithoutCache,
+  getNotionPageWithoutCache
+} from './db'
+import {
+  getFilter,
+  getPlaceholderImage,
+  getPredefinedCategories,
+  getSlugPrefix,
+  makeSlugText,
+  parseAuthorsForPost,
+  parseFeaturedImage,
+  parseTagsForPost,
   transformNotionAuthorsData,
   transformNotionPostsData,
   transformNotionTagsData
 } from './helpers'
 
 /**
- * Get data from Notion using the official Notion APIs. We use React cache() to cache the data.
- *
- * @see {@link https://developers.notion.com/reference/post-database-query Query a database - Notion API}
- * @see {@link https://nextjs.org/docs/app/building-your-application/data-fetching/caching#react-cache React cache()}
- * @see {@link https://developers.notion.com/reference/request-limits Notion API request limits}
- */
-export const getNotionDatabase = cache(async function getNotionDatabase(
-  dataId: string,
-  filter?: QueryDatabaseParameters['filter'],
-  startCursor?: string,
-  pageSize?: number,
-  sorts?: NotionSorts[]
-): Promise<QueryDatabaseResponse | undefined> {
-  // console.log(
-  //   `😇 getNotionDatabase() called with args: ${JSON.stringify({
-  //     dataId,
-  //     filter,
-  //     startCursor,
-  //     pageSize,
-  //     sorts
-  //   })}`
-  // ) // ###M
-  try {
-    const url = `https://api.notion.com/v1/databases/${dataId}/query`
-    const requestBody = {
-      filter,
-      sorts,
-      start_cursor: startCursor,
-      page_size: pageSize ?? defaultNumPostsRequest
-    }
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${NOTION_TOKEN}`,
-        'Notion-Version': NOTION_VERSION,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(requestBody)
-    })
-    return res.json()
-  } catch (error: any) {
-    console.error(error)
-    // Retry after a number of seconds in the returned header
-    const retryAfter = error?.response?.headers['retry-after'] || error['retry-after']
-    if (retryAfter) {
-      console.log(`Retrying after ${retryAfter} seconds`)
-      await new Promise(resolve => setTimeout(resolve, retryAfter * 1000 + 500))
-      return await getNotionDatabase(dataId, filter, startCursor, pageSize, sorts)
-    }
-    return
-  }
-})
-
-/**
  * Get posts from Notion. If the requested `pageSize` is >= `notionMaxRequest`, it will
  * automatically request the next page.
  *
- * categories, tags, authors aren't required but they're required if you want to use transformNotionPostsData()
+ * categories, tags, authors aren't required but they're required if you want to use
+ * transformNotionPostsData(). They're required in case we just want to get sine basic information
+ * of the posts.
  *
  * Below are some notable parameters:
  *
@@ -164,49 +136,253 @@ export async function getPostsBy(options: {
 /**
  * Get all predefined categories (not from Notion database)
  */
-export const getCategories = cache(() => {
-  return predefinedCategories
-})
+export const getCategories = () => predefinedCategories
 
 /**
  * Get all tags from Notion database (NOTION_DB_TAGS)
  */
-export const getTags = cache(async () => {
+export const getTags = async () => {
   if (!NOTION_DB_TAGS) throw new Error('NOTION_DB_TAGS is not defined')
   const data = await getNotionDatabase(NOTION_DB_TAGS)
   return transformNotionTagsData(data?.['results'] as any[])
-})
+}
 
 /**
  * Get all authors from Notion database (NOTION_DB_AUTHORS)
  */
-export const getAuthors = cache(async () => {
+export const getAuthors = async () => {
   if (!NOTION_DB_AUTHORS) throw new Error('NOTION_DB_AUTHORS is not defined')
   const data = await getNotionDatabase(NOTION_DB_AUTHORS)
   return transformNotionAuthorsData(data?.['results'] as any[])
-})
+}
 
 /**
- * Filter to be used in getPosts()
+ * Get header of a single post from Notion
+ *
  */
-function getFilter(filter?: any): QueryDatabaseParameters['filter'] {
-  const defaultFilter = [] as any[]
-  // Ignore sandbox posts in production
-  if (ENV_MODE === 'prod') {
-    defaultFilter.push({
-      property: 'published',
-      checkbox: {
-        equals: true
-      }
-    })
-  }
-  if (!filter) return { and: defaultFilter }
-  if (!filter?.and)
-    return {
-      and: [...defaultFilter, filter]
-    }
-  if (filter?.and)
-    return {
-      and: [...defaultFilter, ...(filter?.and ?? [])]
-    }
+export async function getPostHeader(pageId: string): Promise<PostHeaderType> {
+  const pageData = await getNotionPage(pageId)
+  return await transformPostHeader(pageData, pageId)
 }
+
+export async function transformPostHeader(
+  notionHeader: NotionHeader,
+  pageIdwithDash: string
+): Promise<PostHeaderType> {
+  const properties = notionHeader?.properties
+
+  // title
+  const title = properties?.name?.title?.[0]?.plain_text || defaultPostTitle
+
+  // date
+  // Because we migrate from WP to Notion, a lot of posts need to use the old created date
+  const finalCreatedDate =
+    properties?.finalCreatedDate?.formula?.date?.start || new Date().toISOString()
+  const date = new Date(finalCreatedDate).toISOString()
+
+  // categories
+  const categories = getPredefinedCategories(properties?.categories?.multi_select)
+
+  // tags
+  const tagIdsList = properties?.tags?.relation?.map(item => item.id) || []
+  const tagsList = await getTags()
+  const tags = parseTagsForPost(tagIdsList, tagsList)
+
+  // authors
+  const authorIdsList = properties?.authors?.relation?.map(item => item.id) || []
+  const authorsList = await getAuthors()
+  const authors = parseAuthorsForPost(authorIdsList, authorsList)
+
+  // featured image
+  const sourceUrl = notionHeader?.cover?.external?.url || notionHeader?.cover?.file?.url
+  const featuredImage = sourceUrl
+    ? parseFeaturedImage({ sourceUrl }, `Ảnh đại diện cho bài viết "${title}"`, pageIdwithDash)
+    : null
+  // create place holder for featured image
+  if (featuredImage) {
+    if (sourceUrl) {
+      const { base64 } = await getPlaceholderImage(sourceUrl, 20)
+      featuredImage.blurDataURL = base64
+    } else {
+      featuredImage.blurDataURL = defaultBlurDataURL
+    }
+  }
+
+  // selected
+  const selected = properties?.selected?.checkbox || false
+
+  // bookCover
+  const bookCoverUrl =
+    properties?.bookCover?.files?.[0]?.external?.url || properties?.bookCover?.files?.[0]?.file?.url
+  const bookCover = bookCoverUrl
+    ? parseFeaturedImage({ sourceUrl: bookCoverUrl }, `Ảnh bìa sách "${title}"`, pageIdwithDash)
+    : null
+  // create place holder for book cover
+  if (bookCover) {
+    if (bookCoverUrl) {
+      const { base64 } = await getPlaceholderImage(bookCoverUrl, 20)
+      bookCover.blurDataURL = base64
+    } else {
+      bookCover.blurDataURL = defaultBlurDataURL
+    }
+  }
+
+  // showToc
+  const showToc = properties?.showToc?.checkbox || false
+
+  return { title, date, categories, tags, authors, featuredImage, selected, bookCover, showToc }
+}
+
+/**
+ * Get all nested blocks (in all levels) of a block.
+ *
+ */
+export async function getBlocks(
+  blockId: string,
+  initNumbering?: string
+): Promise<ListBlockChildrenResponse['results']> {
+  const data = await getNotionBlocks(blockId)
+  const blocks = data?.results as
+    | (BlockObjectResponse & {
+        list_item?: string
+        children?: ListBlockChildrenResponse['results']
+        imageSizeInfo?: probe.ProbeResult
+      })[]
+    | []
+
+  if (!blocks?.length) return []
+
+  let number = 1
+  for (const block of blocks) {
+    /**
+     * Remark: Consider 2 cases:
+     * ++ First:
+     * 1. Item 1
+     * Paragraph
+     * 1. Item 2
+     *
+     * ++ Second:
+     * 1. Item 1
+     * 2. Item 2
+     *
+     * The Notion API doesn't give any information in that Item 1 and Item 2 of the first case are
+     * in diffrent uls while in the second case, they are in the same ul.
+     *
+     * They are both in the same structure.
+     * Check: https://developers.notion.com/reference/block#numbered-list-item-blocks
+     *
+     * That's why we add some additional information to the block.
+     */
+    if (block.type === 'numbered_list_item') {
+      if (initNumbering && ['1', '2', '3'].includes(initNumbering)) initNumbering = undefined
+      block['list_item'] = (initNumbering ?? '') + `${number}.`
+      number++
+    } else {
+      number = 1
+    }
+
+    if (block.type === 'bulleted_list_item') {
+      block['list_item'] = !initNumbering ? '1' : initNumbering === '1' ? '2' : '3'
+    }
+
+    // mention
+    if (block.type === 'paragraph') {
+      block.paragraph = await parseMention(block.paragraph)
+    }
+
+    if (block.has_children) {
+      const children = await getBlocks(block.id, block['list_item'])
+      block['children'] = children
+    }
+
+    // Get real image size (width and height) of an image block
+    if (block.type === 'image') {
+      const url = get(block, 'image.file.url') || get(block, 'image.external.url')
+      if (url) {
+        block['imageSizeInfo'] = await getRealImageSize(url)
+      }
+    }
+  }
+
+  return blocks
+}
+
+/**
+ * Add "slug" property when mentioning a page or an author in a paragraph block
+ * @param blockParagraph
+ */
+async function parseMention(
+  blockParagraph: ParagraphBlockObjectResponse['paragraph']
+): Promise<any> {
+  const richText = blockParagraph?.rich_text as RichTextItemResponse[] | []
+  if (!richText?.length) return blockParagraph
+  const newRichText = [] as RichTextItemResponse[]
+  for (const block of richText) {
+    if (block.type === 'mention' && block.mention?.type === 'page') {
+      const pageId = get(block, 'mention.page.id')
+      if (pageId) {
+        const pageSlug = await getPageSlug(pageId)
+        set(block, 'mention.page.slug', pageSlug)
+      }
+      newRichText.push(block)
+    } else {
+      newRichText.push(block)
+    }
+  }
+  return { ...blockParagraph, rich_text: newRichText }
+}
+/**
+ * Get slug of a Notion page
+ */
+async function getPageSlug(pageId: string): Promise<string | null> {
+  const pageData = await getNotionPage(pageId)
+  const isAuthor = get(pageData, 'parent.database_id', '').replaceAll('-', '') === NOTION_DB_AUTHORS
+  const slug =
+    get(pageData, 'properties.slug.rich_text[0].plain_text', '') ||
+    makeSlugText(get(pageData, 'properties.name.title[0].plain_text', ''))
+  if (!slug) return null
+  return !isAuthor ? slug : getSlugPrefix('author') + '/' + slug
+}
+
+/**
+ * Get all blocks of a Notion Page by pageId
+ *
+ * @see {@link https://developers.notion.com/reference/get-block-children Get block children - Notion API}
+ */
+export const getNotionBlocks = cache(
+  async (pageId: string, pageSize?: number, startCursor?: string) =>
+    getNotionBlocksWithoutCache(pageId, pageSize, startCursor)
+)
+
+/**
+ * Get data from Notion using the official Notion APIs. We use React cache() to cache the data.
+ *
+ * @see {@link https://developers.notion.com/reference/post-database-query Query a database - Notion API}
+ * @see {@link https://nextjs.org/docs/app/building-your-application/data-fetching/caching#react-cache React cache()}
+ * @see {@link https://developers.notion.com/reference/request-limits Notion API request limits}
+ */
+export const getNotionDatabase = cache(
+  async (
+    dataId: string,
+    filter?: QueryDatabaseParameters['filter'],
+    startCursor?: string,
+    pageSize?: number,
+    sorts?: NotionSorts[]
+  ) => getNotionDatabaseWithoutCache(dataId, filter, startCursor, pageSize, sorts)
+)
+
+/**
+ * Get Notion Page by pageId
+ *
+ * It's "notion.pages.retrieve()" if we use Notion API directly.
+ *
+ * @see {@link https://developers.notion.com/reference/retrieve-a-page Retrieve a page - Notion API}
+ */
+export const getNotionPage = cache(async (pageId: string) => getNotionPageWithoutCache(pageId))
+
+/**
+ * Get the real size of an external image to be used in Next.js' Image component
+ */
+export const getRealImageSize = cache(async function getRealImageSize(src: string) {
+  return await probe(src)
+})
