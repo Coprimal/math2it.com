@@ -12,7 +12,6 @@ type PostFeaturedImageProps = {
   featuredImage?: FeaturedImage
   blurDataURL?: string
   categories?: Category[]
-  priorityForExternal?: boolean
   imgCustomClasses?: string
   hideLoading?: boolean
 }
@@ -21,22 +20,14 @@ type PostFeaturedImageProps = {
  * This component is used for displaying featured image of a post IN A POST LIST ONLY.
  */
 export default function PostFeaturedImage(props: PostFeaturedImageProps) {
-  const {
-    title,
-    featuredImage,
-    blurDataURL,
-    categories,
-    priorityForExternal,
-    imgCustomClasses,
-    hideLoading
-  } = props
+  const { title, featuredImage, blurDataURL, categories, imgCustomClasses, hideLoading } = props
   const [isImageReady, setIsImageReady] = useState(false)
-  const onLoadCallBack = () => {
-    setIsImageReady(true)
-  }
 
   const alt = `Hình đại diện cho bài viết ${title}`
-  const imageClassName = cn('object-cover group-hover:scale-105 duration-500', imgCustomClasses)
+  const imageClassName = cn('object-cover group-hover:scale-105 duration-500', imgCustomClasses, {
+    'scale-110 blur-2xl grayscale': !isImageReady,
+    'scale-100 blur-0 grayscale-0': isImageReady
+  })
 
   let externalImgSrc: string | null = null
   const category = categories ? categories[0] : null
@@ -59,8 +50,7 @@ export default function PostFeaturedImage(props: PostFeaturedImageProps) {
       sizes={usedSizes}
       placeholder={placeholderToUse}
       blurDataURL={blurDataURLToUse}
-      onLoadingComplete={onLoadCallBack}
-      priority={priorityForExternal}
+      onLoadingComplete={() => setIsImageReady(true)}
       quality={75}
       loading="lazy"
     />
@@ -70,7 +60,7 @@ export default function PostFeaturedImage(props: PostFeaturedImageProps) {
       src={defaultFeaturedImage}
       className={imageClassName}
       sizes={usedSizes}
-      onLoadingComplete={onLoadCallBack}
+      onLoadingComplete={() => setIsImageReady(true)}
       loading="lazy"
     />
   )
