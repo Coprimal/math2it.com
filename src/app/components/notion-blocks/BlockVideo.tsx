@@ -22,7 +22,7 @@ export default function BlockVideo(props: BlockVideoProps) {
   return (
     <div className={cn(props.className, 'flex flex-col justify-center items-center gap-2')}>
       <div className="w-full">
-        <YouTube videoId={videoId} title={title} />
+        <YouTube videoId={videoId} title={title} className="w-full" />
       </div>
       {caption && caption.length > 0 && (
         <div className="text-sm italic opacity-90">

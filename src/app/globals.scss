@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+// For embedded youtube video
+.w-full > iframe {
+  width: 100%;
+}
+
 @layer base {
   .m2it-link-hover {
     @apply text-pink-600;
