@@ -1,3 +1,5 @@
+'use client'
+
 import { getIndentLevelClass, getJoinedRichText } from '@app/lib/block-helpers'
 import Mermaid from '@c/Mermaid'
 import { CodeBlockObjectResponse } from '@notionhq/client/build/src/api-endpoints'

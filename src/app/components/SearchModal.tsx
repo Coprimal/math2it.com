@@ -172,7 +172,7 @@ export default function SearchModal(props: SearchModalProps) {
                           {data.map((item, index) => (
                             <Link
                               onClick={props.closeModal}
-                              href={`/${item.slug}/`}
+                              href={`/${getSlugPrefix('singlePost')}/${item.slug}/`}
                               key={item.id}
                               className={cn('flex gap-3 py-4 px-4 w-full', {
                                 'bg-gray-100': selected === index
