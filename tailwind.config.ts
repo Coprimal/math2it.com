@@ -1,5 +1,6 @@
-/** @type {import('tailwindcss').Config} */
-module.exports = {
+import type { Config } from 'tailwindcss'
+
+export default {
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
@@ -30,8 +31,8 @@ module.exports = {
       },
       keyframes: {
         fadeIn: {
-          '0%': { opacity: 0 },
-          '100%': { opacity: 1 }
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' }
         },
         wave: {
           '0%': { transform: 'rotate(0.0deg) scale(0.4)' },
@@ -51,7 +52,7 @@ module.exports = {
         tighter: '-.04em'
       },
       lineHeight: {
-        tight: 1.2
+        tight: '1.2'
       },
       fontSize: {
         '5xl': '2.5rem',
@@ -66,13 +67,13 @@ module.exports = {
     }
   },
   plugins: [require('@tailwindcss/typography')]
-}
+} satisfies Config
 
 /**
  * Generate for safelist all the classes in the format of before:content-['x.'] or
  * before:content-['x.y.'] or before:content-['x.y.z.']
  */
-function generateNumberedListClasses(nbr) {
+function generateNumberedListClasses(nbr: number) {
   const numList = [...Array(nbr).keys()].map(key => `${key + 1}.`)
 
   const classes = []

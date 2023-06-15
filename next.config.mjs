@@ -1,11 +1,13 @@
-/** @type {import('next').NextConfig} */
+// https://plaiceholder.co/docs/plugins/next
+import withPlaiceholder from '@plaiceholder/next'
+
 const nextConfig = {
-  //   trailingSlash: true, // use "/about/" instead of "/about" (not supported yet by --turbo)
+  trailingSlash: true, // use "/about/" instead of "/about" (not supported yet by --turbo)
   poweredByHeader: false, // remove "Powered by Next.js" from the header
   transpilePackages: ['react-syntax-highlighter'],
-  //   experimental: {
-  //     scrollRestoration: true // not supported yet by --turbo
-  //   }
+  experimental: {
+    scrollRestoration: true // not supported yet by --turbo
+  },
   images: {
     domains: [
       '0.gravatar.com',
@@ -103,4 +105,4 @@ const nextConfig = {
   }
 }
 
-module.exports = nextConfig
+export default withPlaiceholder(nextConfig)
