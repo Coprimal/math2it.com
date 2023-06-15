@@ -9,7 +9,7 @@
 - Check quota Vercel: https://vercel.com/dashboard/usage
 - **Notes**: Trong trường hợp cái ý tưởng dùng get all posts trong `getStaticProps()` để phân trang (pagination) mà không hiệu quả (khi luợng bài quá nhiều chẳng hạn) -> Có thể dùng đến ý tưởng là đánh số thư tự cho rows trên Notion. Sau đó chỉ cần fetch theo STT này thui. Nhuợc điểm của cách này là khi luợng bài trên Notion quá nhiều thì load trang database khá chậm!
 
-## ‼️ Rules
+## ‼️ Rules & Notes
 
 1. Using `id` (or `slug`) for `key={}`.
 2. Query only neccessary fields, not all!
@@ -59,7 +59,7 @@ yarn prettier
 # clean
 yarn clean
 
-# reinstall
+# reinstall (only for "yarn")
 yarn reinstall
 ```
 

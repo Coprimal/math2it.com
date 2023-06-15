@@ -1,8 +1,6 @@
 import { Category, EnvMode, Page } from '@src/interface'
 
 export const usePlaceholder = false // use placeholder for cover images?
-// 👇 use external plaiceholder service in case usePlaiceholder is true
-export const usePlaiceholder = false
 export const defaultBlurDataURL =
   'data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwC' +
   'AAAAC0lEQVR42mN8XA8AAksBZG7LpHYAAAAASUVORK5CYII='

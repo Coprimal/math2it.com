@@ -8,8 +8,7 @@ import {
   defaultFeaturedImageUrl,
   defaultPostDate,
   defaultPostTitle,
-  predefinedCategories,
-  usePlaiceholder
+  predefinedCategories
 } from '@app/lib/config'
 import { QueryDatabaseParameters } from '@notionhq/client/build/src/api-endpoints'
 import {
@@ -25,7 +24,6 @@ import {
   Tag
 } from '@src/interface'
 import { get, intersectionWith } from 'lodash'
-import { getPlaiceholder } from 'plaiceholder'
 
 /**
  * Convert "Nguyễn Văn Đông" to "nguyen-van-dong"
@@ -172,22 +170,11 @@ export async function transformNotionPostsData(options: {
         id
       )
 
-      if (featuredImage && usePlaiceholder) {
-        if (coverUrl) {
-          const { base64 } = await getPlaceholderImage(coverUrl, 20)
-          featuredImage.blurDataURL = base64
-        } else {
-          featuredImage.blurDataURL = defaultBlurDataURL
-        }
-      }
-
       // bookCover (if available)
       const bookCoverUrl = get(post, 'properties.bookCover.files[0].file.url')
       let bookCover: FeaturedImage = null
-      if (bookCoverUrl && usePlaiceholder) {
-        bookCover = { sourceUrl: bookCoverUrl }
-        const { base64 } = await getPlaceholderImage(bookCoverUrl, 20)
-        bookCover.blurDataURL = base64
+      if (bookCoverUrl) {
+        bookCover = { sourceUrl: bookCoverUrl, blurDataURL: defaultBlurDataURL }
       }
 
       // slug
@@ -280,7 +267,8 @@ export function parseFeaturedImage(
   const sourceUrl = mapFeatureImageURl(inputSourceUrl, pageIdWithDash)
   return {
     sourceUrl,
-    altText: altText || 'Không tìm thấy hình ảnh!'
+    altText: altText || 'Không tìm thấy hình ảnh!',
+    blurDataURL: defaultBlurDataURL
   }
 }
 
@@ -478,31 +466,6 @@ export function getSlugPrefix(type: GroupTypeLabels): string {
   if (type === 'selected') return 'tuyen-chon'
   if (type === 'singlePost') return 'bai-viet'
   return ''
-}
-
-/**
- * Since plaiceholder is upgraded to v3.0.0 and it needs this function to work
- *
- * This method returns the placeholder image of a given image
- * It also returns the real size of the image, we can use this size to set the width and height of the image
- * in Next.js' Image component.
- *
- * Another way to get the real size of an external image is to use "probe-image-size" package.
- *
- * @see {@link https://plaiceholder.co/docs/upgrading-to-3#plaiceholder}
- */
-export const getPlaceholderImage = async (src: string, size: number) => {
-  const buffer = await fetch(src).then(async res => Buffer.from(await res.arrayBuffer()))
-
-  const {
-    metadata: { height, width },
-    ...plaiceholder
-  } = await getPlaiceholder(buffer, { size })
-
-  return {
-    ...plaiceholder,
-    img: { src, height, width }
-  }
 }
 
 /**

@@ -1,6 +1,3 @@
-// https://plaiceholder.co/docs/plugins/next
-import withPlaiceholder from '@plaiceholder/next'
-
 const nextConfig = {
   trailingSlash: true, // use "/about/" instead of "/about" (not supported yet by --turbo)
   poweredByHeader: false, // remove "Powered by Next.js" from the header
@@ -105,4 +102,4 @@ const nextConfig = {
   }
 }
 
-export default withPlaiceholder(nextConfig)
+export default nextConfig

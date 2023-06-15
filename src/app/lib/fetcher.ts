@@ -16,6 +16,7 @@ import {
   Tag
 } from '@src/interface'
 import { get, set } from 'lodash'
+import probe from 'probe-image-size'
 import { cache } from 'react'
 
 import {
@@ -34,8 +35,7 @@ import {
   getNotionPageWithoutCache
 } from './db'
 import {
-  getFilter,
-  getPlaceholderImage,
+  getFilter, // getPlaceholderImage,
   getPredefinedCategories,
   getSlugPrefix,
   makeSlugText,
@@ -200,8 +200,8 @@ export async function transformPostHeader(
   // create place holder for featured image
   if (featuredImage) {
     if (sourceUrl) {
-      const { base64 } = await getPlaceholderImage(sourceUrl, 20)
-      featuredImage.blurDataURL = base64
+      // const { base64 } = await getPlaceholderImage(sourceUrl, 20)
+      // featuredImage.blurDataURL = base64
     } else {
       featuredImage.blurDataURL = defaultBlurDataURL
     }
@@ -219,8 +219,8 @@ export async function transformPostHeader(
   // create place holder for book cover
   if (bookCover) {
     if (bookCoverUrl) {
-      const { base64 } = await getPlaceholderImage(bookCoverUrl, 20)
-      bookCover.blurDataURL = base64
+      // const { base64 } = await getPlaceholderImage(bookCoverUrl, 20)
+      // bookCover.blurDataURL = base64
     } else {
       bookCover.blurDataURL = defaultBlurDataURL
     }
@@ -298,7 +298,8 @@ export async function getBlocks(
     if (block.type === 'image') {
       const url = get(block, 'image.file.url') || get(block, 'image.external.url')
       if (url) {
-        block['imageInfo'] = await getPlaceholderImage(url, 20)
+        // block['imageInfo'] = await getPlaceholderImage(url, 20)
+        block['imageInfo'] = await getRealImageSize(url)
       }
     }
   }
@@ -378,3 +379,12 @@ export const getNotionDatabase = cache(
  * @see {@link https://developers.notion.com/reference/retrieve-a-page Retrieve a page - Notion API}
  */
 export const getNotionPage = cache(async (pageId: string) => getNotionPageWithoutCache(pageId))
+
+/**
+ * Because Nextjs's Image needs to know the real size of the image to render it properly
+ *
+ * REMARK: This method MUST be placed in this file, otherwise, there will be an error of "Can't resolve 'fs'"
+ */
+const getRealImageSize = cache(async function getRealImageSize(src: string) {
+  return await probe(src)
+})
