@@ -102,7 +102,18 @@ export type NotionSorts = {
   direction: 'ascending' | 'descending'
 }
 
-export type GroupTypeLabels = 'author' | 'category' | 'tag' | 'selected' | 'all' | 'singlePost'
+export type SlugTypeLabels =
+  | 'author'
+  | 'category'
+  | 'tag'
+  | 'selected'
+  | 'all'
+  | 'singlePost'
+  | 'about'
+  | 'thanks'
+  | 'privacy'
+  | 'viet-bai'
+  | 'newsletter'
 export type GroupTypeReturn = { categories: Category[] } | { tags: Tag[] } | { authors: Author[] }
 
 /**

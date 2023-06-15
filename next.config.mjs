@@ -97,6 +97,21 @@ const nextConfig = {
         source: '/:slug*/education/:path*',
         destination: '/:slug*/giao-duc/:path*',
         permanent: true
+      },
+      {
+        source: '/about',
+        destination: '/gioi-thieu',
+        permanent: true
+      },
+      {
+        source: '/thanks',
+        destination: '/cam-on',
+        permanent: true
+      },
+      {
+        source: '/privacy',
+        destination: '/chinh-sach-bao-mat',
+        permanent: true
       }
     ]
   }

@@ -15,12 +15,12 @@ import {
   Author,
   Category,
   FeaturedImage,
-  GroupTypeLabels,
   NotionAuthor,
   NotionPost,
   NotionTag,
   Post,
   SearchResult,
+  SlugTypeLabels,
   Tag
 } from '@src/interface'
 import { get, intersectionWith } from 'lodash'
@@ -340,7 +340,7 @@ export function getStartCursorForCurrentPage(
   return posts[(currentPage - 1) * postsPerPage]?.id
 }
 
-export function getFilterOf(type: GroupTypeLabels, data?: Category | Tag | Author): unknown {
+export function getFilterOf(type: SlugTypeLabels, data?: Category | Tag | Author): unknown {
   switch (type) {
     case 'author':
       return {
@@ -458,13 +458,18 @@ export function parseSearchResults(data: any): SearchResult[] {
   return results
 }
 
-export function getSlugPrefix(type: GroupTypeLabels): string {
+export function getSlugPrefix(type: SlugTypeLabels): string {
   if (type === 'category') return 'chuyen-muc'
   if (type === 'tag') return 'chu-de'
   if (type === 'author') return 'tac-gia'
   if (type === 'all') return 'tat-ca-bai-viet'
   if (type === 'selected') return 'tuyen-chon'
   if (type === 'singlePost') return 'bai-viet'
+  if (type === 'about') return 'gioi-thieu'
+  if (type === 'thanks') return 'cam-on'
+  if (type === 'privacy') return 'chinh-sach-bao-mat'
+  if (type === 'newsletter') return 'dang-ky-nhan-bai-viet'
+  if (type === 'viet-bai') return 'viet-bai-tren-math2it'
   return ''
 }
 

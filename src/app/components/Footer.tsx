@@ -1,8 +1,8 @@
 import { postWidthContainer } from '@app/lib/config'
 import cn from 'classnames'
 import Link from 'next/link'
-import React from 'react'
 
+import { getSlugPrefix } from '../lib/helpers'
 import Container from './Container'
 
 export default function Footer() {
@@ -19,15 +19,15 @@ export default function Footer() {
             Group
           </a>
           <span>|</span>
-          <Link className={cn(aClass)} href={'/thanks/'}>
+          <Link className={cn(aClass)} href={`/${getSlugPrefix('thanks')}/`}>
             Cảm ơn
           </Link>
           <span>|</span>
-          <Link className={cn(aClass)} href={'/newsletter/'}>
+          <Link className={cn(aClass)} href={`/${getSlugPrefix('newsletter')}/`}>
             Đăng ký nhận tin
           </Link>
           <span>|</span>
-          <Link className={cn(aClass)} href={'/privacy/'}>
+          <Link className={cn(aClass)} href={`/${getSlugPrefix('privacy')}/`}>
             Quyền riêng tư
           </Link>
         </div>

@@ -1,4 +1,6 @@
-import { Category, EnvMode, Page } from '@src/interface'
+import { Category, EnvMode } from '@src/interface'
+
+import { getSlugPrefix } from './helpers'
 
 export const usePlaceholder = false // use placeholder for cover images?
 export const defaultBlurDataURL =
@@ -71,7 +73,7 @@ export const MenuHome = {
 }
 export const MenuAbout = {
   id: 'id-about',
-  uri: '/about/',
+  uri: `${getSlugPrefix('about')}`,
   label: 'Giới thiệu',
   navigationItems: {
     navColor: '#ff8094',
@@ -217,54 +219,6 @@ export const predefinedCategories: Category[] = [
       sizes: defaultCustomSizeFM
     },
     fontello: 'icon-pi-outline'
-  }
-]
-
-/**
- * Pages
- */
-export const singlePages: Page[] = [
-  {
-    slug: 'about',
-    uri: '/about/',
-    title: 'Giới thiệu về Math2IT',
-    id: 'about'
-  },
-  {
-    slug: 'tat-ca-bai-viet',
-    uri: '/tat-ca-bai-viet/',
-    title: 'Tất cả bài viết',
-    id: 'all'
-  },
-  {
-    slug: 'tuyen-chon',
-    uri: '/tuyen-chon/',
-    title: 'Bài viết tuyển chọn',
-    id: 'selected'
-  },
-  {
-    slug: 'thanks',
-    uri: '/thanks/',
-    title: 'Cảm ơn',
-    id: 'thanks'
-  },
-  {
-    slug: 'privacy',
-    uri: '/privacy/',
-    title: 'Quyền riêng tư',
-    id: 'privacy'
-  },
-  {
-    slug: 'viet-bai-tren-math2it',
-    uri: '/viet-bai-tren-math2it/',
-    title: 'Viết bài trên Math2IT',
-    id: 'write'
-  },
-  {
-    slug: 'newsletter',
-    uri: '/newsletter/',
-    title: 'Đăng ký nhận tin',
-    id: 'newsletter'
   }
 ]
 
