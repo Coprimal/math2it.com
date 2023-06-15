@@ -1,9 +1,10 @@
+import Footer from '@c/Footer'
+import Nav from '@c/nav/Nav'
+import '@src/fontello/css/fontello.css'
 import 'katex/dist/katex.min.css'
 import 'prismjs/themes/prism-tomorrow.css'
 import 'tippy.js/dist/tippy.css'
 
-import Footer from './components/Footer'
-import Nav from './components/nav/Nav'
 import './globals.scss'
 
 export const metadata = {

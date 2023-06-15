@@ -14,7 +14,7 @@
     "clean": "rimraf .next && rimraf .vercel && rimraf .netlify",
     "clean-build": "yarn run clean && yarn run build",
     "reinstall": "yarn run clean && rimraf node_modules && rm yarn.lock && yarn install",
-    "ud-fontello": "rimraf .fontello-session && fontello-cli --config fontello/config.json --css fontello/css --font fontello/font install",
+    "ud-fontello": "rimraf .fontello-session && fontello-cli --config src/fontello/config.json --css src/fontello/css --font src/fontello/font install",
     "ud-header-all": "tsx -r dotenv/config ./scripts/ud_images.ts dotenv_config_path=.env.local --a headerAll --dbid 7c2e54318e52416ca5769831454bf08d",
     "ud-header-all-test": "tsx -r dotenv/config ./scripts/ud_images.ts dotenv_config_path=.env.local --a headerAll --dbid fb11f7382dc14f6787674b775cda81c9",
     "ud-header": "npx tsx -r dotenv/config ./scripts/ud_images.ts dotenv_config_path=.env.local --a headerPost --pid",
