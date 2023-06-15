@@ -48,10 +48,10 @@ export default function BlockText(props: TextProps) {
     !props.ignore?.includes('hyperlink') &&
     props.richText.type === 'mention' &&
     props.richText.mention?.type === 'page' &&
-    get(props.richText, 'mention.page.slug') // "slug" is a custom property defined by Math2IT
+    get(props.richText, 'mention.page.uri') // "uri" is a custom property defined by Math2IT
   ) {
     richTextNode = (
-      <Link href={get(props.richText, 'mention.page.slug', '/')}>{props.richText.plain_text}</Link>
+      <Link href={get(props.richText, 'mention.page.uri', '/')}>{props.richText.plain_text}</Link>
     )
   }
 

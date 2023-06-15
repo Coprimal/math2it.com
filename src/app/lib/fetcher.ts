@@ -321,8 +321,8 @@ async function parseMention(
     if (block.type === 'mention' && block.mention?.type === 'page') {
       const pageId = get(block, 'mention.page.id')
       if (pageId) {
-        const pageSlug = await getPageSlug(pageId)
-        set(block, 'mention.page.slug', pageSlug)
+        const pageUri = await getPageUri(pageId)
+        set(block, 'mention.page.uri', pageUri)
       }
       newRichText.push(block)
     } else {
@@ -332,16 +332,18 @@ async function parseMention(
   return { ...blockParagraph, rich_text: newRichText }
 }
 /**
- * Get slug of a Notion page
+ * Get uri (not slug) of a Notion page
  */
-async function getPageSlug(pageId: string): Promise<string | null> {
+async function getPageUri(pageId: string): Promise<string | null> {
   const pageData = await getNotionPage(pageId)
   const isAuthor = get(pageData, 'parent.database_id', '').replaceAll('-', '') === NOTION_DB_AUTHORS
   const slug =
     get(pageData, 'properties.slug.rich_text[0].plain_text', '') ||
     makeSlugText(get(pageData, 'properties.name.title[0].plain_text', ''))
   if (!slug) return null
-  return !isAuthor ? slug : getSlugPrefix('author') + '/' + slug
+  return !isAuthor
+    ? `/${getSlugPrefix('singlePost')}/${slug}/`
+    : `/${getSlugPrefix('author')}/${slug}/`
 }
 
 /**
