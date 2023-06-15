@@ -18,8 +18,8 @@ export default function BlockImage(props: {
   const [isImageReady, setIsImageReady] = useState(false)
   const { block, level, className } = props
   const imgUrl = get(block, 'image.file.url') || get(block, 'image.external.url')
-  const width = get(block, 'imageInfo.img.width', 1000)
-  const height = get(block, 'imageInfo.img.height', 700)
+  const width = Math.min(get(block, 'imageInfo.img.width', 1000), 1000)
+  const height = Math.min(get(block, 'imageInfo.img.height', 700), 700)
   const blurDataURL = get(block, 'imageInfo.base64', defaultBlurDataURL)
   const image = (
     <Image
