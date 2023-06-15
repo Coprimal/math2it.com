@@ -16,7 +16,6 @@ import {
   Tag
 } from '@src/interface'
 import { get, set } from 'lodash'
-import probe from 'probe-image-size'
 import { cache } from 'react'
 
 import {
@@ -246,7 +245,7 @@ export async function getBlocks(
     | (BlockObjectResponse & {
         list_item?: string
         children?: ListBlockChildrenResponse['results']
-        imageSizeInfo?: probe.ProbeResult
+        imageInfo?: any
       })[]
     | []
 
@@ -299,7 +298,7 @@ export async function getBlocks(
     if (block.type === 'image') {
       const url = get(block, 'image.file.url') || get(block, 'image.external.url')
       if (url) {
-        block['imageSizeInfo'] = await getRealImageSize(url)
+        block['imageInfo'] = await getPlaceholderImage(url, 20)
       }
     }
   }
@@ -379,10 +378,3 @@ export const getNotionDatabase = cache(
  * @see {@link https://developers.notion.com/reference/retrieve-a-page Retrieve a page - Notion API}
  */
 export const getNotionPage = cache(async (pageId: string) => getNotionPageWithoutCache(pageId))
-
-/**
- * Get the real size of an external image to be used in Next.js' Image component
- */
-export const getRealImageSize = cache(async function getRealImageSize(src: string) {
-  return await probe(src)
-})
