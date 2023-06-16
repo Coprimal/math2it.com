@@ -1,27 +1,21 @@
 import { comfortaa } from '@app/lib/fonts'
+import PostFeaturedImage from '@c/PostFeaturedImage'
 import { Post } from '@src/interface'
 import cn from 'classnames'
 import Link from 'next/link'
-
-import PostFeaturedImage from '../PostFeaturedImage'
 
 type PostImageBackgroundProps = {
   post: Post
 }
 
 export default function PostImageBackground({ post }: PostImageBackgroundProps) {
-  const { title, featuredImage, categories, uri } = post
+  const { title, featuredImage, uri } = post
   return (
     <div className="group overflow-hidden rounded-md shadow-lg">
       <Link className={cn(comfortaa.className, 'text-center')} href={uri || '/'}>
         <div className="flex flex-col justify-center">
           <div className="relative h-36 w-full overflow-hidden mix-blend-overlay">
-            <PostFeaturedImage
-              featuredImage={featuredImage}
-              categories={categories}
-              title={title}
-              blurDataURL={featuredImage?.blurDataURL}
-            />
+            <PostFeaturedImage featuredImage={featuredImage} title={title} />
             <div
               className={cn(
                 'absolute bottom-0 left-0 flex h-fit w-full flex-col justify-end',

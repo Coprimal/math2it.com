@@ -1,11 +1,10 @@
 import { defaultCategoryBgColor, defaultCategoryTextColor } from '@app/lib/config'
 import { comfortaa } from '@app/lib/fonts'
+import Date from '@c/Date'
+import PostFeaturedImage from '@c/PostFeaturedImage'
 import { Post } from '@src/interface'
 import cn from 'classnames'
 import Link from 'next/link'
-
-import Date from '../Date'
-import PostFeaturedImage from '../PostFeaturedImage'
 
 export type PostTitleCateDateOpts = {
   hideCategory?: boolean
@@ -29,12 +28,7 @@ export default function PostTitleCateDate({ post, options }: PostTitleCateDatePr
           })}
         >
           <div className="relative h-28 w-full overflow-hidden">
-            <PostFeaturedImage
-              featuredImage={featuredImage}
-              categories={categories}
-              title={title}
-              blurDataURL={featuredImage?.blurDataURL}
-            />
+            <PostFeaturedImage featuredImage={featuredImage} title={title} />
           </div>
           {!options?.hideCategory && category && (
             <div

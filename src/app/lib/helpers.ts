@@ -1,29 +1,25 @@
 import {
   ENV_MODE,
   UNOFFICIAL_NOTION_KEYS,
-  defaultBlurDataURL,
   defaultCategoryBgColor,
   defaultCategoryTextColor,
   defaultCustomSizeFM,
-  defaultFeaturedImageUrl,
-  defaultPostDate,
   defaultPostTitle,
+  getSlugPrefix,
   predefinedCategories
 } from '@app/lib/config'
 import { QueryDatabaseParameters } from '@notionhq/client/build/src/api-endpoints'
 import {
   Author,
   Category,
-  FeaturedImage,
   NotionAuthor,
-  NotionPost,
   NotionTag,
   Post,
   SearchResult,
   SlugTypeLabels,
   Tag
 } from '@src/interface'
-import { get, intersectionWith } from 'lodash'
+import { intersectionWith } from 'lodash'
 
 /**
  * Convert "Nguyễn Văn Đông" to "nguyen-van-dong"
@@ -94,114 +90,6 @@ export function transformNotionTagsData(data?: NotionTag[]): Tag[] {
   )
 }
 
-/**
- * Transform data fetched from Notion to format Post[].
- *
- * Note that, in some cases, we don't need all the properties of Post, so we ignore the fields
- * categories, tags and authors.
- */
-export async function transformNotionPostsData(options: {
-  data: NotionPost[]
-  categories?: Category[]
-  tags?: Tag[]
-  authors?: Author[]
-}): Promise<Post[]> {
-  const { data, categories: categoriesList, tags: tagsList, authors: authorsList } = options
-  return Promise.all(
-    data?.map(async post => {
-      // id
-      const id = get(post, 'id') as string
-
-      // title
-      const title = get(post, 'properties.name.title[0].plain_text', defaultPostTitle)
-
-      // date
-      // Because we migrate from WP to Notion, a lot of posts need to use the old created date
-      const gotDate = get(
-        post,
-        'properties.finalCreatedDate.formula.date.start',
-        get(post, 'last_edited_time', defaultPostDate)
-      )
-      const date = new Date(gotDate).toISOString()
-
-      // Tags
-      let tags
-      if (tagsList) {
-        const tagIdsList = get(post, 'properties.tags.relation', []).map(
-          (tag: { id: string }) => tag.id
-        )
-        tags = parseTagsForPost(tagIdsList, tagsList)
-      }
-
-      // Categories
-      let categories
-      if (categoriesList) {
-        const defaultCategory = categoriesList[0]
-        const gotCategories = post.properties?.categories?.multi_select
-        categories = gotCategories
-          ? gotCategories.map(category => {
-              const foundCategory = categoriesList.find(
-                cat => makeSlugText(cat?.name) === makeSlugText(category.name)
-              )
-              return foundCategory
-                ? foundCategory
-                : {
-                    name: category.name,
-                    uri: `/${getSlugPrefix('category')}/${makeSlugText(category.name)}/`
-                  }
-            })
-          : defaultCategory
-      }
-
-      // Author
-      let authors
-      if (authorsList) {
-        const authorIdsList = get(post, 'properties.authors.relation', []).map(
-          (author: { id: string }) => author.id
-        )
-        authors = parseAuthorsForPost(authorIdsList, authorsList)
-      }
-
-      // Featured image
-      const coverUrl = get(post, 'cover.external.url') || get(post, 'cover.file.url')
-      const featuredImage = parseFeaturedImage(
-        { sourceUrl: coverUrl },
-        `Hình trong bài ${title}`,
-        id
-      )
-
-      // bookCover (if available)
-      const bookCoverUrl = get(post, 'properties.bookCover.files[0].file.url')
-      let bookCover: FeaturedImage = null
-      if (bookCoverUrl) {
-        bookCover = { sourceUrl: bookCoverUrl, blurDataURL: defaultBlurDataURL }
-      }
-
-      // slug
-      const slug =
-        get(post, 'properties.slug.rich_text[0].plain_text', '') ||
-        makeSlugText(get(post, 'properties.name.title[0].plain_text', ''))
-
-      // excerpt
-      const excerpt = get(post, 'properties.excerpt.rich_text', [])
-
-      return {
-        id,
-        title,
-        slug,
-        uri: `/${getSlugPrefix('singlePost')}/${slug}/`,
-        date,
-        tags,
-        excerpt,
-        categories,
-        authors,
-        featuredImage,
-        bookCover
-      } as Post
-    }) || []
-  )
-}
-
 export function parseAuthorsForPost(authorIdsList: string[], authorsList: Author[]): Author[] {
   return intersectionWith(authorsList, authorIdsList, (author, id) => author.id === id)
 }
@@ -234,7 +122,7 @@ export function getPredefinedCategories(categories: { name: string }[] = []): Ca
               textColor: defaultCategoryTextColor
             },
             featureImage: {
-              sourceUrl: defaultFeaturedImageUrl,
+              sourceUrl: '/featured-images/default_bg.png',
               sizes: defaultCustomSizeFM
             }
           }
@@ -249,27 +137,18 @@ export function getPredefinedCategories(categories: { name: string }[] = []): Ca
  * - Use photos from Unsplash -> 'https://images.unsplash.com/...'
  * - Use uploaded photos -> 🚸 IGNORED AND REPLACED BY DEFAULT IMAGE 'https://xxx.amazonaws.com/...'
  */
-export function parseFeaturedImage(
-  featuredImageNode: FeaturedImage,
-  altText: string,
-  pageIdWithDash: string
-): FeaturedImage {
-  if (!featuredImageNode || !featuredImageNode.sourceUrl) return null
-  const inputSourceUrl = featuredImageNode.sourceUrl
+export function parseFeaturedImageUrl(imgUrl?: string, pageIdWithDash?: string): string | null {
+  if (!imgUrl || !pageIdWithDash) return null
 
   // 👇 Uploaded photos from our computer -> IGNORED
-  // if (!inputSourceUrl.startsWith('/images')) {
-  //   const u = new URL(inputSourceUrl)
+  // if (!imgUrl.startsWith('/images')) {
+  //   const u = new URL(imgUrl)
   //   if (u.pathname.startsWith('/secure.notion-static.com') && u.hostname.endsWith('.amazonaws.com'))
   //     return null
   // }
 
-  const sourceUrl = mapFeatureImageURl(inputSourceUrl, pageIdWithDash)
-  return {
-    sourceUrl,
-    altText: altText || 'Không tìm thấy hình ảnh!',
-    blurDataURL: defaultBlurDataURL
-  }
+  const sourceUrl = mapFeatureImageURl(imgUrl, pageIdWithDash)
+  return sourceUrl
 }
 
 /**
@@ -456,21 +335,6 @@ export function parseSearchResults(data: any): SearchResult[] {
     }
   }
   return results
-}
-
-export function getSlugPrefix(type: SlugTypeLabels): string {
-  if (type === 'category') return 'chuyen-muc'
-  if (type === 'tag') return 'chu-de'
-  if (type === 'author') return 'tac-gia'
-  if (type === 'all') return 'tat-ca-bai-viet'
-  if (type === 'selected') return 'tuyen-chon'
-  if (type === 'singlePost') return 'bai-viet'
-  if (type === 'about') return 'gioi-thieu'
-  if (type === 'thanks') return 'cam-on'
-  if (type === 'privacy') return 'chinh-sach-bao-mat'
-  if (type === 'newsletter') return 'dang-ky-nhan-bai-viet'
-  if (type === 'viet-bai') return 'viet-bai-tren-math2it'
-  return ''
 }
 
 /**

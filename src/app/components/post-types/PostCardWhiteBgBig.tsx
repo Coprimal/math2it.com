@@ -1,11 +1,10 @@
 import { comfortaa } from '@app/lib/fonts'
+import Date from '@c/Date'
+import Excerpt from '@c/Excerpt'
+import PostFeaturedImage from '@c/PostFeaturedImage'
 import { Post } from '@src/interface'
 import cn from 'classnames'
 import Link from 'next/link'
-
-import Date from '../Date'
-import Excerpt from '../Excerpt'
-import PostFeaturedImage from '../PostFeaturedImage'
 
 export type PostCardWhiteBgBigOpts = {
   hideDate?: boolean
@@ -19,18 +18,13 @@ type PostTitleCateDateProps = {
 }
 
 export default function PostCardWhiteBgBig({ post, options }: PostTitleCateDateProps) {
-  const { title, featuredImage, date, categories, uri, excerpt, authors } = post
+  const { title, featuredImage, date, uri, excerpt, authors } = post
   return (
     <div className="group overflow-hidden rounded-md bg-white shadow-lg">
       <Link className={cn(comfortaa.className, 'text-center')} href={uri || '/'}>
         <div className="flex flex-col justify-center">
           <div className="relative h-36 w-full overflow-hidden ">
-            <PostFeaturedImage
-              featuredImage={featuredImage}
-              categories={categories}
-              title={title}
-              blurDataURL={featuredImage?.blurDataURL}
-            />
+            <PostFeaturedImage featuredImage={featuredImage} title={title} />
           </div>
         </div>
         <div className="p-4">

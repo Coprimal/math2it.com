@@ -1,8 +1,7 @@
-import { postWidthContainer } from '@app/lib/config'
+import { getSlugPrefix, postWidthContainer } from '@app/lib/config'
 import cn from 'classnames'
 import Link from 'next/link'
 
-import { getSlugPrefix } from '../lib/helpers'
 import Container from './Container'
 
 export default function Footer() {

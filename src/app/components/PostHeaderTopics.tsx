@@ -1,8 +1,7 @@
+import { getSlugPrefix } from '@app/lib/config'
 import { Category, Tag } from '@src/interface'
 import cn from 'classnames'
 import Link from 'next/link'
-
-import { getSlugPrefix } from '../lib/helpers'
 
 type PostHeaderTopicsProps = {
   className?: string

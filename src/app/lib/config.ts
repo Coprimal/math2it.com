@@ -1,6 +1,11 @@
-import { Category, EnvMode } from '@src/interface'
-
-import { getSlugPrefix } from './helpers'
+import defaultBook from '@root/public/featured-images/book_bg.png'
+import _defaultFeaturedImage from '@root/public/featured-images/default_bg.png'
+import defaultEdu from '@root/public/featured-images/edu_bg.png'
+import defaultMath from '@root/public/featured-images/math_bg.png'
+import defaultTech from '@root/public/featured-images/tech_bg.png'
+import defaultTool from '@root/public/featured-images/tool_bg.png'
+import defaultTranslate from '@root/public/featured-images/translate_bg.png'
+import { Category, EnvMode, SlugTypeLabels } from '@src/interface'
 
 export const usePlaceholder = false // use placeholder for cover images?
 export const defaultBlurDataURL =
@@ -20,11 +25,12 @@ export const paragraphSpacing = 'mb-4'
 
 export const defaultCategoryBgColor = '#eee'
 export const defaultCategoryTextColor = '#222'
-export const defaultFeaturedImageUrl = '/featured-images/default_bg.png'
 export const defaultCodeLanguage = 'typescript'
 
 export const minNumHeadingsToShowToc = 4 // from this number of headings, show toc
 export const mathFontSize = 'text-base'
+
+export const defaultFeaturedImage = _defaultFeaturedImage
 
 /**
  * NOTION
@@ -138,9 +144,8 @@ export const predefinedCategories: Category[] = [
       bgColor: '#e6d6ff',
       textColor: '#6d4e99'
     },
-    featureImage: {
-      sourceUrl: '/featured-images/translate_bg.png',
-      sizes: defaultCustomSizeFM
+    featuredImage: {
+      staticImageData: defaultTranslate
     },
     fontello: 'icon-language'
   },
@@ -153,9 +158,8 @@ export const predefinedCategories: Category[] = [
       bgColor: '#ffe3e3', // old: #ffe4ee
       textColor: '#cb4242' // old: rgb(197 57 108)
     },
-    featureImage: {
-      sourceUrl: '/featured-images/tool_bg.png',
-      sizes: defaultCustomSizeFM
+    featuredImage: {
+      staticImageData: defaultTool
     },
     fontello: 'icon-magic'
   },
@@ -168,9 +172,8 @@ export const predefinedCategories: Category[] = [
       bgColor: '#ffeacc',
       textColor: '#9c763f'
     },
-    featureImage: {
-      sourceUrl: '/featured-images/tech_bg.png',
-      sizes: defaultCustomSizeFM
+    featuredImage: {
+      staticImageData: defaultTech
     },
     fontello: 'icon-cog-alt'
   },
@@ -183,9 +186,8 @@ export const predefinedCategories: Category[] = [
       bgColor: 'rgb(218 255 227)',
       textColor: 'rgb(36 138 59)'
     },
-    featureImage: {
-      sourceUrl: '/featured-images/edu_bg.png',
-      sizes: defaultCustomSizeFM
+    featuredImage: {
+      staticImageData: defaultEdu
     },
     fontello: 'icon-graduation-cap'
   },
@@ -199,9 +201,8 @@ export const predefinedCategories: Category[] = [
       textColor: 'rgb(9 92 98)',
       bdColor: 'rgb(180 238 243)'
     },
-    featureImage: {
-      sourceUrl: '/featured-images/book_bg.png',
-      sizes: defaultCustomSizeFM
+    featuredImage: {
+      staticImageData: defaultBook
     },
     fontello: 'icon-book'
   },
@@ -214,9 +215,8 @@ export const predefinedCategories: Category[] = [
       bgColor: 'rgb(215 235 255)',
       textColor: '#3d78b5'
     },
-    featureImage: {
-      sourceUrl: '/featured-images/math_bg.png',
-      sizes: defaultCustomSizeFM
+    featuredImage: {
+      staticImageData: defaultMath
     },
     fontello: 'icon-pi-outline'
   }
@@ -236,4 +236,19 @@ export const UNOFFICIAL_NOTION_KEYS = {
   finalCreatedDate: 't:V?',
   boldSearchKey: '<gzkNfoUU>',
   boldSearchKeyClose: '</gzkNfoUU>'
+}
+
+export function getSlugPrefix(type: SlugTypeLabels): string {
+  if (type === 'category') return 'chuyen-muc'
+  if (type === 'tag') return 'chu-de'
+  if (type === 'author') return 'tac-gia'
+  if (type === 'all') return 'tat-ca-bai-viet'
+  if (type === 'selected') return 'tuyen-chon'
+  if (type === 'singlePost') return 'bai-viet'
+  if (type === 'about') return 'gioi-thieu'
+  if (type === 'thanks') return 'cam-on'
+  if (type === 'privacy') return 'chinh-sach-bao-mat'
+  if (type === 'newsletter') return 'dang-ky-nhan-bai-viet'
+  if (type === 'viet-bai') return 'viet-bai-tren-math2it'
+  return ''
 }

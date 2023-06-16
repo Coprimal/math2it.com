@@ -1,6 +1,6 @@
 'use client'
 
-import { getSlugPrefix } from '@app/lib/helpers'
+import { getSlugPrefix } from '@app/lib/config'
 import { Dialog, Transition } from '@headlessui/react'
 import { SearchResult } from '@src/interface'
 import cn from 'classnames'

@@ -19,6 +19,9 @@ export type FeaturedImage = {
   sizes?: string
   altText?: string
   blurDataURL?: string
+  width?: number
+  height?: number
+  staticImageData?: StaticImageData // for default featured images
 } | null
 
 export type OptionalCatchAllProps = { params: OptionalCatchAllParams }
@@ -39,7 +42,7 @@ export type Category = {
     textColor: string
     bdColor?: string
   }
-  featureImage?: FeaturedImage
+  featuredImage?: FeaturedImage
   fontello?: string
 }
 

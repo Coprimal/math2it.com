@@ -1,6 +1,6 @@
-import { NOTION_DB_POSTS, notionMaxRequest, numPostsPerPage } from '@app/lib/config'
+import { NOTION_DB_POSTS, getSlugPrefix, notionMaxRequest, numPostsPerPage } from '@app/lib/config'
 import { getAuthors, getCategories, getPosts, getTags } from '@app/lib/fetcher'
-import { getSlugPrefix, getStartCursorForCurrentPage } from '@app/lib/helpers'
+import { getStartCursorForCurrentPage } from '@app/lib/helpers'
 import PageOfPostsListTemplate from '@app/templates/PageOfPostsListTemplate'
 import { OptionalCatchAllParams, OptionalCatchAllProps } from '@src/interface'
 import { Metadata } from 'next'

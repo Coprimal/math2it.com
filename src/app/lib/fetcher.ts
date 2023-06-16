@@ -5,9 +5,11 @@ import {
   QueryDatabaseParameters,
   RichTextItemResponse
 } from '@notionhq/client/build/src/api-endpoints'
+import defaultBookCover from '@root/public/featured-images/untitledBook.jpg'
 import {
   Author,
   Category,
+  FeaturedImage,
   NotionHeader,
   NotionPost,
   NotionSorts,
@@ -16,15 +18,18 @@ import {
   Tag
 } from '@src/interface'
 import { get, set } from 'lodash'
-import probe from 'probe-image-size'
+import { StaticImageData } from 'next/image'
+import { getPlaiceholder } from 'plaiceholder'
 import { cache } from 'react'
 
 import {
   NOTION_DB_AUTHORS,
   NOTION_DB_POSTS,
   NOTION_DB_TAGS,
-  defaultBlurDataURL,
+  defaultFeaturedImage,
+  defaultPostDate,
   defaultPostTitle,
+  getSlugPrefix,
   notionDateName,
   notionMaxRequest,
   predefinedCategories
@@ -35,15 +40,13 @@ import {
   getNotionPageWithoutCache
 } from './db'
 import {
-  getFilter, // getPlaceholderImage,
+  getFilter,
   getPredefinedCategories,
-  getSlugPrefix,
   makeSlugText,
   parseAuthorsForPost,
-  parseFeaturedImage,
+  parseFeaturedImageUrl,
   parseTagsForPost,
   transformNotionAuthorsData,
-  transformNotionPostsData,
   transformNotionTagsData
 } from './helpers'
 
@@ -164,6 +167,12 @@ export async function getPostHeader(pageId: string): Promise<PostHeaderType> {
   return await transformPostHeader(pageData, pageId)
 }
 
+/**
+ * Transform Notion data to PostHeaderType
+ *
+ * REMARK: This method MUST be placed in this file (not in helpers.ts) because it uses
+ * some methods that require the "cache()" from react.
+ */
 export async function transformPostHeader(
   notionHeader: NotionHeader,
   pageIdwithDash: string
@@ -194,18 +203,13 @@ export async function transformPostHeader(
 
   // featured image
   const sourceUrl = notionHeader?.cover?.external?.url || notionHeader?.cover?.file?.url
-  const featuredImage = sourceUrl
-    ? parseFeaturedImage({ sourceUrl }, `Ảnh đại diện cho bài viết "${title}"`, pageIdwithDash)
-    : null
-  // create place holder for featured image
-  if (featuredImage) {
-    if (sourceUrl) {
-      // const { base64 } = await getPlaceholderImage(sourceUrl, 20)
-      // featuredImage.blurDataURL = base64
-    } else {
-      featuredImage.blurDataURL = defaultBlurDataURL
-    }
-  }
+  const featuredImage = await parseFeaturedImage({
+    sourceUrl,
+    altText: `Ảnh đại diện cho bài viết ${title}`,
+    category: categories[0],
+    pageIdwithDash,
+    staticImageData: defaultFeaturedImage
+  })
 
   // selected
   const selected = properties?.selected?.checkbox || false
@@ -213,23 +217,164 @@ export async function transformPostHeader(
   // bookCover
   const bookCoverUrl =
     properties?.bookCover?.files?.[0]?.external?.url || properties?.bookCover?.files?.[0]?.file?.url
-  const bookCover = bookCoverUrl
-    ? parseFeaturedImage({ sourceUrl: bookCoverUrl }, `Ảnh bìa sách "${title}"`, pageIdwithDash)
-    : null
-  // create place holder for book cover
-  if (bookCover) {
-    if (bookCoverUrl) {
-      // const { base64 } = await getPlaceholderImage(bookCoverUrl, 20)
-      // bookCover.blurDataURL = base64
-    } else {
-      bookCover.blurDataURL = defaultBlurDataURL
-    }
-  }
+  const bookCover = await parseFeaturedImage({
+    sourceUrl: bookCoverUrl,
+    altText: `Ảnh bìa sách ${title}`,
+    pageIdwithDash,
+    staticImageData: defaultBookCover
+  })
 
   // showToc
   const showToc = properties?.showToc?.checkbox || false
 
   return { title, date, categories, tags, authors, featuredImage, selected, bookCover, showToc }
+}
+
+async function parseFeaturedImage(options: {
+  sourceUrl?: string
+  altText?: string
+  category?: Category
+  pageIdwithDash?: string
+  staticImageData?: StaticImageData // can be featured image or book cover
+}): Promise<FeaturedImage> {
+  const { sourceUrl, altText, category, pageIdwithDash, staticImageData } = options
+  const featuredImage: FeaturedImage = { altText, sourceUrl }
+  const imgUrl = parseFeaturedImageUrl(sourceUrl, pageIdwithDash)
+  if (imgUrl) {
+    const { base64, width, height } = await getPlaceholderImage(imgUrl)
+    featuredImage.blurDataURL = base64
+    featuredImage.width = width
+    featuredImage.height = height
+  } else {
+    // If there is no featured image, we will use the default featured image of the category
+    if (category && category.featuredImage?.staticImageData) {
+      featuredImage.staticImageData = category.featuredImage?.staticImageData
+    } else {
+      // If the post has no category
+      featuredImage.staticImageData = staticImageData
+    }
+  }
+
+  return featuredImage
+}
+
+/**
+ * Transform data fetched from Notion to format Post[].
+ *
+ * Note that:
+ *
+ * 1. In some cases, we don't need all the properties of Post, so we ignore the fields
+ * categories, tags and authors.
+ * 2. This method MUST be placed in this file (not in helpers.ts) because it uses
+ * some methods that require the "cache()" from react.
+ */
+async function transformNotionPostsData(options: {
+  data: NotionPost[]
+  categories?: Category[]
+  tags?: Tag[]
+  authors?: Author[]
+}): Promise<Post[]> {
+  const { data, categories: categoriesList, tags: tagsList, authors: authorsList } = options
+  if (!data || !data.length) return []
+  return Promise.all(
+    data?.map(async post => {
+      // id
+      const id = get(post, 'id') as string
+
+      // title
+      const title = get(post, 'properties.name.title[0].plain_text', defaultPostTitle)
+
+      // date
+      // Because we migrate from WP to Notion, a lot of posts need to use the old created date
+      const gotDate = get(
+        post,
+        'properties.finalCreatedDate.formula.date.start',
+        get(post, 'last_edited_time', defaultPostDate)
+      )
+      const date = new Date(gotDate).toISOString()
+
+      // Tags
+      let tags
+      if (tagsList) {
+        const tagIdsList = get(post, 'properties.tags.relation', []).map(
+          (tag: { id: string }) => tag.id
+        )
+        tags = parseTagsForPost(tagIdsList, tagsList)
+      }
+
+      // Categories
+      let categories: Category[]
+      if (categoriesList) {
+        const defaultCategory = categoriesList[0]
+        const gotCategories = post.properties?.categories?.multi_select
+        categories = gotCategories
+          ? gotCategories.map(category => {
+              const foundCategory = categoriesList.find(
+                cat => makeSlugText(cat?.name) === makeSlugText(category.name)
+              )
+              return foundCategory
+                ? foundCategory
+                : {
+                    name: category.name,
+                    uri: `/${getSlugPrefix('category')}/${makeSlugText(category.name)}/`
+                  }
+            })
+          : [defaultCategory]
+      } else {
+        categories = []
+      }
+
+      // Author
+      let authors
+      if (authorsList) {
+        const authorIdsList = get(post, 'properties.authors.relation', []).map(
+          (author: { id: string }) => author.id
+        )
+        authors = parseAuthorsForPost(authorIdsList, authorsList)
+      }
+
+      // Featured image
+      const sourceUrl = get(post, 'cover.external.url') || get(post, 'cover.file.url')
+      const featuredImage = await parseFeaturedImage({
+        sourceUrl,
+        altText: `Ảnh đại diện cho bài viết ${title}`,
+        category: categories?.[0],
+        pageIdwithDash: id,
+        staticImageData: defaultFeaturedImage
+      })
+
+      // bookCover (if available)
+      const bookCoverUrl = get(post, 'properties.bookCover.files[0].file.url')
+      const bookCover = await parseFeaturedImage({
+        sourceUrl: bookCoverUrl,
+        altText: `Ảnh bìa sách ${title}`,
+        pageIdwithDash: id,
+        staticImageData: defaultBookCover
+      })
+
+      // slug
+      const slug =
+        get(post, 'properties.slug.rich_text[0].plain_text', '') ||
+        makeSlugText(get(post, 'properties.name.title[0].plain_text', ''))
+
+      // excerpt
+      const excerpt = get(post, 'properties.excerpt.rich_text', [])
+
+      return {
+        id,
+        title,
+        slug,
+        uri: `/${getSlugPrefix('singlePost')}/${slug}/`,
+        date,
+        tags,
+        excerpt,
+        categories,
+        authors,
+        featuredImage,
+        bookCover
+      } as Post
+    })
+  )
 }
 
 /**
@@ -298,8 +443,7 @@ export async function getBlocks(
     if (block.type === 'image') {
       const url = get(block, 'image.file.url') || get(block, 'image.external.url')
       if (url) {
-        // block['imageInfo'] = await getPlaceholderImage(url, 20)
-        block['imageInfo'] = await getRealImageSize(url)
+        block['imageInfo'] = await getPlaceholderImage(url) // { base64, width, height }
       }
     }
   }
@@ -383,10 +527,13 @@ export const getNotionDatabase = cache(
 export const getNotionPage = cache(async (pageId: string) => getNotionPageWithoutCache(pageId))
 
 /**
- * Because Nextjs's Image needs to know the real size of the image to render it properly
+ * Get blurDataURL (base64) of an image
  *
  * REMARK: This method MUST be placed in this file, otherwise, there will be an error of "Can't resolve 'fs'"
  */
-const getRealImageSize = cache(async function getRealImageSize(src: string) {
-  return await probe(src)
+export const getPlaceholderImage = cache(async function getPlaceholderImage(src: string) {
+  const buffer = await fetch(src).then(async res => Buffer.from(await res.arrayBuffer()))
+
+  const { base64, metadata } = await getPlaiceholder(buffer)
+  return { base64, width: metadata.width, height: metadata.height }
 })
