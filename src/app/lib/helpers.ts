@@ -121,7 +121,7 @@ export function getPredefinedCategories(categories: { name: string }[] = []): Ca
               bgColor: defaultCategoryBgColor,
               textColor: defaultCategoryTextColor
             },
-            featureImage: {
+            featuredImage: {
               sourceUrl: '/featured-images/default_bg.png',
               sizes: defaultCustomSizeFM
             }
@@ -147,7 +147,7 @@ export function parseFeaturedImageUrl(imgUrl?: string, pageIdWithDash?: string):
   //     return null
   // }
 
-  const sourceUrl = mapFeatureImageURl(imgUrl, pageIdWithDash)
+  const sourceUrl = mapFeaturedImageURl(imgUrl, pageIdWithDash)
   return sourceUrl
 }
 
@@ -155,7 +155,7 @@ export function parseFeaturedImageUrl(imgUrl?: string, pageIdWithDash?: string):
  * Modified from third_party/react-notion-x/map-image-url.ts/defaultMapImageUrl()
  * 🚸 IMPORTANT: It's not working if we upload photos to Notion from our computer!
  */
-function mapFeatureImageURl(url: string, pageIdWithDash: string): string | null {
+function mapFeaturedImageURl(url: string, pageIdWithDash: string): string | null {
   if (!url) {
     return null
   }

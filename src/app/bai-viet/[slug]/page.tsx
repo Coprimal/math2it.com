@@ -61,6 +61,8 @@ export default async function SinglePostPage({ params }: DynamicSegmentParamsPro
     const postHeader = await getPostHeader(pageIdwithDash)
     const contentBlocks = await getBlocks(pageIdwithDash)
 
+    // /* ###Thi */ console.log('🤜🤜🤜🤜 postHeader: ', JSON.stringify(postHeader))
+
     return (
       <Suspense fallback={<LoadingPost />}>
         <SinglePostTemplate postHeader={postHeader} contentBlocks={contentBlocks} />

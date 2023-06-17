@@ -9,7 +9,7 @@ import defaultBookCover from '@root/public/featured-images/untitledBook.jpg'
 import {
   Author,
   Category,
-  FeaturedImage,
+  ImageType,
   NotionHeader,
   NotionPost,
   NotionSorts,
@@ -203,7 +203,7 @@ export async function transformPostHeader(
 
   // featured image
   const sourceUrl = notionHeader?.cover?.external?.url || notionHeader?.cover?.file?.url
-  const featuredImage = await parseFeaturedImage({
+  const featuredImage = await parseImage({
     sourceUrl,
     altText: `Ảnh đại diện cho bài viết ${title}`,
     category: categories[0],
@@ -217,11 +217,12 @@ export async function transformPostHeader(
   // bookCover
   const bookCoverUrl =
     properties?.bookCover?.files?.[0]?.external?.url || properties?.bookCover?.files?.[0]?.file?.url
-  const bookCover = await parseFeaturedImage({
+  const bookCover = await parseImage({
     sourceUrl: bookCoverUrl,
     altText: `Ảnh bìa sách ${title}`,
     pageIdwithDash,
-    staticImageData: defaultBookCover
+    staticImageData: defaultBookCover,
+    canBeNull: true
   })
 
   // showToc
@@ -230,15 +231,16 @@ export async function transformPostHeader(
   return { title, date, categories, tags, authors, featuredImage, selected, bookCover, showToc }
 }
 
-async function parseFeaturedImage(options: {
+async function parseImage(options: {
   sourceUrl?: string
   altText?: string
   category?: Category
   pageIdwithDash?: string
   staticImageData?: StaticImageData // can be featured image or book cover
-}): Promise<FeaturedImage> {
-  const { sourceUrl, altText, category, pageIdwithDash, staticImageData } = options
-  const featuredImage: FeaturedImage = { altText, sourceUrl }
+  canBeNull?: boolean // for book cover, we can set it to undefined
+}): Promise<ImageType> {
+  const { sourceUrl, altText, category, pageIdwithDash, staticImageData, canBeNull } = options
+  const featuredImage: ImageType = { altText, sourceUrl }
   const imgUrl = parseFeaturedImageUrl(sourceUrl, pageIdwithDash)
   if (imgUrl) {
     const { base64, width, height } = await getPlaceholderImage(imgUrl)
@@ -246,6 +248,7 @@ async function parseFeaturedImage(options: {
     featuredImage.width = width
     featuredImage.height = height
   } else {
+    if (canBeNull) return null
     // If there is no featured image, we will use the default featured image of the category
     if (category && category.featuredImage?.staticImageData) {
       featuredImage.staticImageData = category.featuredImage?.staticImageData
@@ -335,7 +338,7 @@ async function transformNotionPostsData(options: {
 
       // Featured image
       const sourceUrl = get(post, 'cover.external.url') || get(post, 'cover.file.url')
-      const featuredImage = await parseFeaturedImage({
+      const featuredImage = await parseImage({
         sourceUrl,
         altText: `Ảnh đại diện cho bài viết ${title}`,
         category: categories?.[0],
@@ -345,7 +348,7 @@ async function transformNotionPostsData(options: {
 
       // bookCover (if available)
       const bookCoverUrl = get(post, 'properties.bookCover.files[0].file.url')
-      const bookCover = await parseFeaturedImage({
+      const bookCover = await parseImage({
         sourceUrl: bookCoverUrl,
         altText: `Ảnh bìa sách ${title}`,
         pageIdwithDash: id,

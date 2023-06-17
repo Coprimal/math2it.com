@@ -14,7 +14,7 @@ export type MenuItem = {
   }
 }
 
-export type FeaturedImage = {
+export type ImageType = {
   sourceUrl?: string | null
   sizes?: string
   altText?: string
@@ -42,7 +42,7 @@ export type Category = {
     textColor: string
     bdColor?: string
   }
-  featuredImage?: FeaturedImage
+  featuredImage?: ImageType
   fontello?: string
 }
 
@@ -67,8 +67,8 @@ export type PostHeaderType = {
   tags?: Tag[]
   authors?: Author[]
   selected?: boolean
-  featuredImage?: FeaturedImage
-  bookCover?: FeaturedImage
+  featuredImage: ImageType
+  bookCover?: ImageType
   showToc?: boolean
 }
 

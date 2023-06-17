@@ -1,17 +1,11 @@
-import {
-  anonymAuthor,
-  defaultBlurDataURL,
-  postCoverCustomSizeFM,
-  postWidthContainer
-} from '@app/lib/config'
-import defaultFeaturedImage from '@root/public/featured-images/default_bg.png'
+import { anonymAuthor, postWidthContainer } from '@app/lib/config'
 import { PostHeaderType } from '@src/interface'
 import cn from 'classnames'
-import Image from 'next/image'
 import Link from 'next/link'
 
 import Container from './Container'
 import Date from './Date'
+import ImageComponent from './ImageComponent'
 import PostHeaderTopics from './PostHeaderTopics'
 
 export const fullWidthPostCoverHeight = 'h-[33vh] max-h-[33vh] min-h-[33vh]'
@@ -25,19 +19,15 @@ export default function PostHeader(props: PostHeaderProps) {
   const { title, featuredImage, date, authors, categories, tags, selected, bookCover } =
     props.postHeader
 
-  const imgUrl =
-    featuredImage?.sourceUrl ?? categories?.[0]?.featureImage?.sourceUrl ?? defaultFeaturedImage
-  const imgBlurDataUrl = featuredImage?.blurDataURL ?? defaultBlurDataURL
-
   return (
     <>
       {/* Featured image */}
       <div className={cn('flex w-full items-center justify-center', fullWidthPostCoverHeight)}>
         {/* 👇 Because Image auto create position absolute, we have to wrap this with a relative div */}
         <div className="relative flex h-full w-full items-center overflow-hidden">
-          <Image
+          <ImageComponent
+            image={featuredImage}
             alt={`Hình đại diện của bài viết "${title}"`}
-            src={imgUrl}
             className={cn('object-cover group-hover:scale-105 duration-500', {
               'blur-sm': !!bookCover,
               // Fix: blur image problem on the edge of the image
@@ -45,27 +35,22 @@ export default function PostHeader(props: PostHeaderProps) {
               '!w-[calc(100%+10px)] !max-w-[calc(100%+10px)] !h-[calc(100%+10px)] !left-[-5px] !top-[-5px]':
                 !!bookCover
             })}
-            fill={true}
-            sizes={postCoverCustomSizeFM}
-            placeholder="blur"
-            blurDataURL={imgBlurDataUrl}
-            quality={100}
-            loading="lazy"
+            imageProps={{
+              fill: true
+            }}
           />
           {bookCover && (
             <div
               className={cn('absolute left-0 top-0 flex h-full w-full items-center justify-center')}
             >
-              <Image
+              <ImageComponent
+                image={bookCover}
                 alt={`Bìa sách "${title}"`}
-                src={bookCover.sourceUrl ?? defaultFeaturedImage}
                 className={cn('rounded-md shadow-xl h-4/5 w-auto')}
-                width={175}
-                height={100}
-                placeholder="blur"
-                blurDataURL={bookCover.blurDataURL}
-                quality={100}
-                loading="lazy"
+                imageProps={{
+                  width: bookCover.width,
+                  height: bookCover.height
+                }}
               />
             </div>
           )}
