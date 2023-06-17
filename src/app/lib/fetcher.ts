@@ -10,6 +10,7 @@ import {
   Author,
   Category,
   ImageType,
+  ImgurUrlType,
   NotionHeader,
   NotionPost,
   NotionSorts,
@@ -44,7 +45,8 @@ import {
   getPredefinedCategories,
   makeSlugText,
   parseAuthorsForPost,
-  parseFeaturedImageUrl,
+  parseImgurUrl,
+  parseNotionImageUrl,
   parseTagsForPost,
   transformNotionAuthorsData,
   transformNotionTagsData
@@ -205,10 +207,11 @@ export async function transformPostHeader(
   const sourceUrl = notionHeader?.cover?.external?.url || notionHeader?.cover?.file?.url
   const featuredImage = await parseImage({
     sourceUrl,
-    altText: `Ảnh đại diện cho bài viết ${title}`,
+    altText: `Ảnh đại diện cho bài viết "${title}"`,
     category: categories[0],
     pageIdwithDash,
-    staticImageData: defaultFeaturedImage
+    staticImageData: defaultFeaturedImage,
+    typeImgur: 'h'
   })
 
   // selected
@@ -219,10 +222,11 @@ export async function transformPostHeader(
     properties?.bookCover?.files?.[0]?.external?.url || properties?.bookCover?.files?.[0]?.file?.url
   const bookCover = await parseImage({
     sourceUrl: bookCoverUrl,
-    altText: `Ảnh bìa sách ${title}`,
+    altText: `Ảnh bìa sách "${title}"`,
     pageIdwithDash,
     staticImageData: defaultBookCover,
-    canBeNull: true
+    canBeNull: true,
+    typeImgur: 'm'
   })
 
   // showToc
@@ -231,6 +235,9 @@ export async function transformPostHeader(
   return { title, date, categories, tags, authors, featuredImage, selected, bookCover, showToc }
 }
 
+/**
+ * Make sure that the return of this method is always an image (from Notion or from the default image)
+ */
 async function parseImage(options: {
   sourceUrl?: string
   altText?: string
@@ -238,27 +245,29 @@ async function parseImage(options: {
   pageIdwithDash?: string
   staticImageData?: StaticImageData // can be featured image or book cover
   canBeNull?: boolean // for book cover, we can set it to undefined
+  typeImgur?: ImgurUrlType
 }): Promise<ImageType> {
   const { sourceUrl, altText, category, pageIdwithDash, staticImageData, canBeNull } = options
-  const featuredImage: ImageType = { altText, sourceUrl }
-  const imgUrl = parseFeaturedImageUrl(sourceUrl, pageIdwithDash)
+  const urlToUse = parseImgurUrl(sourceUrl, options.typeImgur)
+  const image: ImageType = { altText, sourceUrl: urlToUse }
+  const imgUrl = parseNotionImageUrl(urlToUse, pageIdwithDash)
   if (imgUrl) {
     const { base64, width, height } = await getPlaceholderImage(imgUrl)
-    featuredImage.blurDataURL = base64
-    featuredImage.width = width
-    featuredImage.height = height
+    image.blurDataURL = base64
+    image.width = width
+    image.height = height
   } else {
     if (canBeNull) return null
     // If there is no featured image, we will use the default featured image of the category
     if (category && category.featuredImage?.staticImageData) {
-      featuredImage.staticImageData = category.featuredImage?.staticImageData
+      image.staticImageData = category.featuredImage?.staticImageData
     } else {
       // If the post has no category
-      featuredImage.staticImageData = staticImageData
+      image.staticImageData = staticImageData
     }
   }
 
-  return featuredImage
+  return image
 }
 
 /**
@@ -343,7 +352,8 @@ async function transformNotionPostsData(options: {
         altText: `Ảnh đại diện cho bài viết ${title}`,
         category: categories?.[0],
         pageIdwithDash: id,
-        staticImageData: defaultFeaturedImage
+        staticImageData: defaultFeaturedImage,
+        typeImgur: 'l'
       })
 
       // bookCover (if available)
@@ -352,7 +362,9 @@ async function transformNotionPostsData(options: {
         sourceUrl: bookCoverUrl,
         altText: `Ảnh bìa sách ${title}`,
         pageIdwithDash: id,
-        staticImageData: defaultBookCover
+        staticImageData: defaultBookCover,
+        canBeNull: true,
+        typeImgur: 'm'
       })
 
       // slug
@@ -394,6 +406,7 @@ export async function getBlocks(
         list_item?: string
         children?: ListBlockChildrenResponse['results']
         imageInfo?: any
+        imgUrl?: string
       })[]
     | []
 
@@ -446,6 +459,7 @@ export async function getBlocks(
     if (block.type === 'image') {
       const url = get(block, 'image.file.url') || get(block, 'image.external.url')
       if (url) {
+        block['imgUrl'] = parseImgurUrl(url, 'h') // Resize the image to 1024x1024 max
         block['imageInfo'] = await getPlaceholderImage(url) // { base64, width, height }
       }
     }

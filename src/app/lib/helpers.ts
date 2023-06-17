@@ -12,6 +12,7 @@ import { QueryDatabaseParameters } from '@notionhq/client/build/src/api-endpoint
 import {
   Author,
   Category,
+  ImgurUrlType,
   NotionAuthor,
   NotionTag,
   Post,
@@ -137,8 +138,8 @@ export function getPredefinedCategories(categories: { name: string }[] = []): Ca
  * - Use photos from Unsplash -> 'https://images.unsplash.com/...'
  * - Use uploaded photos -> 🚸 IGNORED AND REPLACED BY DEFAULT IMAGE 'https://xxx.amazonaws.com/...'
  */
-export function parseFeaturedImageUrl(imgUrl?: string, pageIdWithDash?: string): string | null {
-  if (!imgUrl || !pageIdWithDash) return null
+export function parseNotionImageUrl(url?: string, pageIdWithDash?: string): string | null {
+  if (!url || !pageIdWithDash) return null
 
   // 👇 Uploaded photos from our computer -> IGNORED
   // if (!imgUrl.startsWith('/images')) {
@@ -146,19 +147,6 @@ export function parseFeaturedImageUrl(imgUrl?: string, pageIdWithDash?: string):
   //   if (u.pathname.startsWith('/secure.notion-static.com') && u.hostname.endsWith('.amazonaws.com'))
   //     return null
   // }
-
-  const sourceUrl = mapFeaturedImageURl(imgUrl, pageIdWithDash)
-  return sourceUrl
-}
-
-/**
- * Modified from third_party/react-notion-x/map-image-url.ts/defaultMapImageUrl()
- * 🚸 IMPORTANT: It's not working if we upload photos to Notion from our computer!
- */
-function mapFeaturedImageURl(url: string, pageIdWithDash: string): string | null {
-  if (!url) {
-    return null
-  }
 
   if (url.startsWith('data:')) {
     return url
@@ -197,6 +185,20 @@ function mapFeaturedImageURl(url: string, pageIdWithDash: string): string | null
     // ignore invalid urls
   }
   return url
+}
+
+/**
+ * Imgur has an api for resizing images based on the url of the image.
+ *
+ * @see {@link https://api.imgur.com/models/image#thumbs Image thumbnails - Imgur API}
+ *
+ * @param url
+ * @param type t (160x160), m (320x320), l (640x640), h (1024x1024) all the image proportions are maintained
+ */
+export const parseImgurUrl = (url?: string, type?: ImgurUrlType) => {
+  if (!url || !type || !url.includes('imgur')) return url
+  // return url + type
+  return url.replace(/(\.\w+$)/, `${type}$1`)
 }
 
 /**

@@ -226,3 +226,5 @@ export type SearchResult = {
   textHighlighted: string
   isFake?: boolean // used to not perform the request
 }
+
+export type ImgurUrlType = 't' | 'm' | 'l' | 'h'
