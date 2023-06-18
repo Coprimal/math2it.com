@@ -47,6 +47,9 @@ yarn dev --turbo
 yarn build
 yarn buuld --turbo
 
+# clean then build
+yarn clean-build
+
 # run production server
 yarn start
 
@@ -56,11 +59,39 @@ yarn lint
 # prettier
 yarn prettier
 
+# check before update prod
+yarn check # prettier then build
+
 # clean
 yarn clean
 
 # reinstall (only for "yarn")
 yarn reinstall
+```
+
+### imgur
+
+If an image on Notion isn't hosted on [imgur](https://imgur.com/), download this image -> upload to imgur -> get the url -> update the corresponding field on notion.
+
+``` bash
+# Update cover for a single post
+yarn ud-cover <postId>
+
+# Update cover for all posts in a database
+# (look for posts who need to be updated)
+yarn ud-cover-all
+
+# Update book cover for a single post
+yarn ud-book-cover <postId>
+
+# For both Cover and Book Cover of a post
+yarn ud-header <postId>
+
+# For both Cover and Book Cover of ALL post
+yarn ud-header-all
+
+# Update image blocks in post
+yarn ud-images-post <postId>
 ```
 
 ## Fontello

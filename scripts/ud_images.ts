@@ -1,50 +1,305 @@
-#!/usr/bin/env node
-import { getJoinedRichText } from '@app/lib/block-helpers'
-import { defaultPostTitle, notionDateName, notionMaxRequest } from '@app/lib/config'
-import {
-  getNotionBlocksWithoutCache,
-  getNotionDatabaseWithoutCache,
-  getNotionPageWithoutCache
-} from '@app/lib/db'
-import { getFilter, getPredefinedCategories, transformNotionPostsData } from '@app/lib/helpers'
 import { Client } from '@notionhq/client'
-import {
-  BlockObjectResponse,
-  ImageBlockObjectResponse,
-  ListBlockChildrenResponse
-} from '@notionhq/client/build/src/api-endpoints'
-import { Author, Category, NotionHeader, NotionPost, NotionSorts, Post, Tag } from '@src/interface'
 import chalk from 'chalk'
 import got from 'got'
 import { get } from 'lodash'
-import * as yargsType from 'yargs'
-import yargs from 'yargs/yargs'
+import yargs, * as yargsType from 'yargs'
+
+// --------------------------------------------------------------------------------------------
+// How to use?
+// npx tsx -r dotenv/config ./scripts/ud_images.ts dotenv_config_path=.env.local --a images-in-post --pid <postId>
+// --------------------------------------------------------------------------------------------
+
+// --------------------------------------------------------------------------------------------
+// Cockpit
+// --------------------------------------------------------------------------------------------
 
 const notionClient = new Client({ auth: process.env.NOTION_TOKEN })
 
-/**
- * 1. We don't consider default images of Notion (notion.so), images already uploaded to imgur (imgur.com),
- * images from unsplash (unsplash.com). We only consider images uploaded from local/clipboard or images
- * from other websites. Check the `ignoreImage()` function.
- * 2. Images will be uploaded to imgur in a corresponding album with their category. Check the albumHashMap.
- *
- *
- * 👍 How to use this script?
- *  npx tsx -r dotenv/config ./scripts/ud_images.ts dotenv_config_path=.env.local <options>
- *
- * --a: action
- *   'headerPost': update cover image / book cover of a post, "--pid" is required
- *     eg: npx tsx -r dotenv/config ./scripts/ud_images.ts dotenv_config_path=.env.local --a coverPost --pid 'xxx'
- *   'headerAll': update cover images / book covers of all posts in the DB, "--dbid" is required
- *     eg: npx tsx -r dotenv/config ./scripts/ud_images.ts dotenv_config_path=.env.local --a coverAll --dbid 'xxx'
- *   'imagesInPost': update images in a post, "--pid" is required
- *     eg: npx tsx -r dotenv/config ./scripts/ud_images.ts dotenv_config_path=.env.local --a imagesInPost --pid 'xxx'
- * --pid: post id
- * --dbid: database id
- */
+async function main(argv: yargsType.Argv['argv']) {
+  const { a, pid } = argv as never
+  switch (a) {
+    case 'header': {
+      await updateCover(pid)
+      await updateBookCover(pid)
+      break
+    }
 
-// Images of a post will be uploaded to imgur in a corresponding album with its category
-// Cover images will be uploaded to imgur in album "Cover"
+    case 'header-all': {
+      await updateCoverAll(process.env.NOTION_DB_POSTS as string)
+      await updateBookCoverAll(process.env.NOTION_DB_POSTS as string)
+      break
+    }
+
+    case 'cover': {
+      await updateCover(pid)
+      break
+    }
+
+    case 'cover-all': {
+      await updateCoverAll(process.env.NOTION_DB_POSTS as string)
+      break
+    }
+
+    case 'book-cover': {
+      await updateBookCover(pid)
+      break
+    }
+
+    case 'book-cover-all': {
+      await updateBookCoverAll(process.env.NOTION_DB_POSTS as string)
+      break
+    }
+
+    case 'images-in-post': {
+      await updateImagesInPost(pid)
+      break
+    }
+  }
+}
+
+const argv = yargs(process.argv.slice(2))
+main(argv.argv)
+
+// --------------------------------------------------------------------------------------------
+// Methods
+// --------------------------------------------------------------------------------------------
+
+async function updateImagesInPost(postId: string) {
+  console.log(chalk.blue(`🌶 Update Image Blocks for post id ${postId}`))
+  if (!postId) return handleError('Missing post id', 'updateImagesInPost()')
+
+  console.log(chalk.yellow('⧗ Checking and downloading image from Notion...'))
+  const postInfo = await getPostInfo(postId)
+  const blocks = await getBlocks(postId)
+  const flatBlocks = flattenAllBlocks(blocks)
+  const imageBlocks = flatBlocks.filter((block: any) => 'type' in block && block.type === 'image')
+
+  if (!imageBlocks || !imageBlocks?.length) {
+    return handleError('There is no image block', 'updateImagesInPost()')
+  }
+
+  const blockImages = getBlockImageInfo(imageBlocks, postInfo)
+  const imgs = blockImages.filter(img => !ignoreImage(img.fileUrl))
+  console.log(chalk.blue(`\n### There are ${imgs.length} images to be downloaded.`))
+
+  for (const img of imgs) {
+    await processUpdateImage({
+      type: 'imageInPost',
+      id: img.blockId,
+      fileUrl: img.fileUrl,
+      title: img.title,
+      categorySlug: img.categorySlug,
+      multiple: true
+    })
+  }
+}
+
+function getBlockImageInfo(blocks: any[], postInfo: PostInfo) {
+  const blockImages = []
+  for (const block of blocks) {
+    const blockId = block.id
+    const title = getJoinedRichText(block?.image?.caption) || postInfo?.postTitle
+    const fileUrl = get(block, 'image.file.url') || get(block, 'image.external.url') || null
+    const categorySlug = postInfo?.categorySlug
+    blockImages.push({ blockId, title, fileUrl, categorySlug })
+  }
+
+  return blockImages
+}
+
+async function getBlocks(postId: string) {
+  const data = await getNotionBlocks(postId)
+  const blocks = data?.results as any
+  if (!blocks || !blocks?.length) return []
+
+  for (const block of blocks) {
+    if (block.has_children) {
+      const children = await getBlocks(block.id)
+      block['children'] = children
+    }
+  }
+
+  return blocks
+}
+
+async function updateBookCover(postId: string) {
+  console.log(chalk.blue(`🌶 Update Book Cover for post id ${postId}`))
+  if (!postId) return handleError('Missing post id', 'updateBookCover()')
+
+  console.log(chalk.yellow('⧗ Checking and downloading image from Notion...'))
+  const { postTitle, fileUrl } = await getNotionBookCover(postId)
+  if (!fileUrl) return handleError('Missing file url', 'updateBookCover()')
+  await processUpdateImage({ type: 'bookCover', id: postId, fileUrl, title: postTitle })
+}
+
+async function updateBookCoverAll(dbId: string) {
+  console.log(chalk.blue(`🌶 Update BOOK COVER for ALL POSTS in database ${dbId}`))
+  if (!dbId) return handleError('Missing database id', 'updateBookCoverAll()')
+
+  console.log(chalk.yellow('⧗ Checking and downloading image from Notion...'))
+  const posts = await getPosts(dbId)
+  for (const post of posts) {
+    if (!post?.postId || !post?.bookCoverUrl) continue
+    await processUpdateImage({
+      type: 'bookCover',
+      id: post?.postId,
+      fileUrl: post.bookCoverUrl,
+      title: post.postTitle,
+      multiple: true
+    })
+  }
+}
+
+async function updateCover(postId: string) {
+  console.log(chalk.blue(`🌶 Update Cover for post id ${postId}`))
+  if (!postId) return handleError('Missing post id', 'updateCover()')
+
+  console.log(chalk.yellow('⧗ Checking and downloading image from Notion...'))
+  const { postTitle, fileUrl } = await getNotionCover(postId)
+  if (!fileUrl) return handleError('Missing file url', 'updateCover()')
+  await processUpdateImage({ type: 'cover', id: postId, fileUrl, title: postTitle })
+}
+
+async function updateCoverAll(dbId: string) {
+  console.log(chalk.blue(`🌶 Update COVER for ALL POSTS in database ${dbId}`))
+  if (!dbId) return handleError('Missing database id', 'updateCoverAll()')
+
+  console.log(chalk.yellow('⧗ Checking and downloading image from Notion...'))
+  const posts = await getPosts(dbId)
+  for (const post of posts) {
+    if (!post?.postId || !post?.coverUrl) continue
+    await processUpdateImage({
+      type: 'cover',
+      id: post?.postId,
+      fileUrl: post.coverUrl,
+      title: post.postTitle,
+      multiple: true
+    })
+  }
+}
+
+async function processUpdateImage(options: {
+  type: 'cover' | 'bookCover' | 'imageInPost'
+  id: string // "postId" or "blockId" when type is "imageInPost"
+  fileUrl: string
+  title: string
+  multiple?: boolean // when this method is called from updateCoverAll()
+  categorySlug?: string // when type is "imageInPost"
+}) {
+  const { type, id: postId, fileUrl, title: postTitle, multiple, categorySlug } = options
+  if (multiple) console.log(chalk.blue(`\n🌶 Update ${type.toLocaleUpperCase()} for id ${postId}`))
+
+  if (ignoreImage(fileUrl)) {
+    console.log(chalk.green('✓ No action needed!'))
+    return
+  }
+
+  console.log('----> notionUrl: ', fileUrl)
+  console.log('----> postTitle / Block image title: ', postTitle)
+
+  if (ignoreImage(fileUrl)) return
+
+  const albumKey = ['cover', 'bookCover'].includes(type) ? type : categorySlug
+  if (!albumKey) return handleError('Missing album key', 'processUpdateImage()')
+  const imgurAlbumHash = get(albumHashMap, albumKey)
+  console.log(chalk.yellow(`⧗ Uploading image to Imgur under album key "${albumKey}"`))
+  try {
+    const { url: imgurUrl, deleteHash } = await uploadImageToImgur(
+      fileUrl,
+      imgurAlbumHash,
+      postTitle
+    )
+    console.log(chalk.green('✓ Done!'))
+    console.log('----> imgurUrl: ', imgurUrl)
+
+    console.log(chalk.yellow(`⧗ Modifying ${type} on Notion...`))
+    try {
+      if (type === 'cover') await updateNotionCoverImage(postId, imgurUrl)
+      if (type === 'bookCover') await updateNotionBookCoverImage(postId, imgurUrl, postTitle)
+      if (type === 'imageInPost') await updateNotionBlockImage(postId, imgurUrl)
+      console.log(chalk.green('✓ Done!'))
+    } catch (error) {
+      console.log(chalk.red('🚩 Cannot update image on Notion!'))
+      console.log(chalk.yellow('⧗ Deleting image from Imgur...'))
+      await deleteImageFromImgur(deleteHash)
+      console.log(chalk.green('✓ Done deleting image from Imgur!'))
+      throw error
+    }
+  } catch (error) {
+    return console.log(chalk.red('🚨 Error (processUpdateCover): ', error))
+  }
+}
+
+async function getNotionCover(pageId: string) {
+  if (!pageId) return { title: '', fileUrl: null }
+
+  const response: unknown = await getNotionPage(pageId)
+  const notionHeader = response as NotionHeader
+  const fileUrl = notionHeader?.cover?.file?.url || notionHeader?.cover?.external?.url
+  const postTitle = notionHeader?.properties?.name?.title?.[0]?.plain_text || 'Không tựa đề'
+  return { postTitle, fileUrl }
+}
+
+async function getNotionBookCover(pageId: string) {
+  if (!pageId) return { title: '', fileUrl: null }
+
+  const response: unknown = await getNotionPage(pageId)
+  const notionHeader = response as NotionHeader
+  const fileUrl =
+    notionHeader?.properties?.bookCover?.files?.[0]?.external?.url ||
+    notionHeader?.properties?.bookCover?.files?.[0]?.file?.url
+  const postTitle = notionHeader?.properties?.name?.title?.[0]?.plain_text || 'Không tựa đề'
+  return { postTitle, fileUrl }
+}
+
+/**
+ * Used in updateImagesInPost()
+ */
+async function getPostInfo(postId: string): Promise<PostInfo> {
+  if (!postId) return handleError('Missing post id', 'getPostInfo()') as any
+
+  const response: unknown = await getNotionPage(postId)
+  const notionHeader = response as NotionHeader
+  const postTitle = notionHeader?.properties?.name?.title?.[0]?.plain_text || 'Không tựa đề'
+  const categories = notionHeader?.properties?.categories?.multi_select
+    ?.map(category => predefinedCategories.find(c => c === makeSlugText(category.name)))
+    ?.filter(c => c)
+
+  if (!categories || !categories.length) {
+    return handleError(`Không có category cho bài viết: ${postTitle}`, 'getPostInfo()') as any
+  }
+
+  return { postTitle, categorySlug: categories[0]! }
+}
+
+async function getPosts(dbId: string, startCursor?: string) {
+  console.log('_____getPosts()....')
+  try {
+    let data = await getNotionDatabase(dbId)
+    let postsList = get(data, 'results', [])
+    if (data && data['has_more']) {
+      let newStartCursor = startCursor
+      while (data!['has_more']) {
+        newStartCursor = data!['next_cursor'] as string
+        data = await getNotionDatabase(dbId, newStartCursor)
+        if (get(data, 'results')) {
+          const lst = data!['results'] as any[]
+          postsList = [...postsList, ...lst]
+        }
+      }
+    }
+    const posts = (await transformNotionPostsData(postsList)) || []
+    return posts
+  } catch (error) {
+    console.log('🐞 _____getPosts() error: ', error)
+    return []
+  }
+}
+
+// --------------------------------------------------------------------------------------------
+// Helpers
+// --------------------------------------------------------------------------------------------
+
 const albumHashMap = {
   'bai-dich': 'MWnwinC',
   'cong-cu': 'v9IVBUz',
@@ -56,96 +311,35 @@ const albumHashMap = {
   bookCover: 'ckRVJLZ' // for book cover images
 }
 
-type NotionImageInfo = {
-  fileUrl: string | null
-  categorySlug: string | null
-  title: string
-  postId?: string
-  blockId?: string
+const predefinedCategories = Object.keys(albumHashMap).filter(
+  category => category !== 'cover' && category !== 'bookCover'
+)
+
+function makeSlugText(text?: string | null): string | null {
+  if (!text) return null
+  return text
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/đ/g, 'd')
+    .replace(/Đ/g, 'D')
+    .replace(':', '')
+    .split(' ')
+    .join('-')
+    .replace(/^\/|\/$/g, '') // remove "/" at the beginning and the end
 }
 
-async function main(argv: yargsType.Argv['argv']) {
-  const { a, pid, dbid } = argv as never
-
-  switch (a) {
-    case 'headerPost': {
-      console.log(chalk.blue('-----headerPost'))
-      await updateCoverAndBookCoverForSinglePost(pid, 'cover')
-      await updateCoverAndBookCoverForSinglePost(pid, 'bookCover')
-      break
-    }
-
-    case 'headerAll': {
-      console.log(chalk.blue('-----headerAll'))
-      await updateCoverAndBookCoverForAllPosts(dbid, 'cover')
-      await updateCoverAndBookCoverForAllPosts(dbid, 'bookCover')
-      break
-    }
-
-    case 'imagesInPost': {
-      console.log(chalk.blue('-----imagesInPost'))
-      updateImagesInPost(pid)
-      break
-    }
-
-    default:
-      console.log('🥏 No action')
-      break
-  }
+function handleError(errorMessage: string, context: string) {
+  console.log(chalk.red(`🚨 [${context}] ${errorMessage}`))
+  return
 }
 
-const argv = yargs(process.argv.slice(2))
-main(argv.argv)
-
-async function updateImagesInPost(postId: string) {
-  console.log(chalk.blue('🥏 Update images in a post'))
-  if (!postId) {
-    console.log(chalk.red('🚨 Post id is required!'))
-    return
-  }
-  console.log('👉 Post id: ', postId)
-  console.log(chalk.yellow('⏳ Downloading post info from Notion...'))
-  const postCoverInfo = await getNotionImageInfo(postId, 'cover')
-  console.log(chalk.yellow('⏳ Downloading all blocks in the post from Notion...'))
-  const blocks = await getBlocks(postId)
-  const flatBlocks = flattenAllBlocks(blocks)
-  const imageBlocks = flatBlocks.filter(block => 'type' in block && block.type === 'image')
-  const notionImageInfos = getNotionImageInfoFromBlocks(imageBlocks, postCoverInfo!)
-  const imagesToUpdate = notionImageInfos.filter(
-    image => image.fileUrl && !ignoreImage(image.fileUrl)
-  )
-  console.log(`👉 There are ${imagesToUpdate.length} images to update`)
-  for (const notionImageInfo of imagesToUpdate) {
-    await updateImage({
-      type: 'imagesInPost',
-      blockId: notionImageInfo.blockId,
-      image: notionImageInfo,
-      showLog: true
-    })
-  }
+function ignoreImage(url: string): boolean {
+  const hostName = new URL(url).hostname
+  return hostName.endsWith('imgur.com')
 }
 
-function getNotionImageInfoFromBlocks(
-  imageBlocks: ListBlockChildrenResponse['results'],
-  postCoverInfo: NotionImageInfo
-): NotionImageInfo[] {
-  const blocks = imageBlocks as ImageBlockObjectResponse[]
-  const notionImageInfos: NotionImageInfo[] = []
-  for (const block of blocks) {
-    const blockId = block.id
-    const title =
-      getJoinedRichText(block?.image?.caption) || `An image in the post ${postCoverInfo.title}`
-    const fileUrl = get(block, 'image.file.url') || get(block, 'image.external.url') || null
-    const categorySlug = postCoverInfo.categorySlug
-    notionImageInfos.push({ title, fileUrl, categorySlug, blockId })
-  }
-  return notionImageInfos
-}
-
-// We don't care the nested blocks. We group children blocks with their parent block.
-function flattenAllBlocks(
-  blocks: ListBlockChildrenResponse['results']
-): ListBlockChildrenResponse['results'] {
+function flattenAllBlocks(blocks: any[]): any {
   const childBlocks = blocks
     .filter(block => 'has_children' in block && block.has_children)
     .map((block: any) => {
@@ -156,143 +350,144 @@ function flattenAllBlocks(
   return [...blocks, ...childBlocks.flat()]
 }
 
-async function updateCoverAndBookCoverForAllPosts(dbId: string, type: 'cover' | 'bookCover') {
-  if (!dbId) {
-    console.log(chalk.red('🚨 Database id is required!'))
-    return
-  }
-  console.log(chalk.blue(`🥏 Update ${type} images of all posts`))
-  console.log(chalk.yellow(`⏳ Downloading ${type} image of all posts from Notion...`))
-  const notionImageInfos = await getNotionImageInfoForAllPosts(dbId, type)
-  const imagesToUpdate = notionImageInfos.filter(
-    image => image.fileUrl && !ignoreImage(image.fileUrl)
-  )
-  console.log(`👉 There are ${imagesToUpdate.length} ${type}(s) to update`)
-  for (const image of imagesToUpdate) {
-    await updateImage({
-      type,
-      postId: image.postId,
-      image: image,
-      showLog: true
-    })
-  }
+function getJoinedRichText(richTextArr: any[]): string {
+  if (!richTextArr || !richTextArr.length) return ''
+  const textArr = richTextArr.map((richText: any) => richText.plain_text)
+  return textArr.join('')
 }
 
-async function getNotionImageInfoForAllPosts(
-  dbId: string,
-  type: 'cover' | 'bookCover'
-): Promise<NotionImageInfo[]> {
-  const posts = await getPosts({
-    filter: null,
-    pageSize: notionMaxRequest,
-    dbId
-  })
-  const notionImageInfos: NotionImageInfo[] = []
-  for (const post of posts) {
-    const title = post.title
-    const fileUrl =
-      type === 'bookCover' ? post.bookCover?.sourceUrl : post.featuredImage?.sourceUrl ?? null
-    const categorySlug = post.categories?.[0].slug ?? null
-    notionImageInfos.push({ title, fileUrl: fileUrl || null, categorySlug, postId: post.id })
-  }
-  return notionImageInfos
-}
+// --------------------------------------------------------------------------------------------
+// Transformers
+// --------------------------------------------------------------------------------------------
 
-async function updateCoverAndBookCoverForSinglePost(postId: string, type: 'cover' | 'bookCover') {
-  console.log(chalk.blue(`🥏 Update ${type} image of a post`))
-  if (!postId) {
-    console.log(chalk.red('🚨 Post id is required!'))
-    return
-  }
-  console.log('👉 Post id: ', postId)
+async function transformNotionPostsData(data: NotionPost[]) {
+  if (!data || !data.length) return []
 
-  console.log(chalk.yellow(`⏳ Checking and downloading ${type} image from Notion...`))
-  const notionImageInfo = await getNotionImageInfo(postId, type)
-  updateImage({ type, postId, image: notionImageInfo, showLog: true })
-}
+  return Promise.all(
+    data.map(post => {
+      const title = get(post, 'properties.name.title[0].plain_text', 'Không tựa đề')
+      const coverUrl = post?.cover?.file?.url || post?.cover?.external?.url
+      const bookCoverUrl = get(post, 'properties.bookCover.files[0].file.url') as string
+      const categories = post.properties?.categories?.multi_select
+        ?.map(category => predefinedCategories.find(c => c === makeSlugText(category.name)))
+        ?.filter(c => c)
 
-async function updateImage(options: {
-  type: 'cover' | 'bookCover' | 'imagesInPost'
-  postId?: string // used to update cover or book cover
-  blockId?: string // used to update images in a post
-  image: NotionImageInfo
-  showLog?: boolean
-}): Promise<void> {
-  const { postId, blockId, type, image, showLog } = options
-  if (!postId && !blockId) {
-    console.log(chalk.red('🚨 Post/Block id is required!'))
-    return
-  }
-  const id = postId || blockId
-  const { title, fileUrl, categorySlug } = image
-  console.log(
-    chalk.blue(
-      `\n🌕 [${id}] Updating image with type ${type.toUpperCase()} for post/block title "${title}"`
-    )
-  )
-  if (showLog) console.log('👉 notionUrl: ', fileUrl)
-  if (fileUrl && !ignoreImage(fileUrl)) {
-    const albumKey =
-      type === 'bookCover' ? 'bookCover' : type === 'cover' ? 'cover' : (categorySlug as any)
-    const imgurAlbumHash = get(albumHashMap, albumKey)
-
-    console.log(chalk.yellow(`⏳ Uploading image to Imgur under album key "${albumKey}"`))
-    try {
-      const { url: imgurUrl, deleteHash } = await uploadImageToImgur(fileUrl, imgurAlbumHash, title)
-      if (showLog) console.log('👉 imgurUrl: ', imgurUrl)
-
-      console.log(chalk.yellow(`⏳ Updating image with type ${type} on Notion...`))
-      try {
-        if (type === 'cover' && postId) await updateNotionCoverImage(postId, imgurUrl)
-        if (type === 'imagesInPost' && blockId) await updateNotionBlockImage(blockId, imgurUrl)
-        if (type === 'bookCover' && postId) await updateBookCoverProperty(postId, imgurUrl, title)
-        console.log(chalk.green('✅ Done updating image on Notion!'))
-      } catch (error) {
-        console.log(chalk.red('🚩 Cannot update image on Notion!'))
-        console.log(chalk.yellow('⏳ Deleting image from Imgur...'))
-        await deleteImageFromImgur(deleteHash)
-        console.log(chalk.green('✅ Done deleting image from Imgur!'))
-        throw error
+      if (!categories || !categories.length) {
+        handleError(`Không có category cho bài viết: ${title}`, 'transformNotionPostsData()')
+        return null
       }
-    } catch (error) {
-      return console.log(chalk.red('🚨 Error: ', error))
-    }
-  } else {
-    console.log(
-      chalk.blue(
-        '✅ There is no image or image is already hosted on a right place. No action needed!'
-      )
-    )
-  }
-}
 
-function ignoreImage(url: string): boolean {
-  const hostName = new URL(url).hostname
-  return (
-    hostName.endsWith('imgur.com') ||
-    hostName.endsWith('notion.so') ||
-    hostName.endsWith('unsplash.com')
+      return {
+        postId: post.id,
+        postTitle: title,
+        coverUrl,
+        bookCoverUrl,
+        categorySlug: categories[0]!
+      }
+    })
   )
 }
 
-/**
- * Get the cover or book cover image of a Notion page
- *
- */
-async function getNotionImageInfo(
+// --------------------------------------------------------------------------------------------
+// Fetchers
+// --------------------------------------------------------------------------------------------
+
+async function getNotionPage(pageId: string) {
+  const url = `https://api.notion.com/v1/pages/${pageId}`
+  const res = await fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${process.env.NOTION_TOKEN}`,
+      'Notion-Version': process.env.NOTION_VERSION as string
+    }
+  })
+  return res.json()
+}
+
+async function getNotionDatabase(dbId: string, startCursor?: string): Promise<any> {
+  try {
+    const url = `https://api.notion.com/v1/databases/${dbId}/query`
+    const requestBody = {
+      sorts: [
+        {
+          property: 'finalCreatedDate',
+          direction: 'descending'
+        }
+      ],
+      start_cursor: startCursor,
+      page_size: 100
+    }
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${process.env.NOTION_TOKEN}`,
+        'Notion-Version': process.env.NOTION_VERSION as string,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(requestBody)
+    })
+    return res.json()
+  } catch (error: any) {
+    console.error(error)
+    // Retry after a number of seconds in the returned header
+    const retryAfter = error?.response?.headers['retry-after'] || error['retry-after']
+    if (retryAfter) {
+      console.log(`Retrying after ${retryAfter} seconds`)
+      await new Promise(resolve => setTimeout(resolve, retryAfter * 1000 + 500))
+      return await getNotionDatabase(dbId, startCursor)
+    }
+    return
+  }
+}
+
+async function updateNotionCoverImage(pageId: string, imgurUrl: string): Promise<NotionHeader> {
+  const response: unknown = await notionClient.pages.update({
+    page_id: pageId,
+    cover: {
+      type: 'external',
+      external: {
+        url: imgurUrl
+      }
+    }
+  })
+
+  return response as NotionHeader
+}
+
+async function updateNotionBookCoverImage(
   pageId: string,
-  type: 'cover' | 'bookCover'
-): Promise<NotionImageInfo> {
-  if (!pageId) return { title: '', fileUrl: null, categorySlug: null }
-  const response: unknown = await getNotionPageWithoutCache(pageId)
-  const notionHeader = response as NotionHeader
-  const fileUrl =
-    type === 'bookCover'
-      ? notionHeader?.properties?.bookCover?.files?.[0]?.file?.url
-      : notionHeader?.cover?.file?.url || notionHeader?.cover?.external?.url
-  const categories = getPredefinedCategories(notionHeader?.properties?.categories?.multi_select)
-  const title = notionHeader?.properties?.name?.title?.[0]?.plain_text || defaultPostTitle
-  return { title, fileUrl: fileUrl || null, categorySlug: categories[0].slug! }
+  imgurUrl: string,
+  postTitle: string
+): Promise<NotionHeader> {
+  const response: unknown = await notionClient.pages.update({
+    page_id: pageId,
+    properties: {
+      bookCover: {
+        files: [
+          {
+            name: `Book cover for post ${postTitle}`,
+            type: 'external',
+            external: { url: imgurUrl }
+          }
+        ]
+      }
+    }
+  })
+
+  return response as NotionHeader
+}
+
+async function updateNotionBlockImage(blockId: string, imgurUrl: string) {
+  const response: unknown = await notionClient.blocks.update({
+    block_id: blockId,
+    image: {
+      external: {
+        url: imgurUrl
+      }
+    }
+  })
+
+  return response
 }
 
 async function uploadImageToImgur(
@@ -322,8 +517,6 @@ async function uploadImageToImgur(
   }
 }
 
-// We use imageDeleteHash instead of imageHash to overcome the auth issue
-// (It means we don't need an auth token to delete an image)
 async function deleteImageFromImgur(imageDeleteHash: string) {
   return await got.delete(`https://api.imgur.com/3/image/${imageDeleteHash}`, {
     headers: {
@@ -332,156 +525,72 @@ async function deleteImageFromImgur(imageDeleteHash: string) {
   })
 }
 
-async function updateNotionCoverImage(pageId: string, imgurUrl: string): Promise<NotionHeader> {
-  const response: unknown = await notionClient.pages.update({
-    page_id: pageId,
-    cover: {
-      type: 'external',
-      external: {
-        url: imgurUrl
-      }
+async function getNotionBlocks(pageId: string, startCursor?: string) {
+  let url = `https://api.notion.com/v1/blocks/${pageId}/children`
+  if (startCursor) url += `&start_cursor=${startCursor}`
+  const res = await fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${process.env.NOTION_TOKEN}`,
+      'Notion-Version': process.env.NOTION_VERSION as string
     }
   })
-
-  return response as NotionHeader
+  return res.json()
 }
 
-async function updateBookCoverProperty(
-  pageId: string,
-  imgurUrl: string,
-  title?: string
-): Promise<NotionHeader> {
-  const response: unknown = await notionClient.pages.update({
-    page_id: pageId,
-    properties: {
-      bookCover: {
-        files: [
-          {
-            name: `Book cover ${title}.png`,
-            type: 'external',
-            external: { url: imgurUrl }
-          }
-        ]
-      }
+// --------------------------------------------------------------------------------------------
+// Types
+// --------------------------------------------------------------------------------------------
+
+type NotionHeader = {
+  cover?: { external: { url: string }; file: { url: string } }
+  properties: {
+    name: { title: { plain_text: string }[] }
+    finalCreatedDate: { formula: { date: { start: any } } }
+    categories: { multi_select: { name: string }[] }
+    tags: { relation: { id: string }[] }
+    authors: { relation: { id: string }[] }
+    selected: { checkbox: boolean }
+    showToc: { checkbox: boolean }
+    bookCover: { files: { external: { url: string }; file: { url: string } }[] }
+    slug: { rich_text: { plain_text: string }[] }
+  }
+}
+
+type NotionPost = {
+  id: string
+  created_time: string
+  last_edited_time?: string
+  cover?: {
+    external?: {
+      url: string
     }
-  })
-
-  return response as NotionHeader
-}
-
-async function updateNotionBlockImage(blockId: string, imgurUrl: string) {
-  const response: unknown = await notionClient.blocks.update({
-    block_id: blockId,
-    image: {
-      external: {
-        url: imgurUrl
-      }
-    }
-  })
-
-  return response
-}
-
-/**
- * This method is copied from ./src/app/lib/fetcher.ts. We cannot use the method is this file because
- * there will be an error of "TypeError: (0 , import_react.cache) is not a function".
- * This is because we are importing this file in a non-React file.
- */
-export async function getPosts(options: {
-  dbId: string
-  categories?: Category[]
-  tags?: Tag[]
-  authors?: Author[]
-  filter?: unknown
-  startCursor?: string
-  pageSize?: number
-  sorts?: NotionSorts[]
-}): Promise<Post[]> {
-  const { dbId, filter, categories, tags, authors, startCursor, pageSize, sorts } = options
-
-  const defaultSort = {
-    property: notionDateName,
-    direction: 'descending'
-  } as NotionSorts
-  const sortsToUse: any = sorts?.length ? sorts.push(defaultSort) : [defaultSort]
-  const filterToUse = getFilter(filter)
-
-  let data = await getNotionDatabaseWithoutCache(
-    dbId,
-    filterToUse,
-    startCursor,
-    pageSize,
-    sortsToUse
-  )
-  let postsList = get(data, 'results', []) as NotionPost[]
-
-  if (data && pageSize && pageSize >= notionMaxRequest && data['has_more']) {
-    let newStartCursor = startCursor
-    while (data!['has_more']) {
-      newStartCursor = data!['next_cursor'] as string
-      data = await getNotionDatabaseWithoutCache(
-        dbId,
-        filterToUse,
-        newStartCursor,
-        pageSize,
-        sortsToUse
-      )
-      if (get(data, 'results')) {
-        const lst = data!['results'] as any[]
-        postsList = [...postsList, ...lst]
-      }
+    file?: {
+      url: string
     }
   }
-
-  const posts = await transformNotionPostsData({
-    data: postsList,
-    categories,
-    tags,
-    authors
-  })
-  return posts
+  properties?: {
+    name: {
+      title: { plain_text: string }[]
+    }
+    url: string
+    categories?: {
+      multi_select: { name: string }[]
+    }
+    tags?: {
+      multi_select: { name: string }[]
+    }
+    author?: {
+      select: { name: string }
+    }
+    excerpt?: {
+      rich_text: { plain_text: string }[]
+    }
+    bookCover?: { files: { external: { url: string }; file: { url: string } }[] }
+  }
 }
 
-/**
- * This method is copied from ./src/app/lib/fetcher.ts. WE DON'T COPY ALL!
- *
- * We cannot use the method is this file because
- * there will be an error of "TypeError: (0 , import_react.cache) is not a function".
- * This is because we are importing this file in a non-React file.
- */
-export async function getBlocks(
-  blockId: string,
-  initNumbering?: string
-): Promise<ListBlockChildrenResponse['results']> {
-  const data = await getNotionBlocksWithoutCache(blockId)
-  const blocks = data?.results as
-    | (BlockObjectResponse & {
-        list_item?: string
-        children?: ListBlockChildrenResponse['results']
-      })[]
-    | []
-
-  if (!blocks?.length) return []
-
-  let number = 1
-  for (const block of blocks) {
-    if (block.type === 'numbered_list_item') {
-      if (initNumbering && ['1', '2', '3'].includes(initNumbering)) initNumbering = undefined
-      block['list_item'] = (initNumbering ?? '') + `${number}.`
-      number++
-    } else {
-      number = 1
-    }
-
-    if (block.type === 'bulleted_list_item') {
-      block['list_item'] = !initNumbering ? '1' : initNumbering === '1' ? '2' : '3'
-    }
-
-    if (block.has_children) {
-      const children = await getBlocks(block.id, block['list_item'])
-      block['children'] = children
-    }
-  }
-
-  return blocks
+type PostInfo = {
+  postTitle: string
+  categorySlug: string
 }

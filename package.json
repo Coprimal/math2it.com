@@ -15,10 +15,13 @@
     "clean-build": "yarn run clean && yarn run build",
     "reinstall": "yarn run clean && rimraf node_modules && rm yarn.lock && yarn install",
     "ud-fontello": "rimraf .fontello-session && fontello-cli --config src/fontello/config.json --css src/fontello/css --font src/fontello/font install",
-    "ud-header-all": "tsx -r dotenv/config ./scripts/ud_images.ts dotenv_config_path=.env.local --a headerAll --dbid 7c2e54318e52416ca5769831454bf08d",
-    "ud-header-all-test": "tsx -r dotenv/config ./scripts/ud_images.ts dotenv_config_path=.env.local --a headerAll --dbid fb11f7382dc14f6787674b775cda81c9",
-    "ud-header": "npx tsx -r dotenv/config ./scripts/ud_images.ts dotenv_config_path=.env.local --a headerPost --pid",
-    "ud-images": "npx tsx -r dotenv/config ./scripts/ud_images.ts dotenv_config_path=.env.local --a imagesInPost --pid"
+    "ud-cover": "npx tsx -r dotenv/config ./scripts/ud_images.ts dotenv_config_path=.env.local --a cover --pid",
+    "ud-cover-all": "npx tsx -r dotenv/config ./scripts/ud_images.ts dotenv_config_path=.env.local --a cover-all",
+    "ud-book-cover": "npx tsx -r dotenv/config ./scripts/ud_images.ts dotenv_config_path=.env.local --a book-cover --pid",
+    "ud-book-cover-all": "npx tsx -r dotenv/config ./scripts/ud_images.ts dotenv_config_path=.env.local --a book-cover-all",
+    "ud-header": "npx tsx -r dotenv/config ./scripts/ud_images.ts dotenv_config_path=.env.local --a header --pid",
+    "ud-header-all": "npx tsx -r dotenv/config ./scripts/ud_images.ts dotenv_config_path=.env.local --a header-all",
+    "ud-images-post": "npx tsx -r dotenv/config ./scripts/ud_images.ts dotenv_config_path=.env.local --a images-in-post --pid"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.15",
