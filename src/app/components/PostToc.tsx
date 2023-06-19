@@ -17,7 +17,7 @@ type PostTocProps = {
 }
 
 export default function PostToc(props: PostTocProps) {
-  const [showContent, setShowContent] = useState(false)
+  const [showContent, setShowContent] = useState(true)
   const headingBlocks = props.contentBlocks.filter(
     block => block.type === 'heading_2' || block.type === 'heading_3'
   )

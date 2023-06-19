@@ -7,11 +7,9 @@ import defaultTool from '@root/public/featured-images/tool_bg.png'
 import defaultTranslate from '@root/public/featured-images/translate_bg.png'
 import { Category, EnvMode, SlugTypeLabels } from '@src/interface'
 
-export const usePlaceholder = false // use placeholder for cover images?
 export const defaultBlurDataURL =
   'data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwC' +
   'AAAAC0lEQVR42mN8XA8AAksBZG7LpHYAAAAASUVORK5CYII='
-export const homeOgImageUrl = ''
 // 👇 ❗❗ Shouldn't change this! Otherwise, change the "next_cursor" list in the
 // later of this file as well. Read more in the "next_cursor" section!
 // export const numPostsPerPage = 20
@@ -19,17 +17,16 @@ export const numPostsPerPage = 5 // ###Thi <- Change this
 // 👇 Don't change this! By default, notion's page_size is 100, but we only need 10
 export const defaultNumPostsRequest = 10
 
-// Single post settings
+/**
+ * Single post settings
+ */
 export const postWidthContainer = 'max-w-3xl'
 export const paragraphSpacing = 'mb-4'
-
 export const defaultCategoryBgColor = '#eee'
 export const defaultCategoryTextColor = '#222'
 export const defaultCodeLanguage = 'typescript'
-
 export const minNumHeadingsToShowToc = 4 // from this number of headings, show toc
 export const mathFontSize = 'text-base'
-
 export const defaultFeaturedImage = _defaultFeaturedImage
 
 /**
@@ -89,7 +86,7 @@ export const MenuAbout = {
 export const MENUS = [
   {
     id: 'id-toan-hoc',
-    uri: '/chuyen-muc/toan-hoc/',
+    uri: `/${getSlugPrefix('category')}/toan-hoc/`,
     label: 'Toán học',
     navigationItems: {
       navColor: '#72b5fb',
@@ -98,7 +95,7 @@ export const MENUS = [
   },
   {
     id: 'id-cong-nghe',
-    uri: '/chuyen-muc/cong-nghe/',
+    uri: `/${getSlugPrefix('category')}/cong-nghe/`,
     label: 'Công nghệ',
     navigationItems: {
       navColor: '#f5c175',
@@ -107,7 +104,7 @@ export const MENUS = [
   },
   {
     id: 'id-bai-dich',
-    uri: '/chuyen-muc/bai-dich/',
+    uri: `/${getSlugPrefix('category')}/bai-dich/`,
     label: 'Bài dịch',
     navigationItems: {
       navColor: '#d6baff',
@@ -116,7 +113,7 @@ export const MENUS = [
   },
   {
     id: 'id-cong-cu',
-    uri: '/chuyen-muc/cong-cu/',
+    uri: `/${getSlugPrefix('category')}/cong-cu/`,
     label: 'Công cụ',
     navigationItems: {
       navColor: '#ef92b1',
@@ -138,7 +135,7 @@ export const predefinedCategories: Category[] = [
   // Bài dịch
   {
     slug: 'bai-dich',
-    uri: '/chuyen-muc/bai-dich/',
+    uri: `/${getSlugPrefix('category')}/bai-dich/`,
     name: 'Bài dịch',
     style: {
       bgColor: '#e6d6ff',
@@ -152,7 +149,7 @@ export const predefinedCategories: Category[] = [
   // Công cụ
   {
     slug: 'cong-cu',
-    uri: '/chuyen-muc/cong-cu/',
+    uri: `/${getSlugPrefix('category')}/cong-cu/`,
     name: 'Công cụ',
     style: {
       bgColor: '#ffe3e3', // old: #ffe4ee
@@ -166,7 +163,7 @@ export const predefinedCategories: Category[] = [
   // Công nghệ
   {
     slug: 'cong-nghe',
-    uri: '/chuyen-muc/cong-nghe/',
+    uri: `/${getSlugPrefix('category')}/cong-nghe/`,
     name: 'Công nghệ',
     style: {
       bgColor: '#ffeacc',
@@ -180,7 +177,7 @@ export const predefinedCategories: Category[] = [
   // Giáo dục
   {
     slug: 'giao-duc',
-    uri: '/chuyen-muc/giao-duc/',
+    uri: `/${getSlugPrefix('category')}/giao-duc/`,
     name: 'Giáo dục',
     style: {
       bgColor: 'rgb(218 255 227)',
@@ -194,7 +191,7 @@ export const predefinedCategories: Category[] = [
   // Sách hay
   {
     slug: 'sach-hay',
-    uri: '/chuyen-muc/sach-hay/',
+    uri: `/${getSlugPrefix('category')}/sach-hay/`,
     name: 'Sách hay',
     style: {
       bgColor: 'rgb(220 252 254)',
@@ -209,7 +206,7 @@ export const predefinedCategories: Category[] = [
   // Toán học
   {
     slug: 'toan-hoc',
-    uri: '/chuyen-muc/toan-hoc/',
+    uri: `/${getSlugPrefix('category')}/toan-hoc/`,
     name: 'Toán học',
     style: {
       bgColor: 'rgb(215 235 255)',
