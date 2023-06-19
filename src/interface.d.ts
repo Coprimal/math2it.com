@@ -115,6 +115,7 @@ export type SlugTypeLabels =
   | 'privacy'
   | 'viet-bai'
   | 'newsletter'
+  | 'page'
 export type GroupTypeReturn = { categories: Category[] } | { tags: Tag[] } | { authors: Author[] }
 
 /**
@@ -162,7 +163,7 @@ export type NotionAuthor = {
     }
     website?: { url: string }
     avatar?: {
-      files: { file: { url: string } }[]
+      files: { external: { url: string }; file: { url: string } }[]
     }
     description?: {
       rich_text: { plain_text: string }[]
@@ -178,8 +179,6 @@ export type NotionTag = {
   properties: {
     name: { title: { plain_text: string }[] }
     description: { rich_text: { plain_text: string }[] }
-    icon: { files: { file: { url: string } }[] }
-    fontello: { rich_text: { plain_text: string }[] }
     slug: { rich_text: { plain_text: string }[] }
   }
 }

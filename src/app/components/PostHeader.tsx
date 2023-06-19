@@ -86,12 +86,12 @@ export default function PostHeader(props: PostHeaderProps) {
             )}
           >
             <div className="flex gap-2 text-base opacity-80">
-              {authors?.length && authors?.length > 1 && <i className="icon-users-outline"></i>}
-              {authors?.length && authors?.length <= 1 && (
+              {!!authors?.length && authors?.length > 1 && <i className="icon-users-outline"></i>}
+              {((!!authors?.length && authors?.length <= 1) || !authors?.length) && (
                 <i className="icon-user-outline -mr-1"></i>
               )}
               <div>
-                {authors?.length &&
+                {!!authors?.length &&
                   authors?.length >= 1 &&
                   authors.map((author, idx, authors) => (
                     <span key={author.uri}>

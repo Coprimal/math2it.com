@@ -250,5 +250,6 @@ export function getSlugPrefix(type: SlugTypeLabels): string {
   if (type === 'privacy') return 'chinh-sach-bao-mat'
   if (type === 'newsletter') return 'dang-ky-nhan-bai-viet'
   if (type === 'viet-bai') return 'viet-bai-tren-math2it'
+  if (type === 'page') return 'trang'
   return ''
 }

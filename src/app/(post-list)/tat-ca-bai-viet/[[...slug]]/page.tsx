@@ -27,7 +27,7 @@ export async function generateStaticParams() {
     const path =
       i === 1
         ? { slug: [getSlugPrefix('all')] }
-        : { slug: [getSlugPrefix('all'), 'trang', i.toString()] }
+        : { slug: [getSlugPrefix('all'), getSlugPrefix('page'), i.toString()] }
     params.push(path)
   }
   return params
@@ -40,7 +40,7 @@ export default async function AllPostsPage({ params }: OptionalCatchAllProps) {
 
   if (
     !params ||
-    (params.slug?.length > 0 && params.slug?.[0] !== 'trang') ||
+    (params.slug?.length > 0 && params.slug?.[0] !== getSlugPrefix('page')) ||
     params.slug?.length > 2
   ) {
     notFound()

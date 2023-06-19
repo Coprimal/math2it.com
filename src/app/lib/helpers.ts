@@ -52,7 +52,10 @@ export function transformNotionAuthorsData(data: NotionAuthor[]): Author[] {
       const uri = slug
         ? `/${getSlugPrefix('author')}/${slug}/`
         : `/${getSlugPrefix('author')}/${makeSlugText(name)}/`
-      const avatarUrl = properties?.avatar?.files[0]?.file.url || null
+      const avatarUrl =
+        properties?.avatar?.files[0]?.file?.url ||
+        properties?.avatar?.files[0]?.external?.url ||
+        null
       const description = properties?.description?.rich_text[0]?.plain_text || null
       const icon = author?.icon?.emoji || null
       const role = properties?.role?.select.name || null
@@ -223,10 +226,20 @@ export function getFilterOf(type: SlugTypeLabels, data?: Category | Tag | Author
   switch (type) {
     case 'author':
       return {
-        property: 'authors',
-        relation: {
-          contains: data?.id
-        }
+        or: [
+          {
+            property: 'authors',
+            relation: {
+              contains: data?.id
+            }
+          },
+          {
+            property: 'authors',
+            relation: {
+              is_empty: true
+            }
+          }
+        ]
       }
     case 'category':
       return {
