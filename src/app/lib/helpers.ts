@@ -83,10 +83,8 @@ export function transformNotionTagsData(data?: NotionTag[]): Tag[] {
       const description = properties?.description?.rich_text[0]?.plain_text || null
       const slug = properties?.slug?.rich_text[0]?.plain_text || makeSlugText(name) || null
       const uri = `/${getSlugPrefix('tag')}/${slug}/`
-      const fontello = properties?.fontello?.rich_text[0]?.plain_text || null
       const id = tag?.id || uri
-      const icon = properties?.icon?.files[0]?.file.url || null
-      return { id, name, uri, description, fontello, icon, slug }
+      return { id, name, uri, description, slug }
     }) || []
   )
 }

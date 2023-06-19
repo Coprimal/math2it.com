@@ -52,8 +52,6 @@ export type Tag = {
   uri: string
   slug: string | null
   description?: string | null
-  icon?: string | null
-  fontello?: string | null
 }
 
 export type PostAndPageACF = {

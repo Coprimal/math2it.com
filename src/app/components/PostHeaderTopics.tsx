@@ -61,7 +61,6 @@ export default function PostHeaderTopics(props: PostHeaderTopicsProps) {
             key={tag.uri}
             href={tag.uri || '/'}
           >
-            {tag.fontello && <i className={`${tag.fontello} mr-1 text-sm`}></i>}
             {tag.name}
           </Link>
         ))}
