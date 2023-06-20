@@ -3,6 +3,7 @@ import cn from 'classnames'
 import { get } from 'lodash'
 import dynamic from 'next/dynamic'
 
+import BlockBookmark from './notion-blocks/BlockBookmark'
 import BlockBulletedListItem, {
   BlockBulletedListItemType
 } from './notion-blocks/BlockBulletedListItem'
@@ -137,6 +138,9 @@ export default function BlockRender(props: { block: BlockObjectResponse; level: 
 
     case 'video':
       return <DynamicVideo block={block} className={cn(basicBlockGap)} />
+
+    case 'bookmark':
+      return <BlockBookmark block={block} level={level} className={cn(basicBlockGap)} />
 
     default:
       return null
