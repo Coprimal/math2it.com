@@ -33,7 +33,9 @@ npm install -g yarn
 npm install -g fontello-cli
 ```
 
-🚨 `--turbo`: For a momment (14/6/23), it's not working on MacOS because of this error: "*something went wrong installing the "sharp" module Cannot find module 'relative "../build/Release/sharp-" \<dynamic\> ".node"'*"
+> 🚨 `--turbo`: For a momment (14/6/23), it's not working on MacOS because of this error: "_something went wrong installing the "sharp" module Cannot find module 'relative "../build/Release/sharp-" \<dynamic\> ".node"'_"
+
+> 💡 **TIP**: Because we're using "cache" for requests, if you change something on Notion, don't forget to `Ctrl+Shift+R` (or `cmd+shift+R`) to hard refresh the page.
 
 ```bash
 # install
@@ -73,7 +75,7 @@ yarn reinstall
 
 If an image on Notion isn't hosted on [imgur](https://imgur.com/), download this image -> upload to imgur -> get the url -> update the corresponding field on notion.
 
-``` bash
+```bash
 # Update cover for a single post
 yarn ud-cover <postId>
 
@@ -119,17 +121,17 @@ Usage (`ng` is the field `css` in the config file),
 
 ## Api (`src/api/`)
 
-1. Search posts with the unofficial notion api.
+Search posts with the unofficial notion api.
 
-   **POST** `http://localhost:3000/api/search-notion`
+**POST** `http://localhost:3000/api/search-notion`
 
-    ```bash
-    # body
-    {
-        "query": "check",
-        "limit": 5
-    }
-    ```
+```bash
+# body
+{
+    "query": "check",
+    "limit": 5
+}
+```
 
 ## React Icons
 
@@ -140,7 +142,7 @@ How to use?
 ```tsx
 import { BiRightArrow } from 'react-icons/bi'
 
-<BiRightArrow className="mr-1 text-lg" />
+;<BiRightArrow className="mr-1 text-lg" />
 ```
 
 ## Update package version

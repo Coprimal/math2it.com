@@ -225,3 +225,10 @@ export type SearchResult = {
 }
 
 export type ImgurUrlType = 't' | 'm' | 'l' | 'h'
+
+export type BookmarkPreview = {
+  title: string | null
+  description: string | null
+  favicon: string | null
+  image: ImageType
+}

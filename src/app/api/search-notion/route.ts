@@ -1,6 +1,12 @@
 import { idToUuid, parseSearchResults } from '@app/lib/helpers'
 import got from 'got'
 
+type SearchParams = {
+  query: string
+  limit?: number
+  filters?: any
+}
+
 export async function POST(request: Request) {
   const searchParams = await request.json()
 
@@ -10,12 +16,6 @@ export async function POST(request: Request) {
   return new Response(JSON.stringify(postResults), {
     headers: { 'Content-Type': 'application/json' }
   })
-}
-
-type SearchParams = {
-  query: string
-  limit?: number
-  filters?: any
 }
 
 async function search(params: SearchParams): Promise<any> {
