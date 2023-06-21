@@ -232,7 +232,8 @@ export const UNOFFICIAL_NOTION_KEYS = {
   excerpt: 'VsZM',
   finalCreatedDate: 't:V?',
   boldSearchKey: '<gzkNfoUU>',
-  boldSearchKeyClose: '</gzkNfoUU>'
+  boldSearchKeyClose: '</gzkNfoUU>',
+  bookCover: 'yw|N'
 }
 
 export function getSlugPrefix(type: SlugTypeLabels): string {

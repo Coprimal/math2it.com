@@ -1,10 +1,8 @@
 import {
   ENV_MODE,
-  UNOFFICIAL_NOTION_KEYS,
   defaultCategoryBgColor,
   defaultCategoryTextColor,
   defaultCustomSizeFM,
-  defaultPostTitle,
   getSlugPrefix,
   predefinedCategories
 } from '@app/lib/config'
@@ -16,7 +14,6 @@ import {
   NotionAuthor,
   NotionTag,
   Post,
-  SearchResult,
   SlugTypeLabels,
   Tag
 } from '@src/interface'
@@ -296,58 +293,6 @@ export function idToUuid(id: string): string | null {
   }
 
   return null
-}
-
-/**
- * We convert the format of search results got from /api/search-notion to the format we want
- * Note that: /api/search-notin uses an unofficial notion api, so the format is a little bit different
- *
- * Remark: we put this function here to overcome the error "Module not found: Can't resolve 'child_process'"
- */
-export function parseSearchResults(data: any): SearchResult[] {
-  // console.log('👉👉👉👉 data (parseSearchResults): ', JSON.stringify(data)) // ###M
-  let results = [] as SearchResult[]
-  if (!data || !data.results || data.results.length === 0) results = []
-  else {
-    for (const result of data.results) {
-      const postId = result.id
-      const _properties = data.recordMap?.block?.[postId]?.value?.properties
-      const isPostPublished = _properties?.[UNOFFICIAL_NOTION_KEYS.published]?.[0]?.[0] === 'Yes'
-      const _title = _properties?.[UNOFFICIAL_NOTION_KEYS.title]?.[0]?.[0]
-      const postTitle = _title || defaultPostTitle
-      const _slug = _properties?.[UNOFFICIAL_NOTION_KEYS.slug]?.[0]?.[0] || null
-      const postSlug = _slug || makeSlugText(_title || '')
-      const postCategoryNames =
-        _properties?.[UNOFFICIAL_NOTION_KEYS.categories]?.[0]?.[0]?.split(',') || []
-      const isPostSelected = _properties?.[UNOFFICIAL_NOTION_KEYS.selected]?.[0]?.[0] === 'Yes'
-      const postTitleHighlighted =
-        result?.highlight?.title
-          ?.replaceAll(
-            UNOFFICIAL_NOTION_KEYS.boldSearchKey,
-            '<span className="text-slate-900 font-semibold">'
-          )
-          ?.replaceAll(UNOFFICIAL_NOTION_KEYS.boldSearchKeyClose, '</span>') || postTitle
-      const postTextHighlighted =
-        result.highlight?.text
-          ?.replaceAll(
-            UNOFFICIAL_NOTION_KEYS.boldSearchKey,
-            '<span className="text-slate-900 font-semibold">'
-          )
-          ?.replaceAll(UNOFFICIAL_NOTION_KEYS.boldSearchKeyClose, '</span>') || null
-
-      results.push({
-        id: postId,
-        title: postTitle,
-        slug: postSlug,
-        categoryNames: postCategoryNames,
-        isPublished: isPostPublished,
-        isSelected: isPostSelected,
-        titleHighlighted: postTitleHighlighted,
-        textHighlighted: postTextHighlighted
-      })
-    }
-  }
-  return results
 }
 
 /**

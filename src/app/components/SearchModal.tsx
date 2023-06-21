@@ -12,7 +12,7 @@ import { ChangeEvent, Fragment, useCallback, useRef, useState } from 'react'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import { BsArrowReturnLeft } from 'react-icons/bs'
 import { FiSearch } from 'react-icons/fi'
-import { IoCloseCircle, IoDocumentTextOutline } from 'react-icons/io5'
+import { IoBookOutline, IoCloseCircle, IoDocumentTextOutline } from 'react-icons/io5'
 import useSWR from 'swr'
 
 type SearchModalProps = {
@@ -180,7 +180,12 @@ export default function SearchModal(props: SearchModalProps) {
                               onMouseEnter={() => handleMouseEnter(index)}
                             >
                               <div className="mt-0.5">
-                                <IoDocumentTextOutline className="text-xl opacity-80" />
+                                {!item.isBookPost && (
+                                  <IoDocumentTextOutline className="text-xl opacity-80" />
+                                )}
+                                {item.isBookPost && (
+                                  <IoBookOutline className="text-xl opacity-80" />
+                                )}
                               </div>
                               <div className={cn('w-full flex flex-col text-slate-900 gap-1')}>
                                 <div

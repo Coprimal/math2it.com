@@ -404,7 +404,6 @@ export async function getBlocks(
   initNumbering?: string
 ): Promise<ListBlockChildrenResponse['results']> {
   const data = await getNotionBlocks(blockId)
-  // console.log('✊✊✊ notion blocks (raw)', JSON.stringify(data)) // ###M
   const blocks = data?.results as
     | (BlockObjectResponse & {
         list_item?: string

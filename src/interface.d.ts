@@ -221,6 +221,7 @@ export type SearchResult = {
   isSelected: boolean
   titleHighlighted: string
   textHighlighted: string
+  isBookPost: boolean
   isFake?: boolean // used to not perform the request
 }
 
