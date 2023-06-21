@@ -47,6 +47,7 @@
     "plaiceholder": "^3.0.0",
     "prismjs": "^1.29.0",
     "react": "18.2.0",
+    "react-clipboard.js": "^2.0.16",
     "react-dom": "18.2.0",
     "react-icons": "^4.9.0",
     "react-syntax-highlighter": "^15.5.0",
