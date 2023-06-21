@@ -147,7 +147,7 @@ export const getCategories = () => predefinedCategories
  */
 export const getTags = async () => {
   if (!NOTION_DB_TAGS) throw new Error('NOTION_DB_TAGS is not defined')
-  const data = await getNotionDatabase(NOTION_DB_TAGS)
+  const data = await getNotionDatabase(NOTION_DB_TAGS, undefined, undefined, notionMaxRequest)
   return transformNotionTagsData(data?.['results'] as any[])
 }
 
@@ -156,7 +156,7 @@ export const getTags = async () => {
  */
 export const getAuthors = async () => {
   if (!NOTION_DB_AUTHORS) throw new Error('NOTION_DB_AUTHORS is not defined')
-  const data = await getNotionDatabase(NOTION_DB_AUTHORS)
+  const data = await getNotionDatabase(NOTION_DB_AUTHORS, undefined, undefined, notionMaxRequest)
   return transformNotionAuthorsData(data?.['results'] as any[])
 }
 
@@ -196,6 +196,7 @@ export async function transformPostHeader(
   // tags
   const tagIdsList = properties?.tags?.relation?.map(item => item.id) || []
   const tagsList = await getTags()
+
   const tags = parseTagsForPost(tagIdsList, tagsList)
 
   // authors
