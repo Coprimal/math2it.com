@@ -5,6 +5,7 @@ import PostFeaturedImage from '@c/PostFeaturedImage'
 import { Post } from '@src/interface'
 import cn from 'classnames'
 import Link from 'next/link'
+import { IoBookOutline } from 'react-icons/io5'
 
 export type PostTitleCateDateOpts = {
   hideCategory?: boolean
@@ -27,7 +28,7 @@ export default function PostTitleCateDate({ post, options }: PostTitleCateDatePr
             'rounded-b-md': !category || options?.hideCategory
           })}
         >
-          <div className="relative h-28 w-full overflow-hidden">
+          <div className="relative h-32 w-full overflow-hidden">
             <PostFeaturedImage featuredImage={featuredImage} title={title} />
           </div>
           {!options?.hideCategory && category && (
@@ -42,7 +43,12 @@ export default function PostTitleCateDate({ post, options }: PostTitleCateDatePr
             </div>
           )}
         </div>
-        <div className={cn('group-hover:m2it-link-hover p-2 text-base font-semibold')}>{title}</div>
+        <div className={cn('group-hover:m2it-link-hover p-2 text-base font-semibold')}>
+          {title}
+          {!!post.bookCover && (
+            <IoBookOutline className="group-hover:m2it-link-hover mb-[2px] ml-2 inline text-sm text-slate-700" />
+          )}
+        </div>
         {!options?.hideDate && (
           <div className="text-sm opacity-80">
             <i className="icon-clock mr-1"></i>

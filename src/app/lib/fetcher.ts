@@ -358,7 +358,9 @@ async function transformNotionPostsData(options: {
       })
 
       // bookCover (if available)
-      const bookCoverUrl = get(post, 'properties.bookCover.files[0].file.url')
+      const bookCoverUrl =
+        get(post, 'properties.bookCover.files[0].file.url') ||
+        get(post, 'properties.bookCover.files[0].external.url')
       const bookCover = await parseImage({
         sourceUrl: bookCoverUrl,
         altText: `Ảnh bìa sách ${title}`,
