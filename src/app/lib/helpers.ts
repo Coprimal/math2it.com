@@ -319,3 +319,34 @@ export function getFilter(filter?: any): QueryDatabaseParameters['filter'] {
       and: [...defaultFilter, ...(filter?.and ?? [])]
     }
 }
+
+/**
+ * Get related posts from all posts with the same category or tag. In case there are not enough
+ * posts with the same category or tag, it will get random posts.
+ */
+export function getRelatedPosts(posts: Post[], currentPost: Post, limit = 5): Post[] {
+  const relatedPosts = posts.filter(post => {
+    if (post.uri === currentPost.uri) return false
+    if (
+      post.categories?.some(category =>
+        currentPost.categories?.map(category => category.slug).includes(category.slug)
+      )
+    )
+      return true
+
+    if (post.tags?.some(tag => currentPost.tags?.map(tag => tag.slug).includes(tag.slug)))
+      return true
+
+    return false
+  })
+
+  // If there are not enough related posts, get random posts
+  if (relatedPosts.length < limit) {
+    const randomPosts = posts.filter(
+      post => !relatedPosts.includes(post) && post.uri !== currentPost.uri
+    )
+    return relatedPosts.concat(randomPosts.slice(0, limit - relatedPosts.length))
+  }
+
+  return relatedPosts.sort(() => Math.random() - 0.5).slice(0, limit)
+}

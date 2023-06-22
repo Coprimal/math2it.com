@@ -2,16 +2,18 @@ import PostAside from '@c/PostAside'
 import PostBody from '@c/PostBody'
 import PostHeader from '@c/PostHeader'
 import PostToc from '@c/PostToc'
+import PostList from '@c/PostsList'
 import {
   BlockObjectResponse,
   ListBlockChildrenResponse
 } from '@notionhq/client/build/src/api-endpoints'
-import { PostHeaderType } from '@src/interface'
+import { Post, PostHeaderType } from '@src/interface'
 import cn from 'classnames'
 
 type SinglePostTemplateProps = {
   postHeader: PostHeaderType
   contentBlocks: ListBlockChildrenResponse['results']
+  relatedPosts?: Post[]
 }
 
 // Note: If we change the breakpoint here, we have to change the breakpoint of showing TOC on
@@ -36,6 +38,17 @@ export default function SinglePostTemplate(props: SinglePostTemplateProps) {
             contentBlocks={contentBlocks as BlockObjectResponse[]}
             showToc={postHeader.showToc}
           ></PostBody>
+
+          {props.relatedPosts && (
+            <>
+              <h3>Có thể bạn quan tâm?</h3>
+              <PostList
+                posts={props.relatedPosts}
+                postType="PostTitleCateDate"
+                postTypeOpts={{ hideCategory: true, hideDate: true }}
+              />
+            </>
+          )}
         </article>
 
         <aside className={cn(asideClass)}>
