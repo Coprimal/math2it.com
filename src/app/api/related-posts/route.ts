@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from 'next/server'
 export async function GET(request: NextRequest) {
   const postId = request.nextUrl.searchParams.get('postId')
   const size = request.nextUrl.searchParams.get('size')
-  const pageSize = size ? parseInt(size) : 5
+  const numPosts = size ? parseInt(size) : 5
 
   if (!postId || typeof postId !== 'string') {
     return new NextResponse(JSON.stringify({ error: 'A valid id string is required', code: 400 }), {
@@ -24,10 +24,16 @@ export async function GET(request: NextRequest) {
   const filter = buildFilter(categoryNames, tagIds, postId)
   const posts = await getPostsBy({
     filter,
-    pageSize
+    pageSize: 50 // ###R: We only take the latest 50 posts
   })
 
-  return new NextResponse(JSON.stringify(posts.filter(post => post.id !== idToUuid(postId))), {
+  // Get pageSize random posts
+  const randomPosts = posts
+    .filter(post => post.id !== idToUuid(postId))
+    .sort(() => 0.5 - Math.random())
+    .slice(0, numPosts)
+
+  return new NextResponse(JSON.stringify(randomPosts), {
     status: 200
   })
 }
