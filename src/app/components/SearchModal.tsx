@@ -8,7 +8,7 @@ import parse from 'html-react-parser'
 import { debounce, get } from 'lodash'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { ChangeEvent, Fragment, useCallback, useRef, useState } from 'react'
+import { ChangeEvent, Fragment, useCallback, useLayoutEffect, useRef, useState } from 'react'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import { BsArrowReturnLeft } from 'react-icons/bs'
 import { FiSearch } from 'react-icons/fi'
@@ -23,6 +23,7 @@ type SearchModalProps = {
 
 export default function SearchModal(props: SearchModalProps) {
   const inputRef = useRef<HTMLInputElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
   const [query, setQuery] = useState('')
   const [queryToSearch, setQueryToSearch] = useState(query)
   const [selected, setSelected] = useState(-1)
@@ -47,6 +48,26 @@ export default function SearchModal(props: SearchModalProps) {
     debounceSearch(value)
   }
 
+  // Auto scroll the search container when navigating with arrow keys
+  useLayoutEffect(() => {
+    if (containerRef.current) {
+      const container = containerRef.current
+      const selectedItem = container.children[selected] as HTMLElement
+      const view = checkIsInView(selectedItem, container)
+      if (view === 'above') {
+        container.scrollTo({
+          top: selectedItem.offsetTop - container.offsetTop,
+          behavior: 'smooth'
+        })
+      } else if (view === 'below') {
+        container.scrollTo({
+          top: selectedItem.offsetTop + selectedItem.offsetHeight - container.offsetHeight,
+          behavior: 'smooth'
+        })
+      }
+    }
+  }, [selected])
+
   function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === 'Enter') {
       // navigate to the selected result
@@ -65,15 +86,23 @@ export default function SearchModal(props: SearchModalProps) {
     if (e.key === 'ArrowDown') {
       e.preventDefault()
       setSelected(prev => (!data || prev < data.length - 1 ? prev + 1 : prev))
+      // if before the arrow down, the selected item is the last item, set the selected to the first item
+      if (data?.length && data?.length > 0 && selected === data?.length - 1) {
+        setSelected(0)
+      }
     }
 
     if (e.key === 'ArrowUp') {
       e.preventDefault()
       setSelected(prev => (prev > 0 ? prev - 1 : prev))
+      // if before the arrow up, the selected item is the first item, set the selected to the last item
+      if (data?.length && data?.length > 0 && selected === 0) {
+        setSelected(data?.length - 1)
+      }
     }
   }
 
-  function handleMouseEnter(index: number) {
+  function handleMouseMoveCapture(index: number) {
     setSelected(index)
   }
 
@@ -165,6 +194,7 @@ export default function SearchModal(props: SearchModalProps) {
                     {data.length > 0 && (
                       <div className={cn('flex flex-col divide-y overflow-hidden')}>
                         <div
+                          ref={containerRef}
                           className={cn(
                             'flex flex-col divide-y divide-slate-150 overflow-auto m2it-scrollbar'
                           )}
@@ -177,7 +207,7 @@ export default function SearchModal(props: SearchModalProps) {
                               className={cn('flex gap-3 py-4 px-4 w-full', {
                                 'bg-gray-100': selected === index
                               })}
-                              onMouseEnter={() => handleMouseEnter(index)}
+                              onMouseMoveCapture={() => handleMouseMoveCapture(index)}
                             >
                               <div className="mt-0.5">
                                 {!item.isBookPost && (
@@ -190,13 +220,16 @@ export default function SearchModal(props: SearchModalProps) {
                               <div className={cn('w-full flex flex-col text-slate-900 gap-1')}>
                                 <div
                                   className={cn(
-                                    'w-full text-base flex items-center justify-between',
-                                    {
-                                      'pr-2 pb-1 border-b border-dashed': item.textHighlighted
-                                    }
+                                    'w-full text-base flex items-center justify-between'
                                   )}
                                 >
-                                  <div>{parse(item.titleHighlighted) || item.title}</div>
+                                  <div
+                                    className={cn({
+                                      'pr-4 pb-1 border-b border-dashed': item.textHighlighted
+                                    })}
+                                  >
+                                    {parse(item.titleHighlighted) || item.title}
+                                  </div>
                                   <div
                                     className={cn({
                                       visible: selected === index,
@@ -247,4 +280,18 @@ const fetcher = async (params: any) => {
   })
   const json = await res.json()
   return json
+}
+
+function checkIsInView(selectedEl: HTMLElement, containerEl: HTMLElement) {
+  const isOutBelow =
+    selectedEl.offsetTop + selectedEl.offsetHeight - containerEl.scrollTop >
+    containerEl.offsetHeight
+  const isOutAbove = selectedEl.offsetTop < containerEl.scrollTop
+  if (isOutAbove) {
+    return 'above'
+  } else if (isOutBelow) {
+    return 'below'
+  } else {
+    return 'in'
+  }
 }

@@ -45,7 +45,13 @@ export default function NavSearch() {
           </div>
           <div className="flex items-center gap-2">
             <span className="whitespace-nowrap">Tìm kiếm</span>
-            <span className={cn('text-sm bg-[#757fa838] px-1 rounded-sm')}>{searchKeyText}</span>
+            <span
+              className={cn(
+                'text-[0.7rem] bg-[#65666b30] px-1 rounded-sm border-[#555] border-[0.5px]'
+              )}
+            >
+              {searchKeyText}
+            </span>
           </div>
         </button>
       </div>
