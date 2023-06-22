@@ -2,18 +2,18 @@ import PostAside from '@c/PostAside'
 import PostBody from '@c/PostBody'
 import PostHeader from '@c/PostHeader'
 import PostToc from '@c/PostToc'
-import PostList from '@c/PostsList'
+import RelatedPosts from '@c/RelatedPosts'
 import {
   BlockObjectResponse,
   ListBlockChildrenResponse
 } from '@notionhq/client/build/src/api-endpoints'
-import { Post, PostHeaderType } from '@src/interface'
+import { PostHeaderType } from '@src/interface'
 import cn from 'classnames'
 
 type SinglePostTemplateProps = {
   postHeader: PostHeaderType
   contentBlocks: ListBlockChildrenResponse['results']
-  relatedPosts?: Post[]
+  postId: string
 }
 
 // Note: If we change the breakpoint here, we have to change the breakpoint of showing TOC on
@@ -21,7 +21,8 @@ type SinglePostTemplateProps = {
 const asideClass = cn('hidden 2xl:block flex-1', 'h-[calc(100vh-130px)] sticky top-[70px]')
 
 export default function SinglePostTemplate(props: SinglePostTemplateProps) {
-  const { postHeader, contentBlocks } = props
+  const { postHeader, contentBlocks, postId } = props
+
   return (
     <div className="animate-fadeIn">
       {postHeader && <PostHeader postHeader={postHeader} />}
@@ -39,16 +40,7 @@ export default function SinglePostTemplate(props: SinglePostTemplateProps) {
             showToc={postHeader.showToc}
           ></PostBody>
 
-          {props.relatedPosts && (
-            <>
-              <h3>Có thể bạn quan tâm?</h3>
-              <PostList
-                posts={props.relatedPosts}
-                postType="PostTitleCateDate"
-                postTypeOpts={{ hideCategory: true, hideDate: true }}
-              />
-            </>
-          )}
+          <RelatedPosts postId={postId} />
         </article>
 
         <aside className={cn(asideClass)}>

@@ -7,7 +7,6 @@ import {
   getPosts,
   getTags
 } from '@app/lib/fetcher'
-import { getRelatedPosts } from '@app/lib/helpers'
 import SinglePostTemplate from '@app/templates/SinglePostTemplate'
 import { DynamicSegmentParamsProps } from '@src/interface'
 import { Metadata } from 'next'
@@ -61,14 +60,14 @@ export default async function SinglePostPage({ params }: DynamicSegmentParamsPro
 
     const postHeader = await getPostHeader(pageIdwithDash)
     const contentBlocks = await getBlocks(pageIdwithDash)
-    const relatedPosts = getRelatedPosts(allPosts, post, 4)
+    // const relatedPosts = getRelatedPosts(allPosts, post, 20)
 
     return (
       <Suspense fallback={<LoadingPost />}>
         <SinglePostTemplate
           postHeader={postHeader}
           contentBlocks={contentBlocks}
-          relatedPosts={relatedPosts}
+          postId={pageIdwithDash}
         />
       </Suspense>
     )

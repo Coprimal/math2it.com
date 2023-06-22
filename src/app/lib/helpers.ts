@@ -254,14 +254,10 @@ export function getFilterOf(type: SlugTypeLabels, data?: Category | Tag | Author
       }
     case 'selected':
       return {
-        and: [
-          {
-            property: 'selected',
-            checkbox: {
-              equals: true
-            }
-          }
-        ]
+        property: 'selected',
+        checkbox: {
+          equals: true
+        }
       }
     default:
       return null
