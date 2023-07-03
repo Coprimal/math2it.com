@@ -1,5 +1,9 @@
 'use client'
 
+/**
+ * ARCHIVED: This component is archived because we don't use it anymore. It requires too many requests
+ * to the server to get the related posts.
+ */
 import useSWR from 'swr'
 
 import PostList from './PostsList'

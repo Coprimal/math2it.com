@@ -3,6 +3,10 @@ import { idToUuid } from '@app/lib/helpers'
 import { NotionHeader } from '@src/interface'
 import { NextRequest, NextResponse } from 'next/server'
 
+/**
+ * ARCHIVED: This file is not used anymore.
+ */
+
 export async function GET(request: NextRequest) {
   const postId = request.nextUrl.searchParams.get('postId')
   const size = request.nextUrl.searchParams.get('size')

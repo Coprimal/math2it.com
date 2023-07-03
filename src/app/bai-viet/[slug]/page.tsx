@@ -64,11 +64,7 @@ export default async function SinglePostPage({ params }: DynamicSegmentParamsPro
 
     return (
       <Suspense fallback={<LoadingPost />}>
-        <SinglePostTemplate
-          postHeader={postHeader}
-          contentBlocks={contentBlocks}
-          postId={pageIdwithDash}
-        />
+        <SinglePostTemplate postHeader={postHeader} contentBlocks={contentBlocks} />
       </Suspense>
     )
   } catch (error) {

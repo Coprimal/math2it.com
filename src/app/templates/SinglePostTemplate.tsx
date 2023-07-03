@@ -2,7 +2,6 @@ import PostAside from '@c/PostAside'
 import PostBody from '@c/PostBody'
 import PostHeader from '@c/PostHeader'
 import PostToc from '@c/PostToc'
-import RelatedPosts from '@c/RelatedPosts'
 import {
   BlockObjectResponse,
   ListBlockChildrenResponse
@@ -13,7 +12,6 @@ import cn from 'classnames'
 type SinglePostTemplateProps = {
   postHeader: PostHeaderType
   contentBlocks: ListBlockChildrenResponse['results']
-  postId: string
 }
 
 // Note: If we change the breakpoint here, we have to change the breakpoint of showing TOC on
@@ -21,7 +19,7 @@ type SinglePostTemplateProps = {
 const asideClass = cn('hidden 2xl:block flex-1', 'h-[calc(100vh-130px)] sticky top-[70px]')
 
 export default function SinglePostTemplate(props: SinglePostTemplateProps) {
-  const { postHeader, contentBlocks, postId } = props
+  const { postHeader, contentBlocks } = props
 
   return (
     <div className="animate-fadeIn">
@@ -39,8 +37,6 @@ export default function SinglePostTemplate(props: SinglePostTemplateProps) {
             contentBlocks={contentBlocks as BlockObjectResponse[]}
             showToc={postHeader.showToc}
           ></PostBody>
-
-          <RelatedPosts postId={postId} />
         </article>
 
         <aside className={cn(asideClass)}>
