@@ -40,6 +40,7 @@
     "html-react-parser": "^4.0.0",
     "katex": "^0.16.7",
     "lodash": "^4.17.21",
+    "medium-zoom": "^1.0.8",
     "mermaid": "^10.2.3",
     "moment": "^2.29.4",
     "next": "13.4.4",
