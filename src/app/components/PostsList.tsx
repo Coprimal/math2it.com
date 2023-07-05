@@ -23,8 +23,7 @@ type PostListProps = {
 export default function PostList({ posts, postType, postTypeOpts, options }: PostListProps) {
   const className = options?.className
     ? options.className
-    : 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4' +
-      ' xl:grid-cols-5 gap-7 sm:gap-x-4'
+    : 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-7 sm:gap-x-4'
   return (
     <section>
       <div className={className}>

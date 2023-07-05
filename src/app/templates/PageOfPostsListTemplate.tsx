@@ -14,7 +14,9 @@ type PageOfPostsListTemplateProps = {
 export default function PageOfPostsListTemplate(props: PageOfPostsListTemplateProps) {
   return (
     <Container>
-      <h2 className="my-4 text-3xl font-bold">{props.title}</h2>
+      <div className=" py-8">
+        <h2 className="my-4 w-fit text-3xl font-bold text-slate-600">{props.title}</h2>
+      </div>
       {props.posts.length === 0 && <div className="my-4 text-xl font-bold">No post found</div>}
       {props.posts.length > 0 && (
         <>

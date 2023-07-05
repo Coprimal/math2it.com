@@ -5,6 +5,9 @@ import PageOfPostsListTemplate from '@app/templates/PageOfPostsListTemplate'
 import { OptionalCatchAllParams, OptionalCatchAllProps } from '@src/interface'
 import { Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
+import { Suspense } from 'react'
+
+import LoadingPostListPage from './loading'
 
 export const revalidate = 10 // ###R: change when done developing
 
@@ -99,12 +102,15 @@ export default async function CategoryPage({ params }: OptionalCatchAllProps) {
       })
 
   return (
-    <PageOfPostsListTemplate
-      title={`Chuyên mục ${category.name}`}
-      uri={category.uri}
-      posts={postsOnThisPage}
-      totalPages={totalPages}
-      currentPage={currentPage}
-    />
+    <Suspense fallback={<LoadingPostListPage />}>
+      <PageOfPostsListTemplate
+        title={`Chuyên mục ${category.name}`}
+        uri={category.uri}
+        posts={postsOnThisPage}
+        totalPages={totalPages}
+        currentPage={currentPage}
+      />
+    </Suspense>
+    // <LoadingPostListPage />
   )
 }
