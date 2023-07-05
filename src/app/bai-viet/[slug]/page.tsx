@@ -12,6 +12,7 @@ import { DynamicSegmentParamsProps } from '@src/interface'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { Suspense } from 'react'
+import 'react-medium-image-zoom/dist/styles.css'
 
 import LoadingPost from './loading'
 

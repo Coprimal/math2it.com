@@ -5,9 +5,10 @@ import { defaultBlurDataURL } from '@app/lib/config'
 import { ImageBlockObjectResponse } from '@notionhq/client/build/src/api-endpoints'
 import cn from 'classnames'
 import { get } from 'lodash'
-import mediumZoom from 'medium-zoom'
 import Image from 'next/image'
-import { useRef, useState } from 'react'
+import { useState } from 'react'
+// https://github.com/rpearce/react-medium-image-zoom
+import Zoom from 'react-medium-image-zoom'
 
 import BlockRichText from './BlockRichText'
 
@@ -19,18 +20,12 @@ export default function BlockImage(props: {
   level: number
   className?: string
 }) {
-  const imageRef = useRef(undefined)
   const [isImageReady, setIsImageReady] = useState(false)
   const { block, level, className } = props
   const width = Math.min(get(block, 'imageInfo.width', 1000), 1000)
   const height = Math.min(get(block, 'imageInfo.height', 700), 700)
   const blurDataURL = get(block, 'imageInfo.base64', defaultBlurDataURL)
   const caption = block?.image?.caption
-
-  const openZoomableImage = () => {
-    const zoom = mediumZoom('[data-zoomable]')
-    if (imageRef.current) zoom.open({ target: imageRef.current })
-  }
 
   return (
     <div
@@ -42,22 +37,22 @@ export default function BlockImage(props: {
     >
       {block.imgUrl && (
         <div className="relative flex w-full items-center justify-center overflow-hidden">
-          <Image
-            className={cn({
-              'blur-lg': !isImageReady,
-              'blur-0': isImageReady
-            })}
-            src={block.imgUrl}
-            alt={getJoinedRichText(block?.image?.caption)}
-            width={width}
-            height={height}
-            blurDataURL={blurDataURL}
-            placeholder="blur"
-            onLoadingComplete={() => setIsImageReady(true)}
-            data-zoomable
-            onClick={openZoomableImage}
-            ref={imageRef}
-          />
+          <Zoom zoomMargin={30}>
+            <Image
+              className={cn({
+                'blur-lg': !isImageReady,
+                'blur-0': isImageReady
+              })}
+              src={block.imgUrl}
+              alt={getJoinedRichText(block?.image?.caption)}
+              width={width}
+              height={height}
+              blurDataURL={blurDataURL}
+              placeholder="blur"
+              onLoadingComplete={() => setIsImageReady(true)}
+              data-zoomable
+            />
+          </Zoom>
         </div>
       )}
       {caption && caption.length > 0 && (
