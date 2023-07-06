@@ -97,7 +97,7 @@ export default async function AuthorPage({ params }: OptionalCatchAllProps) {
 
   return (
     <PageOfPostsListTemplate
-      title={`Tác giả ${author.name}`}
+      title={`Tác giả "${author.name}"`}
       uri={author.uri}
       posts={postsOnThisPage}
       totalPages={totalPages}

@@ -70,6 +70,7 @@ export default async function CategoryPage({ params }: OptionalCatchAllProps) {
   const [tags, authors] = await Promise.all([tagsData, authorsData])
   const category = categories.find(c => c.slug === slug)
   if (!category) notFound()
+  const iconComponent = category.fontello ? <i className={category.fontello}></i> : null
 
   // All posts in that category, we need these to find the number of pages
   const allPosts = await getPostsBy({
@@ -104,13 +105,16 @@ export default async function CategoryPage({ params }: OptionalCatchAllProps) {
   return (
     <Suspense fallback={<LoadingPostListPage />}>
       <PageOfPostsListTemplate
-        title={`Chuyên mục ${category.name}`}
+        title={`Chuyên mục "${category.name}"`}
         uri={category.uri}
         posts={postsOnThisPage}
         totalPages={totalPages}
         currentPage={currentPage}
+        iconComponent={iconComponent}
+        patternColor={category.style?.bgColor}
+        titleColor={category.style?.titleColor}
+        subtitle={category.description}
       />
     </Suspense>
-    // <LoadingPostListPage />
   )
 }

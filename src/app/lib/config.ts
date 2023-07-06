@@ -12,8 +12,8 @@ export const defaultBlurDataURL =
   'AAAAC0lEQVR42mN8XA8AAksBZG7LpHYAAAAASUVORK5CYII='
 // 👇 ❗❗ Shouldn't change this! Otherwise, change the "next_cursor" list in the
 // later of this file as well. Read more in the "next_cursor" section!
-// export const numPostsPerPage = 20
-export const numPostsPerPage = 5 // ###Thi <- Change this
+export const numPostsPerPage = 20
+// export const numPostsPerPage = 5 // ###Thi <- Change this
 // 👇 Don't change this! By default, notion's page_size is 100, but we only need 10
 export const defaultNumPostsRequest = 10
 
@@ -137,9 +137,12 @@ export const predefinedCategories: Category[] = [
     slug: 'bai-dich',
     uri: `/${getSlugPrefix('category')}/bai-dich/`,
     name: 'Bài dịch',
+    description:
+      'Rào cản ngôn ngữ là trở ngại lớn nhất với người Việt ta hiện nay. Đây là loạt bài viết thật sự hay về Toán, Tin, Giáo dục mà Math2IT lược dịch cho các bạn.',
     style: {
       bgColor: '#e6d6ff',
-      textColor: '#6d4e99'
+      textColor: '#6d4e99',
+      titleColor: '#3d1674'
     },
     featuredImage: {
       staticImageData: defaultTranslate
@@ -151,9 +154,11 @@ export const predefinedCategories: Category[] = [
     slug: 'cong-cu',
     uri: `/${getSlugPrefix('category')}/cong-cu/`,
     name: 'Công cụ',
+    description: 'Những thủ thuật, công cụ công nghệ hữu ích cho học tập, làm việc và cuộc sống.',
     style: {
       bgColor: '#ffe3e3', // old: #ffe4ee
-      textColor: '#cb4242' // old: rgb(197 57 108)
+      textColor: '#cb4242', // old: rgb(197 57 108),
+      titleColor: '#a21b1b'
     },
     featuredImage: {
       staticImageData: defaultTool
@@ -165,9 +170,12 @@ export const predefinedCategories: Category[] = [
     slug: 'cong-nghe',
     uri: `/${getSlugPrefix('category')}/cong-nghe/`,
     name: 'Công nghệ',
+    description:
+      'Những bài viết hiểu về công nghệ, công nghệ gắn liền với Toán học và hướng đến đối tượng người học cơ bản.',
     style: {
       bgColor: '#ffeacc',
-      textColor: '#9c763f'
+      textColor: '#9c763f',
+      titleColor: '#7b5319'
     },
     featuredImage: {
       staticImageData: defaultTech
@@ -179,9 +187,12 @@ export const predefinedCategories: Category[] = [
     slug: 'giao-duc',
     uri: `/${getSlugPrefix('category')}/giao-duc/`,
     name: 'Giáo dục',
+    description:
+      'Tìm kiếm các phương pháp và ý tưởng giáo dục hay đã và đang được áp dụng trên toàn thế giới.',
     style: {
-      bgColor: 'rgb(218 255 227)',
-      textColor: 'rgb(36 138 59)'
+      bgColor: '#DAFFE3',
+      textColor: '#248A3B',
+      titleColor: '#0d4d1b'
     },
     featuredImage: {
       staticImageData: defaultEdu
@@ -193,10 +204,13 @@ export const predefinedCategories: Category[] = [
     slug: 'sach-hay',
     uri: `/${getSlugPrefix('category')}/sach-hay/`,
     name: 'Sách hay',
+    description:
+      'Đọc nhiều sách không biến bạn thành mọt, nó sẽ mở ra cho bạn một thế giới rộng lớn của kiến thức và ý tưởng. Math2IT xin giới thiệu đến bạn những quyển sách về Toán, Tin, Giáo dục hay và tiêu biểu nhất.',
     style: {
-      bgColor: 'rgb(220 252 254)',
-      textColor: 'rgb(9 92 98)',
-      bdColor: 'rgb(180 238 243)'
+      bgColor: '#DCFCFE',
+      textColor: '#095C62',
+      bdColor: '#B4EEF3',
+      titleColor: '#114b50'
     },
     featuredImage: {
       staticImageData: defaultBook
@@ -208,9 +222,12 @@ export const predefinedCategories: Category[] = [
     slug: 'toan-hoc',
     uri: `/${getSlugPrefix('category')}/toan-hoc/`,
     name: 'Toán học',
+    description:
+      'Những gì bạn học về Toán có ý nghĩa và liên hệ gì với thực tế? Tại sao lại có những định nghĩa, định lý Toán học được giới thiệu một cách miễn cưỡng? Ta sẽ tìm cách hiểu được các liên hệ của chúng một cách tự nhiên nhất có thể.',
     style: {
-      bgColor: 'rgb(215 235 255)',
-      textColor: '#3d78b5'
+      bgColor: '#D7EBFF',
+      textColor: '#3d78b5',
+      titleColor: '#104d8d'
     },
     featuredImage: {
       staticImageData: defaultMath

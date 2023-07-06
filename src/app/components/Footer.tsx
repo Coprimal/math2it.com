@@ -15,7 +15,7 @@ export default function Footer() {
           </a>{' '}
           <span>|</span>
           <a className={cn(aClass)} href="https://fb.com/groups/math2it" target="_blank">
-            Group
+            Nhóm Facebook
           </a>
           <span>|</span>
           <Link className={cn(aClass)} href={`/${getSlugPrefix('thanks')}/`}>

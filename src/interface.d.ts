@@ -41,6 +41,7 @@ export type Category = {
     bgColor: string
     textColor: string
     bdColor?: string
+    titleColor?: string // Used in header of category page
   }
   featuredImage?: ImageType
   fontello?: string
