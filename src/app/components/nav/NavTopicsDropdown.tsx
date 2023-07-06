@@ -1,6 +1,5 @@
 'use client'
 
-import { MenuAbout } from '@app/lib/config'
 import { Popover, Transition } from '@headlessui/react'
 import Link from 'next/link'
 import { Fragment } from 'react'
@@ -56,7 +55,7 @@ export default function NavTopicsDropdown() {
                       </div>
                     </Link>
                   ))}
-                  <Link
+                  {/* <Link
                     key={MenuAbout.id}
                     href={MenuAbout.uri}
                     className={`${dropdownItemClass} sm:hidden`}
@@ -65,7 +64,7 @@ export default function NavTopicsDropdown() {
                       <i className={MenuAbout.navigationItems?.navIcon}></i>
                       {MenuAbout.label}
                     </div>
-                  </Link>
+                  </Link> */}
                 </div>
               </div>
             </Popover.Panel>

@@ -1,4 +1,4 @@
-import { MENUS, MenuAbout, MenuHome } from '@app/lib/config'
+import { MENUS, MenuHome } from '@app/lib/config'
 import { MenuItem } from '@src/interface'
 
 import NavAvatar from './NavAvatar'
@@ -47,11 +47,11 @@ export default function Nav() {
                         />
                       ))}
                       <NavTopicsDropdown />
-                      <NavTopicItem
+                      {/* <NavTopicItem
                         uri={MenuAbout.uri}
                         label={MenuAbout.label}
                         customClass="hidden sm:flex"
-                      />
+                      /> */}
                     </div>
                   </div>
                   <NavSearch />
