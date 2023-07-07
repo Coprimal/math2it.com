@@ -13,17 +13,14 @@ export default {
     extend: {
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))'
+        'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+        // eslint-disable-next-line quotes
+        wave: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 70 500 60' preserveAspectRatio='none'%3E%3Crect x='0' y='0' width='500' height='500' style='stroke: none; fill: %23ffffff;' /%3E%3Cpath d='M0,100 C150,200 350,0 500,100 L500,00 L0,0 Z' style='stroke: none; fill: %23323541;'%3E%3C/path%3E%3C/svg%3E\")"
       },
       colors: {
         success: '#0070f3',
         cyan: '#79FFE1',
-        main: '#1e293b',
-        'main-dark': '#f8fafc',
-        'main-dark-bg': '#282a36',
-        'code-dark-bg': '#343e4c',
-        'dark-border': '#3b3e54',
-        'link-dark': '#ffd479'
+        main: '#1e293b'
       },
       animation: {
         fadeIn: 'fadeIn 500ms;',
@@ -35,14 +32,14 @@ export default {
           '100%': { opacity: '1' }
         },
         wave: {
-          '0%': { transform: 'rotate(0.0deg) scale(0.4)' },
-          '10%': { transform: 'rotate(14deg) scale(0.4)' },
-          '20%': { transform: 'rotate(-8deg) scale(0.4)' },
-          '30%': { transform: 'rotate(14deg scale(0.4))' },
-          '40%': { transform: 'rotate(-4deg scale(0.4))' },
-          '50%': { transform: 'rotate(10.0deg) scale(0.4)' },
-          '60%': { transform: 'rotate(0.0deg) scale(0.4)' },
-          '100%': { transform: 'rotate(0.0deg) scale(0.4)' }
+          '0%': { transform: 'rotate(0deg)' },
+          '10%': { transform: 'rotate(14deg)' },
+          '20%': { transform: 'rotate(-8deg)' },
+          '30%': { transform: 'rotate(14deg)' },
+          '40%': { transform: 'rotate(-4deg)' },
+          '50%': { transform: 'rotate(10deg)' },
+          '60%': { transform: 'rotate(0deg)' },
+          '100%': { transform: 'rotate(0deg)' }
         }
       },
       spacing: {

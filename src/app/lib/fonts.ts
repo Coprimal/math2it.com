@@ -1,4 +1,4 @@
-import { Comfortaa, Nunito } from 'next/font/google'
+import { Comfortaa, Lobster, Nunito, Pacifico } from 'next/font/google'
 
 // How to use? Comfortaa.className inside className
 export const comfortaa = Comfortaa({
@@ -12,4 +12,18 @@ export const nunito = Nunito({
   display: 'swap',
   weight: ['400', '700'],
   style: ['normal', 'italic']
+})
+
+export const pacifico = Pacifico({
+  subsets: ['latin', 'vietnamese'],
+  display: 'swap',
+  weight: ['400'],
+  style: ['normal']
+})
+
+export const lobster = Lobster({
+  subsets: ['latin', 'vietnamese'],
+  display: 'swap',
+  weight: ['400'],
+  style: ['normal']
 })

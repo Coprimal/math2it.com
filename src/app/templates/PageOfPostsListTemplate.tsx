@@ -70,7 +70,12 @@ export default function PageOfPostsListTemplate(props: PageOfPostsListTemplatePr
               {props.title}
             </h2>
             {props.subtitle && (
-              <div className="mt-2 pl-12 text-lg" style={{ color: props.titleColor ?? '#666' }}>
+              <div
+                className="mt-2 pl-12 text-lg"
+                style={{
+                  color: props.titleColor ? props.titleColor : props.cover ? '#fff' : '#fff'
+                }}
+              >
                 {props.subtitle}
               </div>
             )}

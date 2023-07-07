@@ -39,7 +39,7 @@ export default function NavTopicItem(props: NavTopicItemProps) {
 
 export const isActiveClass = (isCurrent: boolean) =>
   cn({
-    'bg-slate-800 text-white border border-slate-600': isCurrent,
+    'bg-slate-800 text-white': isCurrent,
     [`${textClass}`]: !isCurrent
   })
 

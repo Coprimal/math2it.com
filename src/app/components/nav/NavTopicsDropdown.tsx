@@ -18,9 +18,7 @@ export default function NavTopicsDropdown() {
           <Popover.Button
             className={`
           ${open ? '!bg-slate-700 text-white' : 'text-opacity-90'}
-          group ${
-            menuItemCommonClass + ' flex lg:hidden !outline-none border border-slate-600 pr-1.5'
-          }`}
+          group ${menuItemCommonClass + ' flex lg:hidden !outline-none pr-1.5'}`}
           >
             <span>Chủ đề</span>
             <FiChevronDown
