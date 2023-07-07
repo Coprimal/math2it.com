@@ -1,10 +1,10 @@
-import defaultBook from '@root/public/featured-images/book_bg.png'
-import _defaultFeaturedImage from '@root/public/featured-images/default_bg.png'
-import defaultEdu from '@root/public/featured-images/edu_bg.png'
-import defaultMath from '@root/public/featured-images/math_bg.png'
-import defaultTech from '@root/public/featured-images/tech_bg.png'
-import defaultTool from '@root/public/featured-images/tool_bg.png'
-import defaultTranslate from '@root/public/featured-images/translate_bg.png'
+import _dImg from '@root/public/featured-images/_default.png'
+import defaultBook from '@root/public/featured-images/book.png'
+import defaultEdu from '@root/public/featured-images/edu.png'
+import defaultMath from '@root/public/featured-images/math.png'
+import defaultTech from '@root/public/featured-images/tech.png'
+import defaultTool from '@root/public/featured-images/tool.png'
+import defaultTranslate from '@root/public/featured-images/translate.png'
 import { Category, EnvMode, SlugTypeLabels } from '@src/interface'
 
 export const defaultBlurDataURL =
@@ -27,7 +27,7 @@ export const defaultCategoryTextColor = '#222'
 export const defaultCodeLanguage = 'typescript'
 export const minNumHeadingsToShowToc = 4 // from this number of headings, show toc
 export const mathFontSize = 'text-base'
-export const defaultFeaturedImage = _defaultFeaturedImage
+export const defaultFeaturedImage = _dImg
 
 /**
  * NOTION
