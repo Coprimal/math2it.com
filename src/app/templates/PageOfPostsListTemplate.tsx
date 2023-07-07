@@ -1,8 +1,10 @@
 import Container from '@c/Container'
+import ImageComponent from '@c/ImageComponent'
 import Pagination from '@c/Pagination'
 import PostList from '@c/PostsList'
 import { Post } from '@src/interface'
 import cn from 'classnames'
+import { StaticImageData } from 'next/image'
 import { useGeoPattern } from 'react-geopattern'
 
 type PageOfPostsListTemplateProps = {
@@ -15,7 +17,7 @@ type PageOfPostsListTemplateProps = {
   iconComponent?: React.ReactNode
   patternColor?: string
   titleColor?: string
-  coverComponent?: React.ReactNode
+  cover?: StaticImageData
 }
 
 export const heightCoverPostList = 'h-[30vh] max-h-[30vh] min-h-[30vh]'
@@ -34,11 +36,20 @@ export default function PageOfPostsListTemplate(props: PageOfPostsListTemplatePr
           'relative',
           heightCoverPostList
         )}
-        style={props.coverComponent ? undefined : { backgroundImage: pattern.toDataUrl() }}
+        style={props.cover ? undefined : { backgroundImage: pattern.toDataUrl() }}
       >
-        {props.iconComponent && (
+        {props.cover && (
           <div className="relative flex h-full w-full items-center overflow-hidden">
-            {props.coverComponent}
+            <ImageComponent
+              image={{
+                staticImageData: props.cover
+              }}
+              alt={`Hình ảnh đại diện cho trang ${props.title}`}
+              className={cn('object-cover group-hover:scale-105 duration-500 w-full')}
+              imageProps={{
+                fill: true
+              }}
+            />
           </div>
         )}
         <div
@@ -50,8 +61,8 @@ export default function PageOfPostsListTemplate(props: PageOfPostsListTemplatePr
         >
           <Container>
             <h2
-              className="mb-2 mt-4 w-fit text-3xl font-bold drop-shadow-sm"
-              style={{ color: props.titleColor ?? '#fff' }}
+              className="w-fit text-3xl font-bold drop-shadow-sm"
+              style={{ color: props.titleColor ? props.titleColor : props.cover ? '#fff' : '#fff' }}
             >
               {props.iconComponent && (
                 <span className="mr-1 opacity-90">{props.iconComponent}</span>
@@ -59,7 +70,7 @@ export default function PageOfPostsListTemplate(props: PageOfPostsListTemplatePr
               {props.title}
             </h2>
             {props.subtitle && (
-              <div className="pl-10 text-lg" style={{ color: props.titleColor ?? '#666' }}>
+              <div className="mt-2 pl-12 text-lg" style={{ color: props.titleColor ?? '#666' }}>
                 {props.subtitle}
               </div>
             )}

@@ -2,6 +2,7 @@ import { getSlugPrefix, notionMaxRequest, numPostsPerPage } from '@app/lib/confi
 import { getAuthors, getCategories, getPostsBy, getTags } from '@app/lib/fetcher'
 import { getFilterOf, getStartCursorForCurrentPage } from '@app/lib/helpers'
 import PageOfPostsListTemplate from '@app/templates/PageOfPostsListTemplate'
+import authorCover from '@root/public/featured-images/author.png'
 import { OptionalCatchAllParams, OptionalCatchAllProps } from '@src/interface'
 import { Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
@@ -102,6 +103,7 @@ export default async function AuthorPage({ params }: OptionalCatchAllProps) {
       posts={postsOnThisPage}
       totalPages={totalPages}
       currentPage={currentPage}
+      cover={authorCover}
     />
   )
 }

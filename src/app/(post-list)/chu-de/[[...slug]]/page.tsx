@@ -2,6 +2,7 @@ import { getSlugPrefix, notionMaxRequest, numPostsPerPage } from '@app/lib/confi
 import { getAuthors, getCategories, getPostsBy, getTags } from '@app/lib/fetcher'
 import { getFilterOf, getStartCursorForCurrentPage } from '@app/lib/helpers'
 import PageOfPostsListTemplate from '@app/templates/PageOfPostsListTemplate'
+import tagCover from '@root/public/featured-images/tag.png'
 import { OptionalCatchAllParams, OptionalCatchAllProps } from '@src/interface'
 import { Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
@@ -103,6 +104,7 @@ export default async function TagPage({ params }: OptionalCatchAllProps) {
       totalPages={totalPages}
       currentPage={currentPage}
       iconComponent={<i className="icon-tag-2"></i>}
+      cover={tagCover}
     />
   )
 }

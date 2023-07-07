@@ -2,13 +2,9 @@ import { getSlugPrefix, notionMaxRequest, numPostsPerPage } from '@app/lib/confi
 import { getAuthors, getCategories, getPostsBy, getTags } from '@app/lib/fetcher'
 import { getFilterOf, getStartCursorForCurrentPage } from '@app/lib/helpers'
 import PageOfPostsListTemplate from '@app/templates/PageOfPostsListTemplate'
-import ImageComponent from '@c/ImageComponent'
 import { OptionalCatchAllParams, OptionalCatchAllProps } from '@src/interface'
-import cn from 'classnames'
 import { Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
-
-import SkeletonPostListPage from '../../../components/SkeletonPostListPage'
 
 export const revalidate = 60
 
@@ -73,18 +69,6 @@ export default async function CategoryPage({ params }: OptionalCatchAllProps) {
   if (!category) notFound()
 
   const iconComponent = category.fontello ? <i className={category.fontello}></i> : null
-  const coverComponent = (
-    <ImageComponent
-      image={{
-        staticImageData: category.featuredImage?.staticImageData
-      }}
-      alt={`Hình đại diện cho chủ đề "${category.name}"`}
-      className={cn('object-cover group-hover:scale-105 duration-500 w-full')}
-      imageProps={{
-        fill: true
-      }}
-    />
-  )
 
   // All posts in that category, we need these to find the number of pages
   const allPosts = await getPostsBy({
@@ -117,17 +101,15 @@ export default async function CategoryPage({ params }: OptionalCatchAllProps) {
       })
 
   return (
-    // <PageOfPostsListTemplate
-    //   title={`Chuyên mục "${category.name}"`}
-    //   subtitle={category.description}
-    //   uri={category.uri}
-    //   posts={postsOnThisPage}
-    //   totalPages={totalPages}
-    //   currentPage={currentPage}
-    //   iconComponent={iconComponent}
-    //   titleColor="#fff"
-    //   coverComponent={coverComponent}
-    // />
-    <SkeletonPostListPage />
+    <PageOfPostsListTemplate
+      title={`Chuyên mục "${category.name}"`}
+      subtitle={category.description}
+      uri={category.uri}
+      posts={postsOnThisPage}
+      totalPages={totalPages}
+      currentPage={currentPage}
+      iconComponent={iconComponent}
+      cover={category.featuredImage?.staticImageData}
+    />
   )
 }

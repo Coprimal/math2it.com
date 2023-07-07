@@ -2,6 +2,7 @@ import { NOTION_DB_POSTS, getSlugPrefix, notionMaxRequest, numPostsPerPage } fro
 import { getAuthors, getCategories, getPosts, getTags } from '@app/lib/fetcher'
 import { getFilterOf, getStartCursorForCurrentPage } from '@app/lib/helpers'
 import PageOfPostsListTemplate from '@app/templates/PageOfPostsListTemplate'
+import selectedCover from '@root/public/featured-images/selected.png'
 import { OptionalCatchAllParams, OptionalCatchAllProps } from '@src/interface'
 import { Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
@@ -92,6 +93,7 @@ export default async function SelectedPostsPage({ params }: OptionalCatchAllProp
       posts={postsOnThisPage}
       totalPages={totalPages}
       currentPage={currentPage}
+      cover={selectedCover}
     />
   )
 }
