@@ -16,19 +16,7 @@ export default function SkeletonPost() {
     <article className="animate-pulse">
       {/* Featured Image */}
       <div>
-        <div className={cn('relative w-full', fullWidthPostCoverHeight)}>
-          <div className="absolute left-0 top-0 h-full w-full">
-            <div className="relative h-full w-full animate-pulse rounded-lg bg-slate-200">
-              <div
-                className={cn(
-                  'absolute -top-5 left-5 z-20 aspect-square h-[300px] scale-[1.4]',
-                  'animate-wave bg-math2it bg-[length:300px_300px]'
-                )}
-              ></div>
-              <div className="bg-wave absolute bottom-0 left-0 z-10 h-2/5 w-full"></div>
-            </div>
-          </div>
-        </div>
+        <div className={cn('w-full bg-slate-200', fullWidthPostCoverHeight)}></div>
       </div>
       <Container maxWidth={postWidthContainer}>
         <div className="pb-4 pt-8">
@@ -56,7 +44,7 @@ export default function SkeletonPost() {
 
           {/* Tags */}
           <div className="justify-left flex items-center gap-3 pb-2 pt-0">
-            <span className="text-gray-600">
+            <span className="text-slate-400">
               <i className="icon-tag-2"></i>
             </span>
             <div className="h-6 w-20 rounded-2xl bg-slate-200"></div>

@@ -18,6 +18,9 @@ type PageOfPostsListTemplateProps = {
   coverComponent?: React.ReactNode
 }
 
+export const heightCoverPostList = 'h-[30vh] max-h-[30vh] min-h-[30vh]'
+export const spacingCoverPostList = 'pb-6 pt-10'
+
 export default function PageOfPostsListTemplate(props: PageOfPostsListTemplateProps) {
   const pattern = useGeoPattern(props.title, {
     color: props.patternColor
@@ -27,8 +30,9 @@ export default function PageOfPostsListTemplate(props: PageOfPostsListTemplatePr
     <>
       <div
         className={cn(
-          'mx-auto flex h-[25vh] max-h-[25vh] min-h-[25vh] w-full items-center justify-between',
-          'relative'
+          'mx-auto flex w-full items-center justify-between',
+          'relative',
+          heightCoverPostList
         )}
         style={props.coverComponent ? undefined : { backgroundImage: pattern.toDataUrl() }}
       >
@@ -62,7 +66,7 @@ export default function PageOfPostsListTemplate(props: PageOfPostsListTemplatePr
           </Container>
         </div>
       </div>
-      <Container className="pb-6 pt-10">
+      <Container className={spacingCoverPostList}>
         {props.posts.length === 0 && <div className="my-4 text-xl font-bold">No post found</div>}
         {props.posts.length > 0 && (
           <>

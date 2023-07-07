@@ -7,11 +7,10 @@ import { OptionalCatchAllParams, OptionalCatchAllProps } from '@src/interface'
 import cn from 'classnames'
 import { Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
-import { Suspense } from 'react'
 
-import LoadingPostListPage from './loading'
+import SkeletonPostListPage from '../../../components/SkeletonPostListPage'
 
-export const revalidate = 10 // ###R: change when done developing
+export const revalidate = 60
 
 export async function generateMetadata({ params }: OptionalCatchAllProps): Promise<Metadata> {
   const slug = params.slug[0] || ''
@@ -118,20 +117,17 @@ export default async function CategoryPage({ params }: OptionalCatchAllProps) {
       })
 
   return (
-    <Suspense fallback={<LoadingPostListPage />}>
-      <PageOfPostsListTemplate
-        title={`Chuyên mục "${category.name}"`}
-        subtitle={category.description}
-        uri={category.uri}
-        posts={postsOnThisPage}
-        totalPages={totalPages}
-        currentPage={currentPage}
-        iconComponent={iconComponent}
-        // titleColor={category.style?.titleColor}
-        titleColor="#fff"
-        // patternColor={category.style?.bgColor}
-        coverComponent={coverComponent}
-      />
-    </Suspense>
+    // <PageOfPostsListTemplate
+    //   title={`Chuyên mục "${category.name}"`}
+    //   subtitle={category.description}
+    //   uri={category.uri}
+    //   posts={postsOnThisPage}
+    //   totalPages={totalPages}
+    //   currentPage={currentPage}
+    //   iconComponent={iconComponent}
+    //   titleColor="#fff"
+    //   coverComponent={coverComponent}
+    // />
+    <SkeletonPostListPage />
   )
 }

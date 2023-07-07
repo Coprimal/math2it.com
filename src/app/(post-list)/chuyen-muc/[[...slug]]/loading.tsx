@@ -1,5 +1,5 @@
 import SkeletonPostListPage from '@c/SkeletonPostListPage'
 
-export default function LoadingPostListPage() {
+export default function LoadingCategoryPage() {
   return <SkeletonPostListPage />
 }

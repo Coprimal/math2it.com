@@ -6,7 +6,7 @@ import { OptionalCatchAllParams, OptionalCatchAllProps } from '@src/interface'
 import { Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
 
-export const revalidate = 10 // ###R: change when done developing
+export const revalidate = 60
 
 export async function generateMetadata({ params }: OptionalCatchAllProps): Promise<Metadata> {
   const slug = params.slug[0] || ''

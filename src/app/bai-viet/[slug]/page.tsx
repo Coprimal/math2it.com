@@ -11,10 +11,7 @@ import SinglePostTemplate from '@app/templates/SinglePostTemplate'
 import { DynamicSegmentParamsProps } from '@src/interface'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { Suspense } from 'react'
 import 'react-medium-image-zoom/dist/styles.css'
-
-import LoadingPost from './loading'
 
 export async function generateMetadata({ params }: DynamicSegmentParamsProps): Promise<Metadata> {
   const slug = params.slug || ''
@@ -63,11 +60,7 @@ export default async function SinglePostPage({ params }: DynamicSegmentParamsPro
     const contentBlocks = await getBlocks(pageIdwithDash)
     // const relatedPosts = getRelatedPosts(allPosts, post, 20)
 
-    return (
-      <Suspense fallback={<LoadingPost />}>
-        <SinglePostTemplate postHeader={postHeader} contentBlocks={contentBlocks} />
-      </Suspense>
-    )
+    return <SinglePostTemplate postHeader={postHeader} contentBlocks={contentBlocks} />
   } catch (error) {
     console.log('🚨Error when loading a single post page', error)
     notFound()
