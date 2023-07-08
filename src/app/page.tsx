@@ -1,27 +1,30 @@
 import { comfortaa, lobster } from '@app/lib/fonts'
 import Container from '@c/Container'
 import ImageComponent from '@c/ImageComponent'
-import PostListForHome from '@c/PostListForHome'
 import WaveSplit from '@c/WaveSplit'
 import WavingHand from '@root/public/waving_hand.webp'
 import cn from 'classnames'
-import { Suspense } from 'react'
+
+import PostListForHomeSection from './components/PostListForHomeSection'
+import { getSlugPrefix } from './lib/config'
+import { getCategories } from './lib/fetcher'
 
 export default function Home() {
+  const categories = getCategories()
   return (
     <>
       <div className={cn('bg-gradient-to-b from-[#282a36] to-[#323541]')}>
-        <Container>
+        <Container maxWidthClass="max-w-5xl">
           <div
             className={cn(
-              'xl:max-w-4xl lg:max-w-3xl mx-auto py-12',
+              'mx-auto py-12',
               'flex flex-col flex-wrap items-center justify-items-stretch md:flex-row'
             )}
           >
-            <div className="md:order-2">
+            {/* <div className="md:order-1">
               <i className="icon-math2it text-[5rem] text-[#f15f5f] md:text-[8rem]"></i>
-            </div>
-            <div className="flex flex-col gap-4 md:order-1 md:flex-1">
+            </div> */}
+            <div className="flex flex-col gap-4 md:order-2 md:flex-1">
               <div className={cn('flex gap-2 justify-center md:justify-start')}>
                 <div
                   className={cn(
@@ -53,7 +56,7 @@ export default function Home() {
               >
                 <a
                   className={cn(
-                    'bg-gray-700 hover:bg-gray-600 shadow-md text-white py-1 px-6 rounded-3xl'
+                    'bg-[#4358969c] hover:bg-[#215989] shadow-md text-white py-1 px-6 rounded-3xl'
                   )}
                   href="https://www.facebook.com/Math2IT/"
                   target="_blank"
@@ -62,7 +65,7 @@ export default function Home() {
                 </a>
                 <a
                   className={cn(
-                    'bg-gray-700 hover:bg-gray-600 shadow-md text-white py-1 px-6 rounded-3xl'
+                    'bg-[#844b4582] hover:bg-[#ac473c] shadow-md text-white py-1 px-6 rounded-3xl'
                   )}
                   href="https://fb.com/groups/math2it"
                   target="_blank"
@@ -77,9 +80,35 @@ export default function Home() {
 
       <WaveSplit />
 
-      <Suspense fallback={<div>Loading...</div>}>
-        <PostListForHome type="latest" />
-      </Suspense>
+      <div className="flex flex-col gap-8 pb-12 pt-8">
+        <PostListForHomeSection
+          title="Bài viết mới nhất"
+          type="latest"
+          postTypeOpts={{ hideDate: true }}
+          backgroundClassName="bg-gradient-to-b from-indigo-100/50 to-white"
+          moreHref={getSlugPrefix('all')}
+        />
+        <PostListForHomeSection
+          title="Bài viết tuyển chọn"
+          type="selected"
+          postTypeOpts={{ hideDate: true }}
+          backgroundClassName="bg-gradient-to-b from-amber-100/50 to-white"
+          moreHref={getSlugPrefix('selected')}
+          postType="PostImageBackground"
+        />
+        {categories.map(category => (
+          <PostListForHomeSection
+            key={category.slug}
+            title={category.name}
+            type="byCategory"
+            categorySlug={category.slug as string}
+            postTypeOpts={{ hideDate: true, hideCategory: true }}
+            backgroundClassName={category.backgroundClassName}
+            moreHref={category.uri}
+            iconComponent={<i className={category.fontello}></i>}
+          />
+        ))}
+      </div>
     </>
   )
 }

@@ -18,7 +18,7 @@ export default function SkeletonPost() {
       <div>
         <div className={cn('w-full bg-slate-200', fullWidthPostCoverHeight)}></div>
       </div>
-      <Container maxWidth={postWidthContainer}>
+      <Container maxWidthClass={postWidthContainer}>
         <div className="pb-4 pt-8">
           {/* Categories */}
           <div className={cn(gapHeaderItems, 'flex justify-center gap-3 md:justify-start')}>
@@ -55,7 +55,7 @@ export default function SkeletonPost() {
       </Container>
 
       {/* Content */}
-      <Container maxWidth={postWidthContainer}>
+      <Container maxWidthClass={postWidthContainer}>
         <div className={cn(postBodyContainerClass)}>
           <div className="w-100 mb-2 h-5 rounded-2xl bg-slate-200"></div>
           <div className="w-100 mb-2 h-5 rounded-2xl bg-slate-200"></div>

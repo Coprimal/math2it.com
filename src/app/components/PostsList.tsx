@@ -5,12 +5,12 @@ import PostTitleCateDate, { PostTitleCateDateOpts } from '@c/post-types/PostTitl
 import { Post } from '@src/interface'
 import React from 'react'
 
-type PostType =
+export type PostType =
   | 'PostTitleCateDate'
   | 'PostCardWhiteBg'
   | 'PostCardWhiteBgBig'
   | 'PostImageBackground'
-type PostTypeOpts = PostTitleCateDateOpts | PostCardWhiteBgOpts | PostCardWhiteBgBigOpts
+export type PostTypeOpts = PostTitleCateDateOpts | PostCardWhiteBgOpts | PostCardWhiteBgBigOpts
 type PostListProps = {
   posts: Post[]
   postType: PostType
@@ -20,10 +20,11 @@ type PostListProps = {
   }
 }
 
+export const postListGridCLass =
+  'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5 sm:gap-x-4'
+
 export default function PostList({ posts, postType, postTypeOpts, options }: PostListProps) {
-  const className = options?.className
-    ? options.className
-    : 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-7 sm:gap-x-4'
+  const className = options?.className ? options.className : postListGridCLass
   return (
     <section>
       <div className={className}>

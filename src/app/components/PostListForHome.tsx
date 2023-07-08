@@ -1,13 +1,20 @@
-import { Post } from '../../interface'
-import { NOTION_DB_POSTS } from '../lib/config'
-import { getAuthors, getCategories, getPosts, getTags } from '../lib/fetcher'
-import Container from './Container'
-import PostList from './PostsList'
+import { NOTION_DB_POSTS } from '@app/lib/config'
+import { getAuthors, getCategories, getPosts, getPostsBy, getTags } from '@app/lib/fetcher'
+import { Post } from '@src/interface'
+
+import { getFilterOf } from '../lib/helpers'
+import PostList, { PostType, PostTypeOpts } from './PostsList'
+
+export type PostListForHomeType = 'latest' | 'selected' | 'byCategory'
 
 type PostListForHomeProps = {
-  type: 'latest' | 'selected' | 'byCategory'
-  category?: string // required if type === 'byCategory'
+  type: PostListForHomeType
+  categorySlug?: string // required if type === 'byCategory'
+  postTypeOpts?: PostTypeOpts
+  postType?: PostType
 }
+
+export const postListHomeCount = 8
 
 export default async function PostListForHome(props: PostListForHomeProps) {
   const categories = getCategories()
@@ -16,19 +23,49 @@ export default async function PostListForHome(props: PostListForHomeProps) {
   const [tags, authors] = await Promise.all([tagsData, authorsData])
 
   let posts: Post[] = []
-  if (props.type === 'latest') {
-    posts = await getPosts({
-      dbId: NOTION_DB_POSTS,
-      categories,
-      tags,
-      authors,
-      pageSize: 5
-    })
+
+  switch (props.type) {
+    case 'latest':
+      posts = await getPosts({
+        dbId: NOTION_DB_POSTS,
+        categories,
+        tags,
+        authors,
+        pageSize: postListHomeCount
+      })
+      break
+
+    case 'selected':
+      posts = await getPosts({
+        dbId: NOTION_DB_POSTS,
+        categories,
+        tags,
+        authors,
+        pageSize: postListHomeCount,
+        filter: getFilterOf('selected')
+      })
+      break
+
+    case 'byCategory': {
+      if (!props.categorySlug) throw new Error('categorySlug is required if type === "byCategory"')
+      const category = categories.find(c => c.slug === props.categorySlug)
+      if (!category) return null
+      posts = await getPostsBy({
+        categories,
+        tags,
+        authors,
+        filter: getFilterOf('category', category),
+        pageSize: postListHomeCount
+      })
+      break
+    }
   }
 
   return (
-    <Container>
-      <PostList posts={posts} postType="PostTitleCateDate" postTypeOpts={{ hideDate: true }} />
-    </Container>
+    <PostList
+      posts={posts}
+      postType={props.postType ?? 'PostTitleCateDate'}
+      postTypeOpts={props.postTypeOpts}
+    />
   )
 }

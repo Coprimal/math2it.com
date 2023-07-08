@@ -132,22 +132,23 @@ export const anonymAuthor = {
  * Categories
  */
 export const predefinedCategories: Category[] = [
-  // Bài dịch
+  // Toán học
   {
-    slug: 'bai-dich',
-    uri: `/${getSlugPrefix('category')}/bai-dich/`,
-    name: 'Bài dịch',
+    slug: 'toan-hoc',
+    uri: `/${getSlugPrefix('category')}/toan-hoc/`,
+    name: 'Toán học',
     description:
-      'Rào cản ngôn ngữ là trở ngại lớn nhất với người Việt ta hiện nay. Đây là loạt bài viết thật sự hay về Toán, Tin, Giáo dục mà Math2IT lược dịch cho các bạn.',
+      'Những gì bạn học về Toán có ý nghĩa và liên hệ gì với thực tế? Tại sao lại có những định nghĩa, định lý Toán học được giới thiệu một cách miễn cưỡng? Ta sẽ tìm cách hiểu được các liên hệ của chúng một cách tự nhiên nhất có thể.',
     style: {
-      bgColor: '#e6d6ff',
-      textColor: '#6d4e99',
-      titleColor: '#3d1674'
+      bgColor: '#D7EBFF',
+      textColor: '#3d78b5',
+      titleColor: '#104d8d'
     },
     featuredImage: {
-      staticImageData: defaultTranslate
+      staticImageData: defaultMath
     },
-    fontello: 'icon-language'
+    fontello: 'icon-pi-outline',
+    backgroundClassName: 'bg-gradient-to-b from-[#f4f8fb] to-white'
   },
   // Công cụ
   {
@@ -163,7 +164,8 @@ export const predefinedCategories: Category[] = [
     featuredImage: {
       staticImageData: defaultTool
     },
-    fontello: 'icon-magic'
+    fontello: 'icon-magic',
+    backgroundClassName: 'bg-gradient-to-b from-[#ef92b412] to-white'
   },
   // Công nghệ
   {
@@ -180,7 +182,26 @@ export const predefinedCategories: Category[] = [
     featuredImage: {
       staticImageData: defaultTech
     },
-    fontello: 'icon-cog-alt'
+    fontello: 'icon-cog-alt',
+    backgroundClassName: 'bg-gradient-to-b from-[#f9f1e5] to-white'
+  },
+  // Bài dịch
+  {
+    slug: 'bai-dich',
+    uri: `/${getSlugPrefix('category')}/bai-dich/`,
+    name: 'Bài dịch',
+    description:
+      'Rào cản ngôn ngữ là trở ngại lớn nhất với người Việt ta hiện nay. Đây là loạt bài viết thật sự hay về Toán, Tin, Giáo dục mà Math2IT lược dịch cho các bạn.',
+    style: {
+      bgColor: '#e6d6ff',
+      textColor: '#6d4e99',
+      titleColor: '#3d1674'
+    },
+    featuredImage: {
+      staticImageData: defaultTranslate
+    },
+    fontello: 'icon-language',
+    backgroundClassName: 'bg-gradient-to-b from-[#f9f6ff] to-white'
   },
   // Giáo dục
   {
@@ -197,7 +218,8 @@ export const predefinedCategories: Category[] = [
     featuredImage: {
       staticImageData: defaultEdu
     },
-    fontello: 'icon-graduation-cap'
+    fontello: 'icon-graduation-cap',
+    backgroundClassName: 'bg-gradient-to-b from-[#54b57d24] to-white'
   },
   // Sách hay
   {
@@ -215,24 +237,8 @@ export const predefinedCategories: Category[] = [
     featuredImage: {
       staticImageData: defaultBook
     },
-    fontello: 'icon-book'
-  },
-  // Toán học
-  {
-    slug: 'toan-hoc',
-    uri: `/${getSlugPrefix('category')}/toan-hoc/`,
-    name: 'Toán học',
-    description:
-      'Những gì bạn học về Toán có ý nghĩa và liên hệ gì với thực tế? Tại sao lại có những định nghĩa, định lý Toán học được giới thiệu một cách miễn cưỡng? Ta sẽ tìm cách hiểu được các liên hệ của chúng một cách tự nhiên nhất có thể.',
-    style: {
-      bgColor: '#D7EBFF',
-      textColor: '#3d78b5',
-      titleColor: '#104d8d'
-    },
-    featuredImage: {
-      staticImageData: defaultMath
-    },
-    fontello: 'icon-pi-outline'
+    fontello: 'icon-book',
+    backgroundClassName: 'bg-gradient-to-b from-[#dcfcfe75] to-white'
   }
 ]
 

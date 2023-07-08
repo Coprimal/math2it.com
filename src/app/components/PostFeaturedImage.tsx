@@ -8,6 +8,7 @@ import ImageComponent from './ImageComponent'
 type PostFeaturedImageProps = {
   title: string
   featuredImage: ImageType
+  className?: string
 }
 
 /**
@@ -21,7 +22,7 @@ export default function PostFeaturedImage(props: PostFeaturedImageProps) {
         <ImageComponent
           image={featuredImage}
           alt={`Hình đại diện cho bài viết "${title}"`}
-          className={cn('object-cover')}
+          className={cn('object-cover', props.className)}
           imageProps={{
             fill: true
           }}

@@ -58,7 +58,7 @@ export default function PostHeader(props: PostHeaderProps) {
       </div>
 
       {/* Main header with infos */}
-      <Container maxWidth={postWidthContainer}>
+      <Container maxWidthClass={postWidthContainer}>
         <header className="pb-4 pt-8">
           {/* Categories */}
           <div className={cn('w-full', gapHeaderItems)}>

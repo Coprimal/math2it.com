@@ -59,7 +59,7 @@ export default function PageOfPostsListTemplate(props: PageOfPostsListTemplatePr
             'bg-[#0000005e]'
           )}
         >
-          <Container>
+          <Container maxWidthClass="max-w-5xl">
             <h2
               className="w-fit text-3xl font-bold drop-shadow-sm"
               style={{ color: props.titleColor ? props.titleColor : props.cover ? '#fff' : '#fff' }}
@@ -82,7 +82,7 @@ export default function PageOfPostsListTemplate(props: PageOfPostsListTemplatePr
           </Container>
         </div>
       </div>
-      <Container className={spacingCoverPostList}>
+      <Container className={cn(spacingCoverPostList, 'max-w-5xl')}>
         {props.posts.length === 0 && <div className="my-4 text-xl font-bold">No post found</div>}
         {props.posts.length > 0 && (
           <>

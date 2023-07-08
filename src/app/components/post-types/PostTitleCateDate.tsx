@@ -28,8 +28,12 @@ export default function PostTitleCateDate({ post, options }: PostTitleCateDatePr
             'rounded-b-md': !category || options?.hideCategory
           })}
         >
-          <div className="relative h-32 w-full overflow-hidden">
-            <PostFeaturedImage featuredImage={featuredImage} title={title} />
+          <div className="relative h-28 w-full overflow-hidden">
+            <PostFeaturedImage
+              className="duration-300 group-hover:scale-110"
+              featuredImage={featuredImage}
+              title={title}
+            />
           </div>
           {!options?.hideCategory && category && (
             <div

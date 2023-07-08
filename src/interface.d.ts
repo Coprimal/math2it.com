@@ -45,6 +45,7 @@ export type Category = {
   }
   featuredImage?: ImageType
   fontello?: string
+  backgroundClassName?: string // used for index page
 }
 
 export type Tag = {
