@@ -105,6 +105,7 @@ export default async function TagPage({ params }: OptionalCatchAllProps) {
       currentPage={currentPage}
       iconComponent={<i className="icon-tag-2"></i>}
       cover={tagCover}
+      postTypeOpts={{ hideCategory: false }}
     />
   )
 }

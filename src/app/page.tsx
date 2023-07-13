@@ -1,4 +1,4 @@
-import { comfortaa, lobster } from '@app/lib/fonts'
+import { comfortaa, lobster, righteous } from '@app/lib/fonts'
 import Container from '@c/Container'
 import ImageComponent from '@c/ImageComponent'
 import WaveSplit from '@c/WaveSplit'
@@ -39,8 +39,9 @@ export default function Home() {
                     className={cn('h-full')}
                   />
                 </div>
-                <h1 className={cn('flex items-center text-4xl text-white', lobster.className)}>
-                  Math2IT xin chào!
+                <h1 className={cn('flex items-center text-4xl text-white')}>
+                  <span className={cn(righteous.className, 'mr-2')}>Math2IT</span>
+                  <span className={lobster.className}>xin chào</span>
                 </h1>
               </div>
               <p
@@ -81,6 +82,14 @@ export default function Home() {
       <WaveSplit />
 
       <div className="flex flex-col gap-8 pb-12 pt-8">
+        {/* <PostListForHomeSection
+          listStyle="carousel"
+          title="Bài viết mới nhất"
+          type="latest"
+          backgroundClassName="bg-gradient-to-b from-indigo-100/50 to-white"
+          moreHref={getSlugPrefix('all')}
+        /> */}
+
         <PostListForHomeSection
           title="Bài viết mới nhất"
           type="latest"

@@ -104,6 +104,7 @@ export default async function AuthorPage({ params }: OptionalCatchAllProps) {
       totalPages={totalPages}
       currentPage={currentPage}
       cover={authorCover}
+      postTypeOpts={{ hideCategory: false }}
     />
   )
 }

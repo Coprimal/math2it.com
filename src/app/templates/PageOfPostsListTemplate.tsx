@@ -1,7 +1,7 @@
 import Container from '@c/Container'
 import ImageComponent from '@c/ImageComponent'
 import Pagination from '@c/Pagination'
-import PostList from '@c/PostsList'
+import PostList, { PostTypeOpts } from '@c/PostsList'
 import { Post } from '@src/interface'
 import cn from 'classnames'
 import { StaticImageData } from 'next/image'
@@ -18,6 +18,7 @@ type PageOfPostsListTemplateProps = {
   patternColor?: string
   titleColor?: string
   cover?: StaticImageData
+  postTypeOpts?: PostTypeOpts
 }
 
 export const heightCoverPostList = 'h-[30vh] max-h-[30vh] min-h-[30vh]'
@@ -91,7 +92,7 @@ export default function PageOfPostsListTemplate(props: PageOfPostsListTemplatePr
                 <PostList
                   posts={props.posts}
                   postType="PostTitleCateDate"
-                  postTypeOpts={{ hideCategory: true }}
+                  postTypeOpts={props.postTypeOpts ?? { hideCategory: true }}
                 />
               )}
             </div>

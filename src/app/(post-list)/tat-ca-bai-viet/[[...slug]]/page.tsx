@@ -91,6 +91,7 @@ export default async function AllPostsPage({ params }: OptionalCatchAllProps) {
       totalPages={totalPages}
       currentPage={currentPage}
       cover={allPostsCover}
+      postTypeOpts={{ hideCategory: false }}
     />
   )
 }

@@ -89,11 +89,13 @@ export default async function SelectedPostsPage({ params }: OptionalCatchAllProp
   return (
     <PageOfPostsListTemplate
       title={'Bài viết tuyển chọn'}
+      subtitle="Đây là những bài viết được tuyển chọn bởi đội ngũ Math2IT."
       uri={`/${getSlugPrefix('selected')}/`}
       posts={postsOnThisPage}
       totalPages={totalPages}
       currentPage={currentPage}
       cover={selectedCover}
+      postTypeOpts={{ hideCategory: false }}
     />
   )
 }
