@@ -31,14 +31,8 @@ export default function PostListForHomeSection(props: SkeletonPostListForHomePro
         props.backgroundClassName ?? 'bg-gradient-to-b from-gray-100 to-white'
       )}
     >
-      <div className="flex items-center justify-between pr-6">
-        <h1
-          className={cn(
-            'text-[1.65rem] font-semibold text-slate-700',
-            'border-l-4 border-slate-600 leading-5 py-4 pl-3',
-            lobster.className
-          )}
-        >
+      <div className="flex items-center justify-between px-5">
+        <h1 className={cn('text-[1.65rem] font-semibold text-slate-700 py-4', lobster.className)}>
           {props.iconComponent && <span className="mr-1 opacity-90">{props.iconComponent}</span>}
           {props.title}
         </h1>

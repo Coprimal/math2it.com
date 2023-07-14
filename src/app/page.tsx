@@ -86,13 +86,14 @@ export default function Home() {
           listStyle="carousel"
           title="Bài viết mới nhất"
           type="latest"
-          backgroundClassName="bg-gradient-to-b from-indigo-100/50 to-white"
+          backgroundClassName="bg-none"
           moreHref={getSlugPrefix('all')}
           postType="PostCardWhiteBgBig"
           postTypeOpts={{ hideAuthor: true, hideDate: true }}
         />
         <PostListForHomeSection
           title="Bài viết tuyển chọn"
+          iconComponent={<i className="icon-star-circled"></i>}
           type="selected"
           postTypeOpts={{ hideDate: true }}
           backgroundClassName="bg-gradient-to-b from-amber-100/50 to-white"

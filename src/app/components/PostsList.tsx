@@ -9,6 +9,7 @@ import React from 'react'
 
 import { Carousel, CarouselItem } from './Carousel'
 import { PostListStyle } from './PostListForHomeSection'
+import { postListGridCLass } from './SkeletonPostList'
 
 export type PostType =
   | 'PostTitleCateDate'
@@ -25,9 +26,6 @@ type PostListProps = {
     className?: string
   }
 }
-
-export const postListGridCLass =
-  'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5 sm:gap-x-4'
 
 export default function PostList(props: PostListProps) {
   const className = props.options?.className ? props.options.className : postListGridCLass
