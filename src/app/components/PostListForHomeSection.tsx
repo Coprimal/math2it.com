@@ -9,15 +9,18 @@ import PostListForHome, { PostListForHomeType, postListHomeCount } from './PostL
 import { PostType, PostTypeOpts } from './PostsList'
 import SkeletonPostList from './SkeletonPostList'
 
+export type PostListStyle = 'default' | 'carousel'
+
 type SkeletonPostListForHomeProps = {
+  listStyle?: PostListStyle
   title: string
   type: PostListForHomeType
   iconComponent?: React.ReactNode
   moreHref?: string
   categorySlug?: string // required if type === 'byCategory'
-  postTypeOpts?: PostTypeOpts
   backgroundClassName?: string
   postType?: PostType
+  postTypeOpts?: PostTypeOpts
 }
 
 export default function PostListForHomeSection(props: SkeletonPostListForHomeProps) {
@@ -49,9 +52,10 @@ export default function PostListForHomeSection(props: SkeletonPostListForHomePro
           </Link>
         )}
       </div>
-      <div className="px-8 py-5 relative z-20">
+      <div className="px-8 pb-5 pt-2 relative z-20">
         <Suspense fallback={<SkeletonPostList count={postListHomeCount / 2} />}>
           <PostListForHome
+            listStyle={props.listStyle}
             type={props.type}
             categorySlug={props.categorySlug}
             postTypeOpts={props.postTypeOpts}

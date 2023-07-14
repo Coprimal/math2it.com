@@ -7,6 +7,10 @@
   width: 100%;
 }
 
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 @layer base {
   .m2it-link-hover {
     @apply text-pink-600;

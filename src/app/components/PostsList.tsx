@@ -1,9 +1,14 @@
+'use client'
+
 import PostCardWhiteBg, { PostCardWhiteBgOpts } from '@c/post-types/PostCardWhiteBg'
 import PostCardWhiteBgBig, { PostCardWhiteBgBigOpts } from '@c/post-types/PostCardWhiteBgBig'
 import PostImageBackground from '@c/post-types/PostImageBackground'
 import PostTitleCateDate, { PostTitleCateDateOpts } from '@c/post-types/PostTitleCateDate'
 import { Post } from '@src/interface'
 import React from 'react'
+
+import { Carousel, CarouselItem } from './Carousel'
+import { PostListStyle } from './PostListForHomeSection'
 
 export type PostType =
   | 'PostTitleCateDate'
@@ -12,6 +17,7 @@ export type PostType =
   | 'PostImageBackground'
 export type PostTypeOpts = PostTitleCateDateOpts | PostCardWhiteBgOpts | PostCardWhiteBgBigOpts
 type PostListProps = {
+  listStyle?: PostListStyle
   posts: Post[]
   postType: PostType
   postTypeOpts?: PostTypeOpts
@@ -23,17 +29,29 @@ type PostListProps = {
 export const postListGridCLass =
   'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5 sm:gap-x-4'
 
-export default function PostList({ posts, postType, postTypeOpts, options }: PostListProps) {
-  const className = options?.className ? options.className : postListGridCLass
+export default function PostList(props: PostListProps) {
+  const className = props.options?.className ? props.options.className : postListGridCLass
   return (
     <section>
-      <div className={className}>
-        {posts.map(post => (
-          <React.Fragment key={post.uri}>
-            {getPostTypeElement(postType, post, postTypeOpts)}
-          </React.Fragment>
-        ))}
-      </div>
+      {(!props.listStyle || props.listStyle === 'default') && (
+        <div className={className}>
+          {props.posts.map(post => (
+            <React.Fragment key={post.uri}>
+              {getPostTypeElement(props.postType, post, props.postTypeOpts)}
+            </React.Fragment>
+          ))}
+        </div>
+      )}
+      {props.listStyle === 'carousel' && (
+        <Carousel
+          items={props.posts}
+          renderItem={({ item, isSnapPoint }) => (
+            <CarouselItem key={item.id} isSnapPoint={isSnapPoint} widthClass={'w-80'}>
+              {getPostTypeElement(props.postType, item, props.postTypeOpts)}
+            </CarouselItem>
+          )}
+        />
+      )}
     </section>
   )
 }

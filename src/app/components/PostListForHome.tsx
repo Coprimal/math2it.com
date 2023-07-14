@@ -3,11 +3,13 @@ import { getAuthors, getCategories, getPosts, getPostsBy, getTags } from '@app/l
 import { Post } from '@src/interface'
 
 import { getFilterOf } from '../lib/helpers'
+import { PostListStyle } from './PostListForHomeSection'
 import PostList, { PostType, PostTypeOpts } from './PostsList'
 
 export type PostListForHomeType = 'latest' | 'selected' | 'byCategory'
 
 type PostListForHomeProps = {
+  listStyle?: PostListStyle
   type: PostListForHomeType
   categorySlug?: string // required if type === 'byCategory'
   postTypeOpts?: PostTypeOpts
@@ -63,6 +65,7 @@ export default async function PostListForHome(props: PostListForHomeProps) {
 
   return (
     <PostList
+      listStyle={props.listStyle}
       posts={posts}
       postType={props.postType ?? 'PostTitleCateDate'}
       postTypeOpts={props.postTypeOpts}

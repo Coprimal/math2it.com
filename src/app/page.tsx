@@ -82,20 +82,14 @@ export default function Home() {
       <WaveSplit />
 
       <div className="flex flex-col gap-8 pb-12 pt-8">
-        {/* <PostListForHomeSection
+        <PostListForHomeSection
           listStyle="carousel"
           title="Bài viết mới nhất"
           type="latest"
           backgroundClassName="bg-gradient-to-b from-indigo-100/50 to-white"
           moreHref={getSlugPrefix('all')}
-        /> */}
-
-        <PostListForHomeSection
-          title="Bài viết mới nhất"
-          type="latest"
-          postTypeOpts={{ hideDate: true }}
-          backgroundClassName="bg-gradient-to-b from-indigo-100/50 to-white"
-          moreHref={getSlugPrefix('all')}
+          postType="PostCardWhiteBgBig"
+          postTypeOpts={{ hideAuthor: true, hideDate: true }}
         />
         <PostListForHomeSection
           title="Bài viết tuyển chọn"
