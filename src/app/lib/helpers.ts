@@ -292,10 +292,17 @@ export function idToUuid(id: string): string | null {
 }
 
 /**
- * Filter to be used in getPosts()
+ * Filter to be used in getPosts(). Remark, we ignore single page (where isPage = true on Notion)
  */
 export function getFilter(filter?: any): QueryDatabaseParameters['filter'] {
   const defaultFilter = [] as any[]
+  // Ignore single page
+  defaultFilter.push({
+    property: 'isPage',
+    checkbox: {
+      equals: false
+    }
+  })
   // Ignore sandbox posts in production
   if (ENV_MODE === 'prod') {
     defaultFilter.push({

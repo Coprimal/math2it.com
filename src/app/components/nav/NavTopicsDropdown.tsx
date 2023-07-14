@@ -46,7 +46,7 @@ export default function NavTopicsDropdown() {
                     bg-[#323541] px-3 py-1 lg:grid-cols-2`}
                 >
                   {predefinedCategories.map(item => (
-                    <Link key={item.id} href={item.uri} className={dropdownItemClass}>
+                    <Link key={item.slug} href={item.uri} className={dropdownItemClass}>
                       <div className="flex gap-2">
                         <i className={item.fontello}></i>
                         {item.name}

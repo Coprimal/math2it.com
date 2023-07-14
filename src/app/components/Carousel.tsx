@@ -24,6 +24,20 @@ export const Carousel = <T,>({ items, renderItem }: CarouselProps<T>) => {
     'text-xl hover:text-2xl transition-all text-slate-400 hover:text-slate-600'
   )
 
+  React.useEffect(() => {
+    let i = 0
+    const interval = setInterval(() => {
+      goTo(i)
+      i++
+      if (i === pages.length) i = 0
+    }, 2500)
+
+    return () => {
+      clearInterval(interval)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   return (
     <div className="relative">
       <div

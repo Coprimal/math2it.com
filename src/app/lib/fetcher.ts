@@ -112,6 +112,24 @@ export async function getPosts(options: {
 }
 
 /**
+ * Get single pages like Privacy, About, Thanks, etc.
+ */
+export async function getSinglePages(dbId: string) {
+  const filter = {
+    property: 'isPage',
+    checkbox: {
+      equals: true
+    }
+  }
+  const data = await getNotionDatabase(dbId, filter)
+  const pagesList = get(data, 'results', []) as NotionPost[]
+  const pages = await transformNotionPostsData({
+    data: pagesList
+  })
+  return pages
+}
+
+/**
  * Depending on the filter, we can use this function to get posts by categories, tags, authors
  *
  * The categories, tags and authors are otional because sometimes, we don't need them in the return.
