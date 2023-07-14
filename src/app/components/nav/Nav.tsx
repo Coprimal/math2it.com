@@ -1,5 +1,5 @@
-import { MENUS, MenuHome } from '@app/lib/config'
-import { MenuItem } from '@src/interface'
+import { MenuHome, predefinedCategories } from '@app/lib/config'
+import { Category } from '@src/interface'
 
 import NavAvatar from './NavAvatar'
 import NavSearch from './NavSearch'
@@ -11,8 +11,6 @@ export const paddingTopNav = 'pt-14' // Must be the same as navHeight!
 const navClasses = 'bg-[#323541] shadow-transparent text-gray-300'
 export const textClass = 'md:hover:text-white md:hover:bg-gray-700'
 export const groupSpaceClass = 'ml-2 md:ml-4'
-
-export const menus: MenuItem[] = MENUS
 
 export default function Nav() {
   return (
@@ -38,11 +36,11 @@ export default function Nav() {
                         label={MenuHome.label}
                         customClass="hidden sm:flex"
                       />
-                      {menus?.map((item: MenuItem) => (
+                      {predefinedCategories?.map((item: Category) => (
                         <NavTopicItem
-                          uri={item?.uri as string}
-                          label={item?.label}
-                          key={item?.id}
+                          uri={item.uri as string}
+                          label={item.name}
+                          key={item.slug}
                           customClass="hidden lg:flex"
                         />
                       ))}

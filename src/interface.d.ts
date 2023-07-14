@@ -4,16 +4,6 @@ export type SiteTheme = 'dark' | 'light'
 
 export type EnvMode = 'dev' | 'prod'
 
-export type MenuItem = {
-  id: string
-  uri: string
-  label: string
-  navigationItems: {
-    navColor: string
-    navIcon: string
-  }
-}
-
 export type ImageType = {
   sourceUrl?: string | null
   sizes?: string

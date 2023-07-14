@@ -150,23 +150,6 @@ export const predefinedCategories: Category[] = [
     fontello: 'icon-pi-outline',
     backgroundClassName: 'bg-gradient-to-b from-[#f4f8fb] to-white'
   },
-  // Công cụ
-  {
-    slug: 'cong-cu',
-    uri: `/${getSlugPrefix('category')}/cong-cu/`,
-    name: 'Công cụ',
-    description: 'Những thủ thuật, công cụ công nghệ hữu ích cho học tập, làm việc và cuộc sống.',
-    style: {
-      bgColor: '#ffe3e3', // old: #ffe4ee
-      textColor: '#cb4242', // old: rgb(197 57 108),
-      titleColor: '#a21b1b'
-    },
-    featuredImage: {
-      staticImageData: defaultTool
-    },
-    fontello: 'icon-magic',
-    backgroundClassName: 'bg-gradient-to-b from-[#ef92b412] to-white'
-  },
   // Công nghệ
   {
     slug: 'cong-nghe',
@@ -202,6 +185,23 @@ export const predefinedCategories: Category[] = [
     },
     fontello: 'icon-language',
     backgroundClassName: 'bg-gradient-to-b from-[#f9f6ff] to-white'
+  },
+  // Công cụ
+  {
+    slug: 'cong-cu',
+    uri: `/${getSlugPrefix('category')}/cong-cu/`,
+    name: 'Công cụ',
+    description: 'Những thủ thuật, công cụ công nghệ hữu ích cho học tập, làm việc và cuộc sống.',
+    style: {
+      bgColor: '#ffe3e3', // old: #ffe4ee
+      textColor: '#cb4242', // old: rgb(197 57 108),
+      titleColor: '#a21b1b'
+    },
+    featuredImage: {
+      staticImageData: defaultTool
+    },
+    fontello: 'icon-magic',
+    backgroundClassName: 'bg-gradient-to-b from-[#ef92b412] to-white'
   },
   // Giáo dục
   {

@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { Fragment } from 'react'
 import { FiChevronDown } from 'react-icons/fi'
 
-import { menus } from './Nav'
+import { predefinedCategories } from '../../lib/config'
 import { menuItemCommonClass } from './NavTopicItem'
 
 const dropdownItemClass = 'flex items-center p-3 whitespace-nowrap'
@@ -45,11 +45,11 @@ export default function NavTopicsDropdown() {
                   className={`relative grid divide-y divide-slate-600
                     bg-[#323541] px-3 py-1 lg:grid-cols-2`}
                 >
-                  {menus.map(item => (
+                  {predefinedCategories.map(item => (
                     <Link key={item.id} href={item.uri} className={dropdownItemClass}>
                       <div className="flex gap-2">
-                        <i className={item.navigationItems?.navIcon}></i>
-                        {item.label}
+                        <i className={item.fontello}></i>
+                        {item.name}
                       </div>
                     </Link>
                   ))}
