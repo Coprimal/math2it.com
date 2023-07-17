@@ -4,6 +4,7 @@ import ImageComponent from '@c/ImageComponent'
 import WaveSplit from '@c/WaveSplit'
 import WavingHand from '@root/public/waving_hand.webp'
 import cn from 'classnames'
+import Link from 'next/link'
 
 import PostListForHomeSection from './components/PostListForHomeSection'
 import { getSlugPrefix } from './lib/config'
@@ -52,6 +53,14 @@ export default function Home() {
               <div
                 className={cn('flex flex-wrap items-center justify-center gap-4 md:justify-start')}
               >
+                <Link
+                  className={cn(
+                    'bg-[#ffc9004a] hover:bg-[#e1a000] shadow-md text-white py-1 px-6 rounded-3xl'
+                  )}
+                  href={`/${getSlugPrefix('about')}/`}
+                >
+                  Giới thiệu
+                </Link>
                 <a
                   className={cn(
                     'bg-[#4358969c] hover:bg-[#215989] shadow-md text-white py-1 px-6 rounded-3xl'

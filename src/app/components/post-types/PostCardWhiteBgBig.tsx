@@ -17,13 +17,15 @@ type PostTitleCateDateProps = {
   options?: PostCardWhiteBgBigOpts
 }
 
+export const CWBBHeightClass = 'h-36'
+
 export default function PostCardWhiteBgBig({ post, options }: PostTitleCateDateProps) {
   const { title, featuredImage, date, uri, excerpt, authors } = post
   return (
     <div className="group overflow-hidden rounded-md bg-white shadow-lg h-full">
       <Link className={cn(comfortaa.className, 'text-center')} href={uri || '/'}>
         <div className="flex flex-col justify-center">
-          <div className="relative h-36 w-full overflow-hidden ">
+          <div className={cn('relative w-full overflow-hidden', CWBBHeightClass)}>
             <PostFeaturedImage featuredImage={featuredImage} title={title} />
           </div>
         </div>

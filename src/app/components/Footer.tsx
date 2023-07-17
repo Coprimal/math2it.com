@@ -22,6 +22,10 @@ export default function Footer() {
           <Link className={cn(aClass)} href={`/${getSlugPrefix('about')}/`}>
             Giới thiệu
           </Link>
+          <span>|</span>
+          <Link className={cn(aClass)} href={`/${getSlugPrefix('viet-bai')}/`}>
+            Viết bài cùng Math2IT
+          </Link>
         </div>
       </Container>
     </footer>

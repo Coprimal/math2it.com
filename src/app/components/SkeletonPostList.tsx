@@ -1,7 +1,17 @@
+'use client'
+
 import cn from 'classnames'
+
+import { Carousel, CarouselItem } from './Carousel'
+import { PostListStyle } from './PostListForHomeSection'
+import { PostType } from './PostsList'
+import { CWBBHeightClass } from './post-types/PostCardWhiteBgBig'
+import { TCDFIHeightClass } from './post-types/PostTitleCateDate'
 
 type SkeletonPostListProps = {
   count: number
+  postType?: PostType
+  listStyle?: PostListStyle
 }
 
 export const postListGridCLass = cn(
@@ -10,17 +20,64 @@ export const postListGridCLass = cn(
 
 export default function SkeletonPostList(props: SkeletonPostListProps) {
   return (
-    <div className={cn(postListGridCLass, 'animate-pulse')}>
-      {Array.from({ length: props.count }).map((_, i) => (
-        <div key={i} className="flex flex-col justify-center">
-          <div className="h-32 w-full rounded-md bg-slate-200"></div>
-          <div className="flex flex-col items-center gap-1 p-2">
-            <div className="h-4 w-full rounded-md bg-slate-200"></div>
-            <div className="h-4 w-2/3 rounded-md bg-slate-200"></div>
-          </div>
-          <div></div>
+    <>
+      {(!props.listStyle || props.listStyle === 'default') && (
+        <div className={cn(postListGridCLass, 'animate-pulse')}>
+          {Array.from({ length: props.count }).map((_, i) => getSkeleton(props.postType))}
         </div>
-      ))}
-    </div>
+      )}
+      {props.listStyle === 'carousel' && (
+        <Carousel
+          items={Array.from({ length: props.count }).map((_, i) => ({ id: i }))}
+          renderItem={({ item, isSnapPoint }) => (
+            <CarouselItem key={item.id} isSnapPoint={isSnapPoint} widthClass={'w-80'}>
+              {getSkeleton(props.postType)}
+            </CarouselItem>
+          )}
+        />
+      )}
+    </>
   )
 }
+
+function getSkeleton(postType?: PostType) {
+  switch (postType) {
+    case 'PostTitleCateDate':
+      return <PostTitleCateDateSkeleton />
+
+    case 'PostCardWhiteBgBig':
+      return <PostCardWhiteBgBigSkeleton />
+
+    default:
+      return <PostTitleCateDateSkeleton />
+  }
+}
+
+const PostTitleCateDateSkeleton = () => (
+  <div className="flex flex-col justify-center">
+    <div className={cn('w-full rounded-md bg-slate-200', TCDFIHeightClass)}></div>
+    <div className="flex flex-col items-center gap-1 p-2">
+      <div className="h-4 w-full rounded-md bg-slate-200"></div>
+      <div className="h-4 w-3/4 rounded-md bg-slate-200"></div>
+    </div>
+    <div></div>
+  </div>
+)
+
+const PostCardWhiteBgBigSkeleton = () => (
+  <div className="flex flex-col justify-center">
+    <div className={cn('w-full rounded-md bg-slate-200', CWBBHeightClass)}></div>
+    <div className="flex flex-col items-center gap-1 p-2">
+      <div className="h-4 w-full rounded-md bg-slate-200"></div>
+      <div className="h-4 w-3/4 rounded-md bg-slate-200"></div>
+
+      {/* excerpt */}
+      <div className="w-full mt-2 px-2 flex flex-col items-center gap-1">
+        <div className="h-2 w-full rounded-md bg-slate-200"></div>
+        <div className="h-2 w-full rounded-md bg-slate-200"></div>
+        <div className="h-2 w-3/4 rounded-md bg-slate-200"></div>
+      </div>
+    </div>
+    <div></div>
+  </div>
+)

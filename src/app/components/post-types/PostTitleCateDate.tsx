@@ -17,6 +17,8 @@ type PostTitleCateDateProps = {
   options?: PostTitleCateDateOpts
 }
 
+export const TCDFIHeightClass = 'h-28'
+
 export default function PostTitleCateDate({ post, options }: PostTitleCateDateProps) {
   const { title, featuredImage, date, categories, uri } = post
   const category = categories ? categories[0] : null
@@ -28,7 +30,7 @@ export default function PostTitleCateDate({ post, options }: PostTitleCateDatePr
             'rounded-b-md': !category || options?.hideCategory
           })}
         >
-          <div className="relative h-28 w-full overflow-hidden">
+          <div className={cn('relative w-full overflow-hidden', TCDFIHeightClass)}>
             <PostFeaturedImage
               className="duration-300 group-hover:scale-110"
               featuredImage={featuredImage}

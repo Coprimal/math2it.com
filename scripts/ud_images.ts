@@ -165,7 +165,7 @@ async function updateCoverAll(dbId: string) {
   if (!dbId) return handleError('Missing database id', 'updateCoverAll()')
 
   console.log(chalk.yellow('⧗ Checking and downloading image from Notion...'))
-  const posts = await getPosts(dbId)
+  const posts = await getPosts(dbId, undefined, 'categories')
   for (const post of posts) {
     if (!post?.postId || !post?.coverUrl) continue
     await processUpdateImage({
@@ -272,7 +272,11 @@ async function getPostInfo(postId: string): Promise<PostInfo> {
   return { postTitle, categorySlug: categories[0]! }
 }
 
-async function getPosts(dbId: string, startCursor?: string) {
+async function getPosts(
+  dbId: string,
+  startCursor?: string,
+  ignore?: TransformNotionPostsDataIgnore
+) {
   console.log('_____getPosts()....')
   try {
     let data = await getNotionDatabase(dbId)
@@ -288,7 +292,7 @@ async function getPosts(dbId: string, startCursor?: string) {
         }
       }
     }
-    const posts = (await transformNotionPostsData(postsList)) || []
+    const posts = (await transformNotionPostsData(postsList, ignore)) || []
     return posts
   } catch (error) {
     console.log('🐞 _____getPosts() error: ', error)
@@ -360,7 +364,11 @@ function getJoinedRichText(richTextArr: any[]): string {
 // Transformers
 // --------------------------------------------------------------------------------------------
 
-async function transformNotionPostsData(data: NotionPost[]) {
+type TransformNotionPostsDataIgnore = 'categories'
+async function transformNotionPostsData(
+  data: NotionPost[],
+  ignore?: TransformNotionPostsDataIgnore
+) {
   if (!data || !data.length) return []
 
   return Promise.all(
@@ -372,7 +380,7 @@ async function transformNotionPostsData(data: NotionPost[]) {
         ?.map(category => predefinedCategories.find(c => c === makeSlugText(category.name)))
         ?.filter(c => c)
 
-      if (!categories || !categories.length) {
+      if ((!ignore || ignore !== 'categories') && (!categories || !categories.length)) {
         handleError(`Không có category cho bài viết: ${title}`, 'transformNotionPostsData()')
         return null
       }
@@ -382,7 +390,7 @@ async function transformNotionPostsData(data: NotionPost[]) {
         postTitle: title,
         coverUrl,
         bookCoverUrl,
-        categorySlug: categories[0]!
+        categorySlug: categories?.[0]
       }
     })
   )

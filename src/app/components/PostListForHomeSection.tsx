@@ -47,7 +47,15 @@ export default function PostListForHomeSection(props: SkeletonPostListForHomePro
         )}
       </div>
       <div className="px-8 pb-5 pt-2 relative z-20">
-        <Suspense fallback={<SkeletonPostList count={postListHomeCount / 2} />}>
+        <Suspense
+          fallback={
+            <SkeletonPostList
+              count={postListHomeCount / 2}
+              postType={props.postType}
+              listStyle={props.listStyle}
+            />
+          }
+        >
           <PostListForHome
             listStyle={props.listStyle}
             type={props.type}
