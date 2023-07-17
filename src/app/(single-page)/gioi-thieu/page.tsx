@@ -1,10 +1,16 @@
-import Link from 'next/link'
+import { notFound } from 'next/navigation'
 
-export default function AboutPage() {
-  return (
-    <>
-      <h1 className="mt-20 text-2xl">Giới thiệu</h1>
-      <Link href="/">Go back to the homepage</Link>
-    </>
-  )
+import { ABOUT_PAGE } from '../../lib/config'
+import { getBlocks, getPostHeader } from '../../lib/fetcher'
+import SinglePostTemplate from '../../templates/SinglePostTemplate'
+
+export default async function AboutPage() {
+  try {
+    const postHeader = await getPostHeader(ABOUT_PAGE)
+    const contentBlocks = await getBlocks(ABOUT_PAGE)
+    return <SinglePostTemplate postHeader={postHeader} contentBlocks={contentBlocks} />
+  } catch (error) {
+    console.log('🚨Error when loading a single post page', error)
+    notFound()
+  }
 }

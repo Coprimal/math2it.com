@@ -107,12 +107,17 @@ const nextConfig = {
       },
       {
         source: '/thanks',
-        destination: '/cam-on',
+        destination: '/gioi-thieu',
         permanent: true
       },
       {
         source: '/privacy',
-        destination: '/chinh-sach-bao-mat',
+        destination: '/gioi-thieu',
+        permanent: true
+      },
+      {
+        source: '/newsletter',
+        destination: '/gioi-thieu',
         permanent: true
       }
     ]

@@ -19,7 +19,7 @@ export default function PostHeaderTopics(props: PostHeaderTopicsProps) {
   const usedTags = tags?.filter(tag => tag.uri !== '/tag/tuyen-chon/') || []
   return (
     <div className={cn('flex flex-wrap gap-2', className)}>
-      {selected && categories && (
+      {!!selected && !!categories && (
         <Link
           className={`${topTagClass} border border-amber-300 bg-amber-50 !text-amber-600`}
           key={getSlugPrefix('selected')}
@@ -28,7 +28,7 @@ export default function PostHeaderTopics(props: PostHeaderTopicsProps) {
           <i className="icon-star-circled mr-1"></i> Tuyển chọn
         </Link>
       )}
-      {categories?.length &&
+      {!!categories?.length &&
         categories?.length > 0 &&
         categories
           .filter(cat => !!cat)

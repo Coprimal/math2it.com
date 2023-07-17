@@ -17,13 +17,10 @@ export default function Home() {
         <Container maxWidthClass="max-w-5xl">
           <div
             className={cn(
-              'mx-auto py-12',
+              'mx-auto py-20',
               'flex flex-col flex-wrap items-center justify-items-stretch md:flex-row'
             )}
           >
-            {/* <div className="md:order-1">
-              <i className="icon-math2it text-[5rem] text-[#f15f5f] md:text-[8rem]"></i>
-            </div> */}
             <div className="flex flex-col gap-4 md:order-2 md:flex-1">
               <div className={cn('flex gap-2 justify-center md:justify-start')}>
                 <div

@@ -61,13 +61,15 @@ export default function PostHeader(props: PostHeaderProps) {
       <Container maxWidthClass={postWidthContainer}>
         <header className="pb-4 pt-8">
           {/* Categories */}
-          <div className={cn('w-full', gapHeaderItems)}>
-            <PostHeaderTopics
-              categories={categories}
-              className="justify-start"
-              selected={selected}
-            />
-          </div>
+          {!!categories && (
+            <div className={cn('w-full', gapHeaderItems)}>
+              <PostHeaderTopics
+                categories={categories}
+                className="justify-start"
+                selected={selected}
+              />
+            </div>
+          )}
 
           {/* Title */}
           <h1
@@ -79,47 +81,55 @@ export default function PostHeader(props: PostHeaderProps) {
           />
 
           {/* Authors & Date */}
-          <div
-            className={cn(
-              gapHeaderItems,
-              '!mb-4 flex w-full flex-wrap gap-3 md:w-auto md:flex-nowrap'
-            )}
-          >
-            <div className="flex gap-2 text-base opacity-80">
-              {!!authors?.length && authors?.length > 1 && <i className="icon-users-outline"></i>}
-              {((!!authors?.length && authors?.length <= 1) || !authors?.length) && (
-                <i className="icon-user-outline -mr-1"></i>
+          {(authors || date) && (
+            <div
+              className={cn(
+                gapHeaderItems,
+                '!mb-4 flex w-full flex-wrap gap-3 md:w-auto md:flex-nowrap'
               )}
-              <div>
-                {!!authors?.length &&
-                  authors?.length >= 1 &&
-                  authors.map((author, idx, authors) => (
-                    <span key={author.uri}>
-                      <Link className="hover:m2it-link-hover" href={author.uri || '/'}>
-                        {author.name}
+            >
+              {authors && (
+                <div className="flex gap-2 text-base opacity-80">
+                  {!!authors?.length && authors?.length > 1 && (
+                    <i className="icon-users-outline"></i>
+                  )}
+                  {((!!authors?.length && authors?.length <= 1) || !authors?.length) && (
+                    <i className="icon-user-outline -mr-1"></i>
+                  )}
+                  <div>
+                    {!!authors?.length &&
+                      authors?.length >= 1 &&
+                      authors.map((author, idx, authors) => (
+                        <span key={author.uri}>
+                          <Link className="hover:m2it-link-hover" href={author.uri || '/'}>
+                            {author.name}
+                          </Link>
+                          {idx + 1 === authors.length ? ' ' : ' ◦ '}
+                        </span>
+                      ))}
+                    {!authors?.length && (
+                      <Link className="hover:m2it-link-hover" href={anonymAuthor.uri}>
+                        {anonymAuthor.name}
                       </Link>
-                      {idx + 1 === authors.length ? ' ' : ' ◦ '}
-                    </span>
-                  ))}
-                {!authors?.length && (
-                  <Link className="hover:m2it-link-hover" href={anonymAuthor.uri}>
-                    {anonymAuthor.name}
-                  </Link>
-                )}
-              </div>
+                    )}
+                  </div>
+                </div>
+              )}
+              {date && (
+                <div className="flex gap-1 text-base opacity-80">
+                  <i className="icon-clock"></i>
+                  <Date dateString={date} />
+                </div>
+              )}
             </div>
-            {date && (
-              <div className="flex gap-1 text-base opacity-80">
-                <i className="icon-clock"></i>
-                <Date dateString={date} />
-              </div>
-            )}
-          </div>
+          )}
 
           {/* Tags */}
-          <div className="justify-left flex items-center pb-2 pt-0">
-            <PostHeaderTopics className="justify-left" tags={tags} />
-          </div>
+          {tags && (
+            <div className="justify-left flex items-center pb-2 pt-0">
+              <PostHeaderTopics className="justify-left" tags={tags} />
+            </div>
+          )}
         </header>
       </Container>
     </>

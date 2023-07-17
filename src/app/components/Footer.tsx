@@ -19,16 +19,8 @@ export default function Footer() {
             Nhóm Facebook <TbExternalLink />
           </a>
           <span>|</span>
-          <Link className={cn(aClass)} href={`/${getSlugPrefix('thanks')}/`}>
-            Cảm ơn
-          </Link>
-          <span>|</span>
-          <Link className={cn(aClass)} href={`/${getSlugPrefix('newsletter')}/`}>
-            Đăng ký nhận tin
-          </Link>
-          <span>|</span>
-          <Link className={cn(aClass)} href={`/${getSlugPrefix('privacy')}/`}>
-            Quyền riêng tư
+          <Link className={cn(aClass)} href={`/${getSlugPrefix('about')}/`}>
+            Giới thiệu
           </Link>
         </div>
       </Container>

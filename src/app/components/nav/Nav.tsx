@@ -1,4 +1,4 @@
-import { MenuHome, predefinedCategories } from '@app/lib/config'
+import { MenuAbout, MenuHome, predefinedCategories } from '@app/lib/config'
 import { Category } from '@src/interface'
 
 import NavAvatar from './NavAvatar'
@@ -45,11 +45,11 @@ export default function Nav() {
                         />
                       ))}
                       <NavTopicsDropdown />
-                      {/* <NavTopicItem
+                      <NavTopicItem
                         uri={MenuAbout.uri}
                         label={MenuAbout.label}
                         customClass="hidden sm:flex"
-                      /> */}
+                      />
                     </div>
                   </div>
                   <NavSearch />

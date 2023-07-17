@@ -52,12 +52,12 @@ export type PostAndPageACF = {
 
 export type PostHeaderType = {
   title: string
+  featuredImage: ImageType
   date?: string
   categories?: Category[]
   tags?: Tag[]
   authors?: Author[]
   selected?: boolean
-  featuredImage: ImageType
   bookCover?: ImageType
   showToc?: boolean
 }

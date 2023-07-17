@@ -42,6 +42,9 @@ export const NOTION_VERSION = process.env.NOTION_VERSION as string
 // 👇 Read this: https://github.com/NotionX/react-notion-x#private-pages
 export const NOTION_ACTIVE_USER = process.env.NOTION_ACTIVE_USER as string
 export const NOTION_TOKEN_V2 = process.env.NOTION_TOKEN_V2 as string
+// Single pages
+export const WRITE_WITH_US_PAGE = process.env.WRITE_WITH_US_PAGE as string
+export const ABOUT_PAGE = process.env.ABOUT_PAGE as string
 
 // 👇 It's used to sort posts by date
 export const notionDateName = 'finalCreatedDate'
@@ -68,7 +71,7 @@ export const postCoverCustomSizeFM = `
 export const MenuHome = {
   id: 'id-home',
   uri: '/',
-  label: 'Math2IT',
+  label: 'Trang chủ',
   navigationItems: {
     navColor: '#ffeead',
     navIcon: 'icon-home'
@@ -267,9 +270,6 @@ export function getSlugPrefix(type: SlugTypeLabels): string {
   if (type === 'selected') return 'tuyen-chon'
   if (type === 'singlePost') return 'bai-viet'
   if (type === 'about') return 'gioi-thieu'
-  if (type === 'thanks') return 'cam-on'
-  if (type === 'privacy') return 'chinh-sach-bao-mat'
-  if (type === 'newsletter') return 'dang-ky-nhan-bai-viet'
   if (type === 'viet-bai') return 'viet-bai-tren-math2it'
   if (type === 'page') return 'trang'
   return ''

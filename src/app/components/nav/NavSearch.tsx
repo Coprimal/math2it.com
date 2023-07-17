@@ -47,7 +47,8 @@ export default function NavSearch() {
             <span className="whitespace-nowrap">Tìm kiếm</span>
             <span
               className={cn(
-                'text-[0.7rem] bg-[#65666b30] px-1 rounded-sm border-[#555] border-[0.5px]'
+                'text-[0.7rem] bg-[#65666b30] px-1 rounded-sm border-[#555] border-[0.5px]',
+                'hidden sm:inline-block'
               )}
             >
               {searchKeyText}
