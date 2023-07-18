@@ -1,6 +1,6 @@
 import { getSlugPrefix, notionMaxRequest, numPostsPerPage } from '@app/lib/config'
 import { getAuthors, getCategories, getPostsBy, getTags } from '@app/lib/fetcher'
-import { getFilterOf, getStartCursorForCurrentPage } from '@app/lib/helpers'
+import { generateMetaTitle, getFilterOf, getStartCursorForCurrentPage } from '@app/lib/helpers'
 import PageOfPostsListTemplate from '@app/templates/PageOfPostsListTemplate'
 import { OptionalCatchAllParams, OptionalCatchAllProps } from '@src/interface'
 import { Metadata } from 'next'
@@ -18,7 +18,8 @@ export async function generateMetadata({ params }: OptionalCatchAllProps): Promi
       title: 'Chuyên mục không xác định | Math2IT'
     }
   return {
-    title: `Chuyên mục "${category?.name}" - trang ${currentPage} | Math2IT`
+    title: generateMetaTitle(`Chuyên mục "${category?.name}" - trang ${currentPage}`),
+    description: category.description
   }
 }
 

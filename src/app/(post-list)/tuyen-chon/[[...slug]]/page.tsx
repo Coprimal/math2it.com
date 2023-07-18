@@ -1,6 +1,6 @@
 import { NOTION_DB_POSTS, getSlugPrefix, notionMaxRequest, numPostsPerPage } from '@app/lib/config'
 import { getAuthors, getCategories, getPosts, getTags } from '@app/lib/fetcher'
-import { getFilterOf, getStartCursorForCurrentPage } from '@app/lib/helpers'
+import { generateMetaTitle, getFilterOf, getStartCursorForCurrentPage } from '@app/lib/helpers'
 import PageOfPostsListTemplate from '@app/templates/PageOfPostsListTemplate'
 import selectedCover from '@root/public/featured-images/selected.png'
 import { OptionalCatchAllParams, OptionalCatchAllProps } from '@src/interface'
@@ -12,7 +12,7 @@ export const revalidate = 60
 export async function generateMetadata({ params }: OptionalCatchAllProps): Promise<Metadata> {
   const currentPage = +(params?.slug?.[1] || 1)
   return {
-    title: `Bài viết tuyển chọn - trang ${currentPage} | Math2IT`
+    title: generateMetaTitle(`Bài viết tuyển chọn - trang ${currentPage}`)
   }
 }
 

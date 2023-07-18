@@ -1,6 +1,6 @@
 import { getSlugPrefix, notionMaxRequest, numPostsPerPage } from '@app/lib/config'
 import { getAuthors, getCategories, getPostsBy, getTags } from '@app/lib/fetcher'
-import { getFilterOf, getStartCursorForCurrentPage } from '@app/lib/helpers'
+import { generateMetaTitle, getFilterOf, getStartCursorForCurrentPage } from '@app/lib/helpers'
 import PageOfPostsListTemplate from '@app/templates/PageOfPostsListTemplate'
 import authorCover from '@root/public/featured-images/author.png'
 import { OptionalCatchAllParams, OptionalCatchAllProps } from '@src/interface'
@@ -16,10 +16,10 @@ export async function generateMetadata({ params }: OptionalCatchAllProps): Promi
   const author = authors.find(a => a.slug === slug)
   if (!author)
     return {
-      title: 'Tác giả không xác định | Math2IT'
+      title: generateMetaTitle('Tác giả không xác định')
     }
   return {
-    title: `Tác giả "${author?.name}" - trang ${currentPage} | Math2IT`
+    title: generateMetaTitle(`Tác giả "${author?.name}" - trang ${currentPage}`)
   }
 }
 

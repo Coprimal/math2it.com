@@ -1,6 +1,6 @@
 import { getSlugPrefix, notionMaxRequest, numPostsPerPage } from '@app/lib/config'
 import { getAuthors, getCategories, getPostsBy, getTags } from '@app/lib/fetcher'
-import { getFilterOf, getStartCursorForCurrentPage } from '@app/lib/helpers'
+import { generateMetaTitle, getFilterOf, getStartCursorForCurrentPage } from '@app/lib/helpers'
 import PageOfPostsListTemplate from '@app/templates/PageOfPostsListTemplate'
 import tagCover from '@root/public/featured-images/tag.png'
 import { OptionalCatchAllParams, OptionalCatchAllProps } from '@src/interface'
@@ -16,10 +16,10 @@ export async function generateMetadata({ params }: OptionalCatchAllProps): Promi
   const tag = tags.find(t => t.slug === slug)
   if (!tag)
     return {
-      title: 'Chủ đề không xác định | Math2IT'
+      title: generateMetaTitle('Chủ đề không xác định')
     }
   return {
-    title: `Chủ đề "${tag.name}" - trang ${currentPage} | Math2IT`
+    title: generateMetaTitle(`Chủ đề "${tag.name}" - trang ${currentPage}`)
   }
 }
 

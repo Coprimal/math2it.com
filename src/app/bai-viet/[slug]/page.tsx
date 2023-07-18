@@ -13,6 +13,8 @@ import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import 'react-medium-image-zoom/dist/styles.css'
 
+import { generateMetaTitle } from '../../lib/helpers'
+
 export async function generateMetadata({ params }: DynamicSegmentParamsProps): Promise<Metadata> {
   const slug = params.slug || ''
   const untitled = 'Bài viết không xác định | Math2IT'
@@ -23,7 +25,7 @@ export async function generateMetadata({ params }: DynamicSegmentParamsProps): P
   })
   const post = allPosts.find(post => post.slug === slug)
   if (!post) return { title: untitled }
-  return { title: `${post.title} | Math2IT` }
+  return { title: generateMetaTitle(post.title) }
 }
 
 export async function generateStaticParams() {

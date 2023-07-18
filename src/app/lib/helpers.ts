@@ -353,3 +353,7 @@ export function getRelatedPosts(posts: Post[], currentPost: Post, limit = 5): Po
 
   return relatedPosts.sort(() => Math.random() - 0.5).slice(0, limit)
 }
+
+export function generateMetaTitle(title: string) {
+  return `${title} | Math2IT`
+}

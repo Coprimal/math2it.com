@@ -2,7 +2,13 @@ import { notFound } from 'next/navigation'
 
 import { WRITE_WITH_US_PAGE } from '../../lib/config'
 import { getBlocks, getPostHeader } from '../../lib/fetcher'
+import { generateMetaTitle } from '../../lib/helpers'
 import SinglePostTemplate from '../../templates/SinglePostTemplate'
+
+export const metadata = {
+  title: generateMetaTitle('Viết bài cùng Math2IT'),
+  description: 'Cùng Math2IT tạo nên những bài viết chất lượng về Toán, Tin và Công nghệ.'
+}
 
 export default async function WriteWithUsPage() {
   try {
