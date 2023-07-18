@@ -159,7 +159,7 @@ export const predefinedCategories: Category[] = [
     uri: `/${getSlugPrefix('category')}/cong-nghe/`,
     name: 'Công nghệ',
     description:
-      'Những bài viết hiểu về công nghệ, công nghệ gắn liền với Toán học và hướng đến đối tượng người học cơ bản.',
+      'Những bài viết hiểu về công nghệ, công nghệ gắn liền với Toán học và hướng đến đối tượng người học cơ bản. Các bài viết sẽ tập trung vào những cách thức và tài liệu để tự học.',
     style: {
       bgColor: '#ffeacc',
       textColor: '#9c763f',
@@ -177,7 +177,7 @@ export const predefinedCategories: Category[] = [
     uri: `/${getSlugPrefix('category')}/bai-dich/`,
     name: 'Bài dịch',
     description:
-      'Rào cản ngôn ngữ là trở ngại lớn nhất với người Việt ta hiện nay. Đây là loạt bài viết thật sự hay về Toán, Tin, Giáo dục mà Math2IT lược dịch cho các bạn.',
+      'Rào cản ngôn ngữ là trở ngại lớn nhất với người Việt ta hiện nay. Đây là loạt bài viết thật sự hay về Toán, Tin, Giáo dục mà Math2IT lựa chọn và lược dịch cho các bạn.',
     style: {
       bgColor: '#e6d6ff',
       textColor: '#6d4e99',

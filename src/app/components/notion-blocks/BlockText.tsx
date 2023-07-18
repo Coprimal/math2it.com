@@ -36,11 +36,24 @@ export default function BlockText(props: TextProps) {
     !props.ignore?.includes('hyperlink') &&
     props.richText.href
   ) {
-    richTextNode = (
-      <a className="m2it-link" href={props.richText.href} target="_blank">
-        {props.richText.plain_text}
-      </a>
-    )
+    // Link contains "https://math2it.com"
+    if (props.richText.href.includes('math2it.com')) {
+      richTextNode = (
+        <Link
+          href={props.richText.href
+            .replace('https://math2it.com', '')
+            .replace('http://math2it.com', '')}
+        >
+          {props.richText.plain_text}
+        </Link>
+      )
+    } else {
+      richTextNode = (
+        <a className="m2it-link" href={props.richText.href} target="_blank">
+          {props.richText.plain_text}
+        </a>
+      )
+    }
   }
 
   // Mention

@@ -48,7 +48,7 @@ export function mapColorClass(color: string): string {
     case 'orange_background':
       return 'bg-orange-100'
     case 'yellow_background':
-      return 'bg-yellow-100'
+      return 'bg-amber-100'
     case 'green_background':
       return 'bg-green-100'
     case 'blue_background':
