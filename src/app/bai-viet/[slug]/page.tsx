@@ -60,7 +60,6 @@ export default async function SinglePostPage({ params }: DynamicSegmentParamsPro
 
     const postHeader = await getPostHeader(pageIdwithDash)
     const contentBlocks = await getBlocks(pageIdwithDash)
-    // const relatedPosts = getRelatedPosts(allPosts, post, 20)
 
     return <SinglePostTemplate postHeader={postHeader} contentBlocks={contentBlocks} />
   } catch (error) {

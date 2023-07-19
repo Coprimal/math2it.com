@@ -3,7 +3,7 @@ import cn from 'classnames'
 import { postWidthContainer } from '../lib/config'
 import Container from './Container'
 import { postBodyContainerClass } from './PostBody'
-import { fullWidthPostCoverHeight, gapHeaderItems } from './PostHeader'
+import { containerHeaderClass, fullWidthPostCoverHeight, gapHeaderItems } from './PostHeader'
 
 type SkeletonPostProps = {
   hideCategories?: boolean
@@ -24,24 +24,26 @@ export default function SkeletonPost(props: SkeletonPostProps) {
       <div>
         <div className={cn('w-full bg-slate-200', fullWidthPostCoverHeight)}></div>
       </div>
-      <Container maxWidthClass={postWidthContainer}>
+      <Container className={containerHeaderClass} maxWidthClass={postWidthContainer}>
         <div className="pb-4 pt-8">
           {/* Categories */}
           {!props.hideCategories && (
             <div className={cn(gapHeaderItems, 'flex justify-center gap-3 md:justify-start')}>
-              <div className="h-6 w-24 rounded-2xl bg-slate-200"></div>
+              <div className="h-6 w-28 rounded-2xl bg-slate-200"></div>
               <div className="h-6 w-28 rounded-2xl bg-slate-200"></div>
             </div>
           )}
 
           {/* Title */}
-          <div className="w-100 mb-2 h-8 rounded-2xl bg-slate-200 pt-1"></div>
-          <div className={cn(gapHeaderItems, 'h-8 w-1/2 rounded-2xl bg-slate-200')}></div>
+          <div className={cn(gapHeaderItems, 'h-8 w-3/4 rounded-2xl bg-slate-200')}></div>
 
           {/* Meta */}
           {!props.hideMeta && (
             <div
-              className={cn(gapHeaderItems, 'flex flex-wrap justify-start gap-3 md:flex-nowrap')}
+              className={cn(
+                gapHeaderItems,
+                '!mb-4 flex flex-wrap justify-start gap-3 md:flex-nowrap'
+              )}
             >
               <div className="flex items-center gap-1">
                 <i className="icon-user-outline text-slate-400"></i>
@@ -70,7 +72,7 @@ export default function SkeletonPost(props: SkeletonPostProps) {
       {/* Content */}
       <Container maxWidthClass={postWidthContainer}>
         <div className={cn(postBodyContainerClass)}>
-          <div className="w-100 mb-2 h-5 rounded-2xl bg-slate-200"></div>
+          <div className="w-100 mt-4 mb-2 h-5 rounded-2xl bg-slate-200"></div>
           <div className="w-100 mb-2 h-5 rounded-2xl bg-slate-200"></div>
           <div className="w-100 mb-2 h-5 rounded-2xl bg-slate-200"></div>
           <div className="mb-1 h-5 w-1/2 rounded-2xl bg-slate-200"></div>

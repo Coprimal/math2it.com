@@ -15,6 +15,8 @@ type PostHeaderProps = {
   postHeader: PostHeaderType
 }
 
+export const containerHeaderClass = 'max-w-full bg-slate-50 drop-shadow-sm py-4'
+
 export default function PostHeader(props: PostHeaderProps) {
   const { title, featuredImage, date, authors, categories, tags, selected, bookCover } =
     props.postHeader
@@ -58,10 +60,7 @@ export default function PostHeader(props: PostHeaderProps) {
       </div>
 
       {/* Main header with infos */}
-      <Container
-        className="max-w-full bg-slate-50 drop-shadow-sm py-4"
-        maxWidthClass={postWidthContainer}
-      >
+      <Container className={containerHeaderClass} maxWidthClass={postWidthContainer}>
         <header className="pb-4 pt-8">
           {/* Categories */}
           {!!categories && (
