@@ -19,7 +19,14 @@ export const metadata = {
     url: 'https://math2it.com',
     siteName: 'Math2IT',
     locale: 'vi_VN',
-    type: 'website'
+    type: 'website',
+    images: [
+      {
+        url: 'https://i.imgur.com/PyXUtfTh.png',
+        width: 1024,
+        height: 581
+      }
+    ]
   },
   twitter: {
     card: 'summary_large_image',
@@ -36,7 +43,7 @@ export default function Home() {
         <Container maxWidthClass="max-w-5xl">
           <div
             className={cn(
-              'mx-auto py-20',
+              'mx-auto py-20 px-6',
               'flex flex-col flex-wrap items-center justify-items-stretch md:flex-row'
             )}
           >

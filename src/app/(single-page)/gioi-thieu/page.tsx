@@ -7,7 +7,16 @@ import SinglePostTemplate from '../../templates/SinglePostTemplate'
 
 export const metadata = {
   title: generateMetaTitle('Giới thiệu'),
-  description: 'Giới thiệu trang web Math2IT và quyền riêng tư của bạn cũng như của chúng tôi.'
+  description: 'Giới thiệu trang web Math2IT và quyền riêng tư của bạn cũng như của chúng tôi.',
+  openGraph: {
+    images: [
+      {
+        url: 'https://i.imgur.com/PyXUtfTh.png',
+        width: 1024,
+        height: 591
+      }
+    ]
+  }
 }
 
 export default async function AboutPage() {

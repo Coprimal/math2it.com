@@ -12,7 +12,17 @@ export const revalidate = 60
 export async function generateMetadata({ params }: OptionalCatchAllProps): Promise<Metadata> {
   const currentPage = +(params?.slug?.[1] || 1)
   return {
-    title: generateMetaTitle(`Tất cả bài viết - trang ${currentPage}`)
+    title: generateMetaTitle(`Tất cả bài viết - trang ${currentPage}`),
+    description: 'Tất cả bài viết trên trang web Math2IT.',
+    openGraph: {
+      images: [
+        {
+          url: 'https://i.imgur.com/wXYx5SIh.png',
+          width: 1024,
+          height: 591
+        }
+      ]
+    }
   }
 }
 

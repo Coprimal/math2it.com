@@ -13,6 +13,7 @@ import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import 'react-medium-image-zoom/dist/styles.css'
 
+import { getJoinedRichText } from '../../lib/block-helpers'
 import { generateMetaTitle } from '../../lib/helpers'
 
 export async function generateMetadata({ params }: DynamicSegmentParamsProps): Promise<Metadata> {
@@ -24,8 +25,18 @@ export async function generateMetadata({ params }: DynamicSegmentParamsProps): P
     pageSize: notionMaxRequest
   })
   const post = allPosts.find(post => post.slug === slug)
-  if (!post) return { title: untitled }
-  return { title: generateMetaTitle(post.title) }
+  if (!post) return { title: untitled, description: undefined }
+  return {
+    title: generateMetaTitle(post.title),
+    description: getJoinedRichText(post.excerpt),
+    openGraph: {
+      images: [
+        {
+          url: post.featuredImage?.sourceUrl || ''
+        }
+      ]
+    }
+  }
 }
 
 export async function generateStaticParams() {

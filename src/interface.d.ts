@@ -12,6 +12,7 @@ export type ImageType = {
   width?: number
   height?: number
   staticImageData?: StaticImageData // for default featured images
+  imgur?: string // image uploaded to imgur
 } | null
 
 export type OptionalCatchAllProps = { params: OptionalCatchAllParams }

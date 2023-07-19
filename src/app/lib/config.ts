@@ -148,7 +148,8 @@ export const predefinedCategories: Category[] = [
       titleColor: '#104d8d'
     },
     featuredImage: {
-      staticImageData: defaultMath
+      staticImageData: defaultMath,
+      imgur: 'https://i.imgur.com/oml1Oe0h.png'
     },
     fontello: 'icon-pi-outline',
     backgroundClassName: 'bg-gradient-to-b from-[#f4f8fb] to-white'
@@ -166,7 +167,8 @@ export const predefinedCategories: Category[] = [
       titleColor: '#7b5319'
     },
     featuredImage: {
-      staticImageData: defaultTech
+      staticImageData: defaultTech,
+      imgur: 'https://i.imgur.com/wZuuuS9h.png'
     },
     fontello: 'icon-cog-alt',
     backgroundClassName: 'bg-gradient-to-b from-[#f9f1e5] to-white'
@@ -184,7 +186,8 @@ export const predefinedCategories: Category[] = [
       titleColor: '#3d1674'
     },
     featuredImage: {
-      staticImageData: defaultTranslate
+      staticImageData: defaultTranslate,
+      imgur: 'https://i.imgur.com/dgf3ZD8h.png'
     },
     fontello: 'icon-language',
     backgroundClassName: 'bg-gradient-to-b from-[#f9f6ff] to-white'
@@ -201,7 +204,8 @@ export const predefinedCategories: Category[] = [
       titleColor: '#a21b1b'
     },
     featuredImage: {
-      staticImageData: defaultTool
+      staticImageData: defaultTool,
+      imgur: 'https://i.imgur.com/d1LoRWXh.png'
     },
     fontello: 'icon-magic',
     backgroundClassName: 'bg-gradient-to-b from-[#ef92b412] to-white'
@@ -219,7 +223,8 @@ export const predefinedCategories: Category[] = [
       titleColor: '#0d4d1b'
     },
     featuredImage: {
-      staticImageData: defaultEdu
+      staticImageData: defaultEdu,
+      imgur: 'https://i.imgur.com/CMiVIvwh.png'
     },
     fontello: 'icon-graduation-cap',
     backgroundClassName: 'bg-gradient-to-b from-[#54b57d24] to-white'
@@ -238,7 +243,8 @@ export const predefinedCategories: Category[] = [
       titleColor: '#114b50'
     },
     featuredImage: {
-      staticImageData: defaultBook
+      staticImageData: defaultBook,
+      imgur: 'https://i.imgur.com/PB7pSADh.png'
     },
     fontello: 'icon-book',
     backgroundClassName: 'bg-gradient-to-b from-[#dcfcfe75] to-white'

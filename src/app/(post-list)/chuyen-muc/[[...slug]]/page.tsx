@@ -15,11 +15,20 @@ export async function generateMetadata({ params }: OptionalCatchAllProps): Promi
   const category = categories.find(c => c.slug === slug)
   if (!category)
     return {
-      title: 'Chuyên mục không xác định | Math2IT'
+      title: generateMetaTitle('Không tìm thấy chuyên mục')
     }
   return {
     title: generateMetaTitle(`Chuyên mục "${category?.name}" - trang ${currentPage}`),
-    description: category.description
+    description: category.description,
+    openGraph: {
+      images: [
+        {
+          url: category.featuredImage!.imgur!,
+          width: 1024,
+          height: 591
+        }
+      ]
+    }
   }
 }
 

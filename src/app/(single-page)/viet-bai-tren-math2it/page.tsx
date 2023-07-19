@@ -7,7 +7,16 @@ import SinglePostTemplate from '../../templates/SinglePostTemplate'
 
 export const metadata = {
   title: generateMetaTitle('Viết bài cùng Math2IT'),
-  description: 'Cùng Math2IT tạo nên những bài viết chất lượng về Toán, Tin và Công nghệ.'
+  description: 'Cùng Math2IT tạo nên những bài viết chất lượng về Toán, Tin và Công nghệ.',
+  openGraph: {
+    images: [
+      {
+        url: 'https://i.imgur.com/IGneUknh.jpg',
+        width: 1024,
+        height: 591
+      }
+    ]
+  }
 }
 
 export default async function WriteWithUsPage() {

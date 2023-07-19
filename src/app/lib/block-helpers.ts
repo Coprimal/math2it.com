@@ -77,7 +77,7 @@ export function getIndentLevelClass(level: number): string {
   }
 }
 
-export function getJoinedRichText(richTextArr: RichTextItemResponse[]): string {
+export function getJoinedRichText(richTextArr?: RichTextItemResponse[]): string {
   if (!richTextArr || !richTextArr.length) return ''
   const textArr = richTextArr.map((richText: RichTextItemResponse) => richText.plain_text)
   return textArr.join('')

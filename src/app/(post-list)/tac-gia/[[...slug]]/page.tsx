@@ -19,7 +19,17 @@ export async function generateMetadata({ params }: OptionalCatchAllProps): Promi
       title: generateMetaTitle('Tác giả không xác định')
     }
   return {
-    title: generateMetaTitle(`Tác giả "${author?.name}" - trang ${currentPage}`)
+    title: generateMetaTitle(`Tác giả "${author?.name}" - trang ${currentPage}`),
+    description: author.description,
+    openGraph: {
+      images: [
+        {
+          url: 'https://i.imgur.com/z3t05uQh.png',
+          width: 1024,
+          height: 591
+        }
+      ]
+    }
   }
 }
 
