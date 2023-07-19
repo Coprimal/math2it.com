@@ -6,6 +6,7 @@ import { Carousel, CarouselItem } from './Carousel'
 import { PostListStyle } from './PostListForHomeSection'
 import { PostType } from './PostsList'
 import { CWBBHeightClass } from './post-types/PostCardWhiteBgBig'
+import { PIBHeightClass } from './post-types/PostImageBackground'
 import { TCDFIHeightClass } from './post-types/PostTitleCateDate'
 
 type SkeletonPostListProps = {
@@ -48,6 +49,9 @@ function getSkeleton(postType?: PostType) {
     case 'PostCardWhiteBgBig':
       return <PostCardWhiteBgBigSkeleton />
 
+    case 'PostImageBackground':
+      return <PostImageBackgroundSkeleton />
+
     default:
       return <PostTitleCateDateSkeleton />
   }
@@ -60,7 +64,6 @@ const PostTitleCateDateSkeleton = () => (
       <div className="h-4 w-full rounded-md bg-slate-200"></div>
       <div className="h-4 w-3/4 rounded-md bg-slate-200"></div>
     </div>
-    <div></div>
   </div>
 )
 
@@ -78,6 +81,16 @@ const PostCardWhiteBgBigSkeleton = () => (
         <div className="h-2 w-3/4 rounded-md bg-slate-200"></div>
       </div>
     </div>
-    <div></div>
+  </div>
+)
+
+const PostImageBackgroundSkeleton = () => (
+  <div className="flex flex-col justify-center">
+    <div className={cn('relative w-full rounded-md bg-slate-200', PIBHeightClass)}>
+      <div className="absolute bottom-0 left-0 w-full flex flex-col items-center gap-1 p-3">
+        <div className="h-4 w-full rounded-md bg-slate-300"></div>
+        <div className="h-4 w-3/4 rounded-md bg-slate-300"></div>
+      </div>
+    </div>
   </div>
 )

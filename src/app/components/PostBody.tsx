@@ -4,7 +4,7 @@ import cn from 'classnames'
 import BlockRender from './BlockRender'
 import PostToc from './PostToc'
 
-export const postBodyContainerClass = 'mx-auto container pb-8 pt-0'
+export const postBodyContainerClass = 'mx-auto container pb-8 pt-4'
 
 type PostBodyProps = {
   contentBlocks: BlockObjectResponse[]

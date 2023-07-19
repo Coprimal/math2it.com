@@ -11,6 +11,13 @@ export default {
   safelist: generateNumberedListClasses(20),
   theme: {
     extend: {
+      typography: {
+        DEFAULT: {
+          css: {
+            color: '#2e343e'
+          }
+        }
+      },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',

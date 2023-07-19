@@ -21,7 +21,7 @@ type PageOfPostsListTemplateProps = {
   postTypeOpts?: PostTypeOpts
 }
 
-export const heightCoverPostList = 'h-[30vh] max-h-[30vh] min-h-[30vh]'
+export const heightCoverPostList = 'h-[25vh] max-h-[25vh] min-h-[25vh]'
 export const spacingCoverPostList = 'pb-6 pt-10'
 
 export default function PageOfPostsListTemplate(props: PageOfPostsListTemplateProps) {

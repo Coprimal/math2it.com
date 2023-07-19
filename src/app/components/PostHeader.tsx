@@ -8,7 +8,7 @@ import Date from './Date'
 import ImageComponent from './ImageComponent'
 import PostHeaderTopics from './PostHeaderTopics'
 
-export const fullWidthPostCoverHeight = 'h-[33vh] max-h-[33vh] min-h-[33vh]'
+export const fullWidthPostCoverHeight = 'h-[25vh] max-h-[25vh] min-h-[25vh]'
 export const gapHeaderItems = 'mb-3'
 
 type PostHeaderProps = {
@@ -58,7 +58,10 @@ export default function PostHeader(props: PostHeaderProps) {
       </div>
 
       {/* Main header with infos */}
-      <Container maxWidthClass={postWidthContainer}>
+      <Container
+        className="max-w-full bg-slate-50 drop-shadow-sm py-4"
+        maxWidthClass={postWidthContainer}
+      >
         <header className="pb-4 pt-8">
           {/* Categories */}
           {!!categories && (

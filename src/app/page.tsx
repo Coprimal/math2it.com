@@ -10,6 +10,24 @@ import PostListForHomeSection from './components/PostListForHomeSection'
 import { getSlugPrefix } from './lib/config'
 import { getCategories } from './lib/fetcher'
 
+export const metadata = {
+  title: 'Math2IT | Toán học, Giáo dục và Công nghệ',
+  description: 'Toán học, Giáo dục và Công nghệ',
+  openGraph: {
+    title: 'Math2IT | Toán học, Giáo dục và Công nghệ',
+    description: 'Toán học, Giáo dục và Công nghệ',
+    url: 'https://math2it.com',
+    siteName: 'Math2IT',
+    locale: 'vi_VN',
+    type: 'website'
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Math2IT | Toán học, Giáo dục và Công nghệ',
+    description: 'Toán học, Giáo dục và Công nghệ'
+  }
+}
+
 export default function Home() {
   const categories = getCategories()
   return (
