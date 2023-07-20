@@ -62,8 +62,8 @@ export default function BlockHeading(props: {
 
   return (
     <div className={cn(getIndentLevelClass(level))}>
-      <div className={cn(mapColorClass(heading?.color), className, 'flex items-center gap-2')}>
-        <a href={`#${id}`} className="text-sky-600">
+      <div className={cn(mapColorClass(heading?.color), className, 'flex items-start gap-2')}>
+        <a href={`#${id}`} className="text-sky-600 mt-[5px]">
           <RiHashtag className="text-2xl" />
         </a>
         {get(heading, 'is_toggleable') && (

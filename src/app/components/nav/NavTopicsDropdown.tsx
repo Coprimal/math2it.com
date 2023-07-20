@@ -2,7 +2,7 @@
 
 import { Popover, Transition } from '@headlessui/react'
 import Link from 'next/link'
-import { Fragment } from 'react'
+import { Fragment, useRef } from 'react'
 import { FiChevronDown } from 'react-icons/fi'
 
 import { predefinedCategories } from '../../lib/config'
@@ -11,11 +11,17 @@ import { menuItemCommonClass } from './NavTopicItem'
 const dropdownItemClass = 'flex items-center p-3 whitespace-nowrap'
 
 export default function NavTopicsDropdown() {
+  const btnRef = useRef<HTMLButtonElement>(null)
+  const onClickOpt = (open: boolean) => {
+    if (!open) return
+    if (open) btnRef.current?.click()
+  }
   return (
     <Popover className="relative">
       {({ open }) => (
         <>
           <Popover.Button
+            ref={btnRef}
             className={`
           ${open ? '!bg-slate-700 text-white' : 'text-opacity-90'}
           group ${menuItemCommonClass + ' flex lg:hidden !outline-none pr-1.5'}`}
@@ -46,23 +52,18 @@ export default function NavTopicsDropdown() {
                     bg-[#323541] px-3 py-1 lg:grid-cols-2`}
                 >
                   {predefinedCategories.map(item => (
-                    <Link key={item.slug} href={item.uri} className={dropdownItemClass}>
+                    <Link
+                      onClick={() => onClickOpt(open)}
+                      key={item.slug}
+                      href={item.uri}
+                      className={dropdownItemClass}
+                    >
                       <div className="flex gap-2">
                         <i className={item.fontello}></i>
                         {item.name}
                       </div>
                     </Link>
                   ))}
-                  {/* <Link
-                    key={MenuAbout.id}
-                    href={MenuAbout.uri}
-                    className={`${dropdownItemClass} sm:hidden`}
-                  >
-                    <div className="flex gap-2">
-                      <i className={MenuAbout.navigationItems?.navIcon}></i>
-                      {MenuAbout.label}
-                    </div>
-                  </Link> */}
                 </div>
               </div>
             </Popover.Panel>

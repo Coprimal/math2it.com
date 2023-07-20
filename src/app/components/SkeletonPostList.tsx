@@ -24,7 +24,7 @@ export default function SkeletonPostList(props: SkeletonPostListProps) {
     <>
       {(!props.listStyle || props.listStyle === 'default') && (
         <div className={cn(postListGridCLass, 'animate-pulse')}>
-          {Array.from({ length: props.count }).map((_, i) => getSkeleton(props.postType))}
+          {Array.from({ length: props.count }).map((_, i) => getSkeleton(i, props.postType))}
         </div>
       )}
       {props.listStyle === 'carousel' && (
@@ -32,7 +32,7 @@ export default function SkeletonPostList(props: SkeletonPostListProps) {
           items={Array.from({ length: props.count }).map((_, i) => ({ id: i }))}
           renderItem={({ item, isSnapPoint }) => (
             <CarouselItem key={item.id} isSnapPoint={isSnapPoint} widthClass={'w-80'}>
-              {getSkeleton(props.postType)}
+              {getSkeleton(item.id, props.postType)}
             </CarouselItem>
           )}
         />
@@ -41,19 +41,19 @@ export default function SkeletonPostList(props: SkeletonPostListProps) {
   )
 }
 
-function getSkeleton(postType?: PostType) {
+function getSkeleton(key: number | string, postType?: PostType) {
   switch (postType) {
     case 'PostTitleCateDate':
-      return <PostTitleCateDateSkeleton />
+      return <PostTitleCateDateSkeleton key={key} />
 
     case 'PostCardWhiteBgBig':
-      return <PostCardWhiteBgBigSkeleton />
+      return <PostCardWhiteBgBigSkeleton key={key} />
 
     case 'PostImageBackground':
-      return <PostImageBackgroundSkeleton />
+      return <PostImageBackgroundSkeleton key={key} />
 
     default:
-      return <PostTitleCateDateSkeleton />
+      return <PostTitleCateDateSkeleton key={key} />
   }
 }
 

@@ -39,18 +39,24 @@ export const metadata = {
 
 export default function Home() {
   const categories = getCategories()
+  const badgeClassName =
+    'shadow-md text-white py-1 px-6 rounded-3xl hover:translate-y-[-2px] hover:transition-all'
   return (
     <>
       <div className={cn('bg-gradient-to-b from-[#282a36] to-[#323541]')}>
         <Container maxWidthClass="max-w-5xl">
           <div
             className={cn(
-              'mx-auto py-20 px-6',
+              'mx-auto py-20 px-0 md:px-6',
               'flex flex-col flex-wrap items-center justify-items-stretch md:flex-row'
             )}
           >
-            <div className="flex flex-col gap-4 md:order-2 md:flex-1">
-              <div className={cn('flex gap-2 justify-center md:justify-start')}>
+            <div className="flex flex-col gap-6 md:order-2 md:flex-1">
+              <div
+                className={cn(
+                  'flex flex-col md:flex-row items-center gap-2 justify-center md:justify-start'
+                )}
+              >
                 <div
                   className={cn(
                     'inline-flex h-9 w-9 origin-[70%_70%] animate-wave items-center justify-center'
@@ -66,7 +72,7 @@ export default function Home() {
                 </div>
                 <h1 className={cn('flex items-center text-4xl text-white')}>
                   <span className={cn(righteous.className, 'mr-2')}>Math2IT</span>
-                  <span className={lobster.className}>xin chào</span>
+                  <span className={cn(lobster.className, 'whitespace-nowrap')}>xin chào</span>
                 </h1>
               </div>
               <p
@@ -81,31 +87,31 @@ export default function Home() {
                 className={cn('flex flex-wrap items-center justify-center gap-4 md:justify-start')}
               >
                 <Link
-                  className={cn(
-                    'bg-[#ffc9004a] hover:bg-[#e1a000] shadow-md text-white py-1 px-6 rounded-3xl'
-                  )}
+                  className={cn('bg-[#eeeeee30]', badgeClassName)}
                   href={`/${getSlugPrefix('about')}/`}
                 >
                   Giới thiệu
                 </Link>
                 <a
-                  className={cn(
-                    'bg-[#4358969c] hover:bg-[#215989] shadow-md text-white py-1 px-6 rounded-3xl'
-                  )}
+                  className={cn('bg-[#eeeeee30]', badgeClassName)}
                   href="https://www.facebook.com/Math2IT/"
                   target="_blank"
                 >
                   Facebook Math2IT
                 </a>
                 <a
-                  className={cn(
-                    'bg-[#844b4582] hover:bg-[#ac473c] shadow-md text-white py-1 px-6 rounded-3xl'
-                  )}
+                  className={cn('bg-[#eeeeee30]', badgeClassName)}
                   href="https://fb.com/groups/math2it"
                   target="_blank"
                 >
                   Nhóm Math2IT
                 </a>
+                <Link
+                  className={cn(badgeClassName, 'bg-gradient-to-r from-purple-700 to-pink-500')}
+                  href={getSlugPrefix('viet-bai')}
+                >
+                  Viết bài cùng Math2IT
+                </Link>
               </div>
             </div>
           </div>
@@ -117,7 +123,7 @@ export default function Home() {
       <div className="flex flex-col gap-8 pb-12 pt-8">
         <PostListForHomeSection
           listStyle="carousel"
-          title="Bài viết mới nhất"
+          title="Mới nhất"
           type="latest"
           backgroundClassName="bg-none"
           moreHref={getSlugPrefix('all')}
@@ -125,7 +131,7 @@ export default function Home() {
           postTypeOpts={{ hideAuthor: true, hideDate: true }}
         />
         <PostListForHomeSection
-          title="Bài viết tuyển chọn"
+          title="Tuyển chọn"
           iconComponent={<i className="icon-star-circled"></i>}
           type="selected"
           postTypeOpts={{ hideDate: true }}

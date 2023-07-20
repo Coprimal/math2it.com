@@ -31,14 +31,25 @@ export default function PostListForHomeSection(props: SkeletonPostListForHomePro
         props.backgroundClassName ?? 'bg-gradient-to-b from-gray-100 to-white'
       )}
     >
-      <div className="flex items-center justify-between px-6">
-        <h1 className={cn('text-[1.65rem] font-semibold text-slate-700 py-4', lobster.className)}>
-          {props.iconComponent && <span className="mr-1 opacity-90">{props.iconComponent}</span>}
+      <div className={cn('flex items-center justify-between px-4 sm:px-6')}>
+        <h1
+          className={cn(
+            'text-2xl sm:text-[1.65rem] font-semibold text-slate-700 py-4',
+            lobster.className
+          )}
+        >
+          {props.iconComponent && (
+            <span className="mr-1 opacity-90 ml-0">{props.iconComponent}</span>
+          )}
           {props.title}
         </h1>
         {props.moreHref && (
           <Link
-            className={cn('text-slate-700 hover:m2it-link-hover italic', 'flex items-center gap-1')}
+            className={cn(
+              'text-slate-700 hover:m2it-link-hover italic',
+              'flex items-center gap-1',
+              'text-[0.9rem] sm:text-base'
+            )}
             href={props.moreHref}
           >
             <MdKeyboardDoubleArrowRight />
@@ -46,7 +57,7 @@ export default function PostListForHomeSection(props: SkeletonPostListForHomePro
           </Link>
         )}
       </div>
-      <div className="px-8 pb-5 pt-2 relative z-20">
+      <div className="px-4 sm:px-8 pb-5 pt-2 relative z-20">
         <Suspense
           fallback={
             <SkeletonPostList

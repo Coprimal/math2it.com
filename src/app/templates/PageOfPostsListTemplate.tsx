@@ -21,7 +21,7 @@ type PageOfPostsListTemplateProps = {
   postTypeOpts?: PostTypeOpts
 }
 
-export const heightCoverPostList = 'h-[25vh] max-h-[25vh] min-h-[25vh]'
+export const heightCoverPostList = 'min-h-[25vh]'
 export const spacingCoverPostList = 'pb-6 pt-10'
 
 export default function PageOfPostsListTemplate(props: PageOfPostsListTemplateProps) {
@@ -32,15 +32,16 @@ export default function PageOfPostsListTemplate(props: PageOfPostsListTemplatePr
   return (
     <>
       <div
-        className={cn(
-          'mx-auto flex w-full items-center justify-between',
-          'relative',
-          heightCoverPostList
-        )}
+        className={cn('mx-auto flex w-full items-center justify-between', 'relative')}
         style={props.cover ? undefined : { backgroundImage: pattern.toDataUrl() }}
       >
         {props.cover && (
-          <div className="relative flex h-full w-full items-center overflow-hidden">
+          <div
+            className={cn(
+              'flex h-full w-full items-center overflow-hidden',
+              'absolute left-0 top-0 h-full w-full'
+            )}
+          >
             <ImageComponent
               image={{
                 staticImageData: props.cover
@@ -55,14 +56,14 @@ export default function PageOfPostsListTemplate(props: PageOfPostsListTemplatePr
         )}
         <div
           className={cn(
-            'absolute left-0 top-0 h-full w-full',
             'flex items-center justify-center',
-            'bg-[#0000005e]'
+            'bg-[#0000005e] w-full z-10 py-10',
+            heightCoverPostList
           )}
         >
           <Container maxWidthClass="max-w-5xl">
             <h2
-              className="w-fit text-3xl font-bold drop-shadow-sm"
+              className="w-fit text-2xl md:text-3xl font-bold drop-shadow-sm"
               style={{ color: props.titleColor ? props.titleColor : props.cover ? '#fff' : '#fff' }}
             >
               {props.iconComponent && (
@@ -72,7 +73,7 @@ export default function PageOfPostsListTemplate(props: PageOfPostsListTemplatePr
             </h2>
             {props.subtitle && (
               <div
-                className="mt-2 pl-12 text-lg"
+                className="mt-2 text-base md:text-lg"
                 style={{
                   color: props.titleColor ? props.titleColor : props.cover ? '#fff' : '#fff'
                 }}
