@@ -7,7 +7,6 @@ import {
 } from '@notionhq/client/build/src/api-endpoints'
 import cn from 'classnames'
 import { get } from 'lodash'
-import { RiHashtag } from 'react-icons/ri'
 
 import BlockHeadingToggle from './BlockHeadingToggle'
 import BlockRichText from './BlockRichText'
@@ -24,6 +23,7 @@ export default function BlockHeading(props: {
   const { type, block, level, className, children } = props
   let heading: { rich_text: RichTextItemResponse[]; color: string }
   let headingElement: JSX.Element
+  let anchorElement: JSX.Element
   const h1Size = 'text-3xl'
   const h2Size = 'text-2xl'
   const h3Size = 'text-xl'
@@ -39,6 +39,11 @@ export default function BlockHeading(props: {
           {insideHeading(heading)}
         </h1>
       )
+      anchorElement = (
+        <a href={`#${id}`} className={cn('text-sky-600', h1Size)}>
+          #
+        </a>
+      )
       break
 
     case 'h2':
@@ -47,6 +52,11 @@ export default function BlockHeading(props: {
         <h2 id={id} className={cn(h2Size, headingClass)}>
           {insideHeading(heading)}
         </h2>
+      )
+      anchorElement = (
+        <a href={`#${id}`} className={cn('text-sky-600', h2Size)}>
+          #
+        </a>
       )
       break
 
@@ -57,15 +67,18 @@ export default function BlockHeading(props: {
           {insideHeading(heading)}
         </h3>
       )
+      anchorElement = (
+        <a href={`#${id}`} className={cn('text-orange-700', h3Size)}>
+          ##
+        </a>
+      )
       break
   }
 
   return (
     <div className={cn(getIndentLevelClass(level))}>
-      <div className={cn(mapColorClass(heading?.color), className, 'flex items-start gap-2')}>
-        <a href={`#${id}`} className="text-sky-600 mt-[5px]">
-          <RiHashtag className="text-2xl" />
-        </a>
+      <div className={cn(mapColorClass(heading?.color), className, 'flex items-start gap-1')}>
+        {anchorElement}
         {get(heading, 'is_toggleable') && (
           <BlockHeadingToggle headingElement={headingElement}>{children}</BlockHeadingToggle>
         )}
