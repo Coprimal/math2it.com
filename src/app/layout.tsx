@@ -7,6 +7,10 @@ import 'tippy.js/dist/tippy.css'
 
 import './globals.scss'
 
+export const metadata = {
+  metadataBase: new URL('https://math2it.com')
+}
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">

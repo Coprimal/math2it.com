@@ -11,6 +11,7 @@ import { getSlugPrefix } from './lib/config'
 import { getCategories } from './lib/fetcher'
 
 export const metadata = {
+  metadataBase: new URL('https://math2it.com'),
   title: 'Math2IT | Toán học, Giáo dục và Công nghệ',
   description: 'Toán học, Giáo dục và Công nghệ',
   openGraph: {
