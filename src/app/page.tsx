@@ -7,6 +7,7 @@ import cn from 'classnames'
 import Link from 'next/link'
 
 import PostListForHomeSection from './components/PostListForHomeSection'
+import ScrollToTop from './components/ScrollToTop'
 import { getSlugPrefix } from './lib/config'
 import { getCategories } from './lib/fetcher'
 
@@ -145,6 +146,8 @@ export default function Home() {
           />
         ))}
       </div>
+
+      <ScrollToTop />
     </>
   )
 }

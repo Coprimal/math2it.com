@@ -31,7 +31,8 @@ export default {
       },
       animation: {
         fadeIn: 'fadeIn 500ms;',
-        wave: 'wave 2s linear infinite'
+        wave: 'wave 2s linear infinite',
+        toTop: 'toTop 0.3s alternate ease infinite'
       },
       keyframes: {
         fadeIn: {
@@ -47,6 +48,10 @@ export default {
           '50%': { transform: 'rotate(10deg)' },
           '60%': { transform: 'rotate(0deg)' },
           '100%': { transform: 'rotate(0deg)' }
+        },
+        toTop: {
+          '0%': { transform: 'translate(0, 0)' },
+          '100%': { transform: 'translate(0, -3px)' }
         }
       },
       spacing: {

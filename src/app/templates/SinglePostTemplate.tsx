@@ -9,6 +9,8 @@ import {
 import { PostHeaderType } from '@src/interface'
 import cn from 'classnames'
 
+import ScrollToTop from '../components/ScrollToTop'
+
 type SinglePostTemplateProps = {
   postHeader: PostHeaderType
   contentBlocks: ListBlockChildrenResponse['results']
@@ -22,32 +24,35 @@ export default function SinglePostTemplate(props: SinglePostTemplateProps) {
   const { postHeader, contentBlocks } = props
 
   return (
-    <div className="animate-fadeIn">
-      {postHeader && <PostHeader postHeader={postHeader} />}
-      <div className={cn('flex justify-center px-5')}>
-        <aside className={cn(asideClass)}>
-          <PostAside position="left">
-            <div className="hidden">Left aside</div>
-          </PostAside>
-        </aside>
+    <>
+      <div className="animate-fadeIn">
+        {postHeader && <PostHeader postHeader={postHeader} />}
+        <div className={cn('flex justify-center px-5')}>
+          <aside className={cn(asideClass)}>
+            <PostAside position="left">
+              <div className="hidden">Left aside</div>
+            </PostAside>
+          </aside>
 
-        <article className={cn('container max-w-3xl')}>
-          <PostBody
-            className={cn('w-full')}
-            contentBlocks={contentBlocks as BlockObjectResponse[]}
-            showToc={postHeader.showToc}
-          ></PostBody>
-        </article>
-
-        <aside className={cn(asideClass)}>
-          <PostAside position="right">
-            <PostToc
-              showToc={postHeader.showToc}
+          <article className={cn('container max-w-3xl')}>
+            <PostBody
+              className={cn('w-full')}
               contentBlocks={contentBlocks as BlockObjectResponse[]}
-            />
-          </PostAside>
-        </aside>
+              showToc={postHeader.showToc}
+            ></PostBody>
+          </article>
+
+          <aside className={cn(asideClass)}>
+            <PostAside position="right">
+              <PostToc
+                showToc={postHeader.showToc}
+                contentBlocks={contentBlocks as BlockObjectResponse[]}
+              />
+            </PostAside>
+          </aside>
+        </div>
       </div>
-    </div>
+      <ScrollToTop />
+    </>
   )
 }
