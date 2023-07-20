@@ -7,6 +7,7 @@ import {
 } from '@notionhq/client/build/src/api-endpoints'
 import cn from 'classnames'
 import { get } from 'lodash'
+import { RiHashtag } from 'react-icons/ri'
 
 import BlockHeadingToggle from './BlockHeadingToggle'
 import BlockRichText from './BlockRichText'
@@ -26,7 +27,7 @@ export default function BlockHeading(props: {
   const h1Size = 'text-3xl'
   const h2Size = 'text-2xl'
   const h3Size = 'text-xl'
-  const headingClass = 'scroll-mt-[70px]'
+  const headingClass = 'scroll-mt-[70px] mt-0'
 
   const id = convertHeadingIdToSlug(block.id, (block as any)[`${block.type}`]?.rich_text)
 
@@ -61,7 +62,10 @@ export default function BlockHeading(props: {
 
   return (
     <div className={cn(getIndentLevelClass(level))}>
-      <div className={cn(mapColorClass(heading?.color), className)}>
+      <div className={cn(mapColorClass(heading?.color), className, 'flex items-center gap-2')}>
+        <a href={`#${id}`} className="text-sky-600">
+          <RiHashtag className="text-2xl" />
+        </a>
         {get(heading, 'is_toggleable') && (
           <BlockHeadingToggle headingElement={headingElement}>{children}</BlockHeadingToggle>
         )}
