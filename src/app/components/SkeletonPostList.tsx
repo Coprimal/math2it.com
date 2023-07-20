@@ -72,7 +72,6 @@ const PostCardWhiteBgBigSkeleton = () => (
     <div className={cn('w-full rounded-md bg-slate-200', CWBBHeightClass)}></div>
     <div className="flex flex-col items-center gap-1 p-2">
       <div className="h-4 w-full rounded-md bg-slate-200"></div>
-      <div className="h-4 w-3/4 rounded-md bg-slate-200"></div>
 
       {/* excerpt */}
       <div className="w-full mt-2 px-2 flex flex-col items-center gap-1">
