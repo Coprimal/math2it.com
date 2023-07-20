@@ -113,7 +113,7 @@ export default function SearchModal(props: SearchModalProps) {
 
   return (
     <Transition appear={true} show={props.isOpen} as={Fragment}>
-      <Dialog as="div" className={cn('relative z-10', props.className)} onClose={props.closeModal}>
+      <Dialog as="div" className={cn('relative z-50', props.className)} onClose={props.closeModal}>
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"

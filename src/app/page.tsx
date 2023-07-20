@@ -104,7 +104,7 @@ export default function Home() {
                   href="https://fb.com/groups/math2it"
                   target="_blank"
                 >
-                  Nhóm Math2IT trên Facebook
+                  Nhóm Math2IT
                 </a>
               </div>
             </div>
