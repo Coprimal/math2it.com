@@ -5,6 +5,8 @@ import { getBlocks, getPostHeader } from '../../lib/fetcher'
 import { generateMetaTitle } from '../../lib/helpers'
 import SinglePostTemplate from '../../templates/SinglePostTemplate'
 
+export const revalidate = 60
+
 export const metadata = {
   title: generateMetaTitle('Giới thiệu'),
   description: 'Giới thiệu trang web Math2IT và quyền riêng tư của bạn cũng như của chúng tôi.',

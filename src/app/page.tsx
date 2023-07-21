@@ -11,6 +11,8 @@ import ScrollToTop from './components/ScrollToTop'
 import { getSlugPrefix } from './lib/config'
 import { getCategories } from './lib/fetcher'
 
+export const revalidate = 60
+
 export const metadata = {
   metadataBase: new URL('https://math2it.com'),
   title: 'Math2IT | Toán học, Giáo dục và Công nghệ',

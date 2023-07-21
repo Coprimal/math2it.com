@@ -16,6 +16,8 @@ import 'react-medium-image-zoom/dist/styles.css'
 import { getJoinedRichText } from '../../lib/block-helpers'
 import { generateMetaTitle } from '../../lib/helpers'
 
+export const revalidate = 60
+
 export async function generateMetadata({ params }: DynamicSegmentParamsProps): Promise<Metadata> {
   const slug = params.slug || ''
   const untitled = 'Bài viết không xác định | Math2IT'

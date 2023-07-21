@@ -7,6 +7,8 @@ import 'tippy.js/dist/tippy.css'
 
 import './globals.scss'
 
+export const revalidate = 60
+
 export const metadata = {
   metadataBase: new URL('https://math2it.com')
 }
