@@ -8,7 +8,7 @@ import BlockRichText from './BlockRichText'
 export default function BlockToDo(props: {
   block: ToDoBlockObjectResponse
   level: number
-  children: React.ReactNode
+  children?: React.ReactNode
   className?: string
 }) {
   const { block, level, className, children } = props

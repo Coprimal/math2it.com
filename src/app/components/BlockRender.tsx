@@ -27,14 +27,17 @@ const DynamicVideo = dynamic(() => import('./notion-blocks/BlockVideo'))
 
 export default function BlockRender(props: { block: BlockObjectResponse; level: number }) {
   const { block, level } = props
+  let children: React.ReactNode
 
-  const children = get(block, 'children', [])?.map(childBlock => (
-    <BlockRender
-      key={(childBlock as BlockObjectResponse).id}
-      block={childBlock}
-      level={level + 1}
-    />
-  ))
+  if (block.has_children) {
+    children = get(block, 'children', [])?.map(childBlock => (
+      <BlockRender
+        key={(childBlock as BlockObjectResponse).id}
+        block={childBlock}
+        level={level + 1}
+      />
+    ))
+  }
 
   const basicBlockGap = 'my-4'
   const basicBlockGapHeading = 'mt-6'

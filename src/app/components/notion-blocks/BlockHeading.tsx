@@ -17,7 +17,7 @@ export default function BlockHeading(props: {
   type: headingType
   block: Heading1BlockObjectResponse | Heading2BlockObjectResponse | Heading3BlockObjectResponse
   level: number
-  children: React.ReactNode
+  children?: React.ReactNode
   className?: string
 }) {
   const { type, block, level, className, children } = props
@@ -40,7 +40,7 @@ export default function BlockHeading(props: {
         </h1>
       )
       anchorElement = (
-        <a href={`#${id}`} className={cn('text-sky-600', h1Size)}>
+        <a href={`#${id}`} className={cn('text-sky-600 md:-ml-6', h1Size)}>
           #
         </a>
       )
@@ -54,7 +54,7 @@ export default function BlockHeading(props: {
         </h2>
       )
       anchorElement = (
-        <a href={`#${id}`} className={cn('text-sky-600', h2Size)}>
+        <a href={`#${id}`} className={cn('text-sky-600 md:-ml-6', h2Size)}>
           #
         </a>
       )
@@ -68,7 +68,7 @@ export default function BlockHeading(props: {
         </h3>
       )
       anchorElement = (
-        <a href={`#${id}`} className={cn('text-orange-700', h3Size)}>
+        <a href={`#${id}`} className={cn('text-orange-700 md:-ml-8', h3Size)}>
           ##
         </a>
       )
@@ -77,9 +77,9 @@ export default function BlockHeading(props: {
 
   return (
     <div className={cn(getIndentLevelClass(level))}>
-      <div className={cn(mapColorClass(heading?.color), className, 'flex items-start gap-1')}>
+      <div className={cn(mapColorClass(heading?.color), className, 'flex items-start gap-2')}>
         {anchorElement}
-        {get(heading, 'is_toggleable') && (
+        {get(heading, 'is_toggleable') && children && (
           <BlockHeadingToggle headingElement={headingElement}>{children}</BlockHeadingToggle>
         )}
         {!get(heading, 'is_toggleable') && headingElement}

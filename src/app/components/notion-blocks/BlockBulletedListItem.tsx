@@ -13,7 +13,7 @@ export type BlockBulletedListItemType = BulletedListItemBlockObjectResponse & {
 export default function BlockBulletedListItem(props: {
   block: BlockBulletedListItemType
   level: number
-  children: React.ReactNode
+  children?: React.ReactNode
   className?: string
 }) {
   const { block, level, className, children } = props

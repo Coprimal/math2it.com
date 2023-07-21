@@ -11,7 +11,7 @@ import BlockRichText from './BlockRichText'
 export default function BlockQuote(props: {
   block: QuoteBlockObjectResponse
   level: number
-  children: React.ReactNode
+  children?: React.ReactNode
   className?: string
 }) {
   const { block, level, children, className } = props

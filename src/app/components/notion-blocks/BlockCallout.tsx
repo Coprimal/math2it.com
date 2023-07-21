@@ -8,8 +8,8 @@ import BlockRichText from './BlockRichText'
 export default function BlockCallout(props: {
   block: CalloutBlockObjectResponse
   level: number
-  children: React.ReactNode
   className?: string
+  children?: React.ReactNode
 }) {
   const { block, level, children, className } = props
   return (
@@ -18,11 +18,11 @@ export default function BlockCallout(props: {
         {get(block, 'callout.icon.emoji') && (
           <div className="text-2xl pl-4 pr-2 py-3">{get(block, 'callout.icon.emoji')}</div>
         )}
-        <div className="pt-4 pl-2 pr-4 pb-1 w-full">
+        <div className="py-4 pl-2 pr-4 w-full">
           {block?.callout?.rich_text.map((richText, index) => (
             <BlockRichText key={index} richText={richText} />
           ))}
-          <div className="-ml-4">{children}</div>
+          {!!children && <div className="-ml-4 pt-3 m2it-inside-box">{children}</div>}
         </div>
       </div>
     </div>

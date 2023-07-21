@@ -61,16 +61,16 @@ function trBlock(options: {
             cell,
             key: index,
             isHeader: true,
-            headerType: 'column',
-            hideBorder: index + 1 === cells.length
+            headerType: 'column'
+            // hideBorder: index + 1 === cells.length
           })
         } else {
           return cellBlock({
             cell,
             key: index,
             isHeader: isRowHeader,
-            headerType: 'row',
-            hideBorder: index + 1 === cells.length
+            headerType: 'row'
+            // hideBorder: index + 1 === cells.length
           })
         }
       })}
@@ -86,7 +86,7 @@ function cellBlock(options: {
   hideBorder?: boolean
 }) {
   const { cell, isHeader, key, headerType, hideBorder } = options
-  const cellClass = { 'px-4 py-2': true, 'border-r border-b border-slate-300': !hideBorder }
+  const cellClass = { 'px-4 py-2': true, 'border border-slate-300': !hideBorder }
   if (isHeader) {
     const headerClass = {
       'bg-sky-100': headerType === 'row',

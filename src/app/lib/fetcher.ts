@@ -1,7 +1,6 @@
 import {
   BlockObjectResponse,
   ListBlockChildrenResponse,
-  ParagraphBlockObjectResponse,
   QueryDatabaseParameters,
   RichTextItemResponse
 } from '@notionhq/client/build/src/api-endpoints'
@@ -415,8 +414,6 @@ export async function getBlocks(
 
   if (!blocks?.length) return []
 
-  // /* ###Thi */ console.log(`👉👉👉 blocks: ${JSON.stringify(blocks)}`)
-
   let number = 1
   for (const block of blocks) {
     /**
@@ -450,12 +447,7 @@ export async function getBlocks(
       block['list_item'] = !initNumbering ? '1' : initNumbering === '1' ? '2' : '3'
     }
 
-    // mention
-    // if (block.type === 'paragraph') {
-    //   block.paragraph = await parseMention(block.paragraph)
-    // }
     if (get(block, `${block.type}.rich_text`)) {
-      // /* ###Thi */ console.log(`👉👉👉 HERE!!!`);
       const parsedMention = await parseMention(get(block, `${block.type}.rich_text`) as any)
       set(block, `${block.type}.rich_text`, parsedMention)
     }
@@ -485,7 +477,6 @@ export async function getBlocks(
 async function parseMention(richText: RichTextItemResponse[] | []): Promise<any> {
   if (!richText?.length) return []
   const newRichText = [] as RichTextItemResponse[]
-  // /* ###Thi */ console.log(`👉👉👉 richText: ${JSON.stringify(richText)}`)
   for (const block of richText) {
     if (block.type === 'mention' && block.mention?.type === 'page') {
       const pageId = get(block, 'mention.page.id')
@@ -498,7 +489,6 @@ async function parseMention(richText: RichTextItemResponse[] | []): Promise<any>
       newRichText.push(block)
     }
   }
-  // return { ...blockParagraph, rich_text: newRichText }
   return newRichText
 }
 /**

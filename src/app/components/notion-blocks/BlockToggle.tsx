@@ -11,7 +11,7 @@ import BlockRichText from './BlockRichText'
 export default function BlockToggle(props: {
   block: ToggleBlockObjectResponse
   level: number
-  children: React.ReactNode
+  children?: React.ReactNode
   className?: string
 }) {
   const { block, level, children, className } = props
@@ -45,9 +45,11 @@ export default function BlockToggle(props: {
                 ))}
               </div>
             </Disclosure.Button>
-            <Disclosure.Panel className="rounded-b-md bg-gray-50 py-4 pr-4 m2it-inside-box">
-              {children}
-            </Disclosure.Panel>
+            {!!children && (
+              <Disclosure.Panel className="rounded-b-md py-4 pr-4 m2it-inside-box">
+                {children}
+              </Disclosure.Panel>
+            )}
           </>
         )}
       </Disclosure>
