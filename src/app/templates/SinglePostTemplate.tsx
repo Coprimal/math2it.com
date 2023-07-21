@@ -26,7 +26,7 @@ type SinglePostTemplateProps = {
 
 // Note: If we change the breakpoint here, we have to change the breakpoint of showing TOC on
 // small screens in component post-toc.tsx too.
-const asideClass = cn('hidden 2xl:block flex-1', 'h-[calc(100vh-130px)] sticky top-[70px]')
+const asideClass = cn('hidden 2xl:block flex-1', 'h-[calc(100vh-130px)] sticky top-[70px] pt-8')
 
 export default function SinglePostTemplate(props: SinglePostTemplateProps) {
   const { postHeader, contentBlocks } = props

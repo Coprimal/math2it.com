@@ -1,4 +1,4 @@
-import { anonymAuthor, postWidthContainer } from '@app/lib/config'
+import { anonymAuthor, getSlugPrefix, postWidthContainer } from '@app/lib/config'
 import { PostHeaderType } from '@src/interface'
 import cn from 'classnames'
 import Link from 'next/link'
@@ -87,11 +87,11 @@ export default function PostHeader(props: PostHeaderProps) {
             <div
               className={cn(
                 gapHeaderItems,
-                '!mb-4 flex w-full flex-wrap gap-3 md:w-auto md:flex-nowrap'
+                '!mb-4 flex w-full flex-wrap gap-3 md:w-auto md:flex-nowrap items-center'
               )}
             >
               {authors && (
-                <div className="flex gap-2 text-base opacity-80">
+                <div className="flex items-center gap-2 text-base opacity-80">
                   {!!authors?.length && authors?.length > 1 && (
                     <i className="icon-users-outline"></i>
                   )}
@@ -117,12 +117,26 @@ export default function PostHeader(props: PostHeaderProps) {
                   </div>
                 </div>
               )}
+
               {date && (
-                <div className="flex gap-1 text-base opacity-80">
+                <div className="flex items-center gap-1 text-base opacity-80">
                   <i className="icon-clock"></i>
                   <Date dateString={date} />
                 </div>
               )}
+
+              <div className="hidden md:block">
+                <Link
+                  className={cn(
+                    'shadow-md text-white rounded-3xl hover:translate-y-[-2px] hover:transition-all',
+                    'bg-gradient-to-r from-purple-700 to-pink-500',
+                    'text-[0.85rem] h-fit w-fit block py-[2px] px-[15px]'
+                  )}
+                  href={getSlugPrefix('viet-bai')}
+                >
+                  ✍ Viết bài cùng Math2IT
+                </Link>
+              </div>
             </div>
           )}
 

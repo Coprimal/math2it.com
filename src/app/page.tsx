@@ -110,7 +110,7 @@ export default function Home() {
                   className={cn(badgeClassName, 'bg-gradient-to-r from-purple-700 to-pink-500')}
                   href={getSlugPrefix('viet-bai')}
                 >
-                  Viết bài cùng Math2IT
+                  ✍ Viết bài cùng Math2IT
                 </Link>
               </div>
             </div>
@@ -120,7 +120,7 @@ export default function Home() {
 
       <WaveSplit />
 
-      <div className="flex flex-col gap-8 pb-12 pt-8">
+      <div className="flex flex-col gap-12 pb-12 pt-8">
         <PostListForHomeSection
           listStyle="carousel"
           title="Mới nhất"
