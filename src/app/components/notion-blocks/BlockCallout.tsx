@@ -14,15 +14,15 @@ export default function BlockCallout(props: {
   const { block, level, children, className } = props
   return (
     <div className={cn(getIndentLevelClass(level), className)}>
-      <div className={cn('flex gap-2 p-4 rounded-md', mapColorClass(block?.callout?.color))}>
+      <div className={cn('flex rounded-md', mapColorClass(block?.callout?.color))}>
         {get(block, 'callout.icon.emoji') && (
-          <div className="text-2xl">{get(block, 'callout.icon.emoji')}</div>
+          <div className="text-2xl pl-4 pr-2 py-3">{get(block, 'callout.icon.emoji')}</div>
         )}
-        <div>
+        <div className="pt-4 pl-2 pr-4 pb-1 w-full">
           {block?.callout?.rich_text.map((richText, index) => (
             <BlockRichText key={index} richText={richText} />
           ))}
-          {children}
+          <div className="-ml-4">{children}</div>
         </div>
       </div>
     </div>

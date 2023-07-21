@@ -11,13 +11,22 @@
   display: none;
 }
 
+.m2it-inside-box {
+  & > *:first-child {
+    margin-top: 0;
+  }
+  & > *:last-child {
+    margin-bottom: 0;
+  }
+}
+
 @layer base {
   .m2it-link-hover {
     @apply text-pink-600;
   }
 
   .m2it-link {
-    @apply hover:m2it-link-hover text-[#015caa] no-underline font-normal;
+    @apply hover:m2it-link-hover font-normal text-[#015caa] no-underline;
   }
 
   .m2it-prose-headings {
@@ -29,7 +38,7 @@
   }
 
   .m2it-prose {
-    @apply prose max-w-none text-[1.05rem] leading-7;
+    @apply prose max-w-none text-[1.05rem] leading-normal;
     @apply prose-a:m2it-link;
     @apply prose-headings:m2it-prose-headings;
     @apply prose-img:m2it-prose-img;

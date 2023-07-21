@@ -37,7 +37,7 @@ export default function BlockRender(props: { block: BlockObjectResponse; level: 
   ))
 
   const basicBlockGap = 'my-4'
-  const listItem = 'mt-0 mb-2'
+  const basicBlockGapHeading = 'mt-6'
 
   switch (block.type) {
     case 'paragraph':
@@ -52,7 +52,7 @@ export default function BlockRender(props: { block: BlockObjectResponse; level: 
         <BlockNumberedListItem
           block={block as BlockNumberedListItemType}
           level={level}
-          className={cn(basicBlockGap, listItem)}
+          className={cn(basicBlockGap)}
         >
           {children}
         </BlockNumberedListItem>
@@ -63,7 +63,7 @@ export default function BlockRender(props: { block: BlockObjectResponse; level: 
         <BlockBulletedListItem
           block={block as BlockBulletedListItemType}
           level={level}
-          className={cn(basicBlockGap, listItem)}
+          className={cn(basicBlockGap)}
         >
           {children}
         </BlockBulletedListItem>
@@ -71,28 +71,43 @@ export default function BlockRender(props: { block: BlockObjectResponse; level: 
 
     case 'to_do':
       return (
-        <BlockToDo block={block} level={level} className={cn(basicBlockGap, listItem)}>
+        <BlockToDo block={block} level={level} className={cn(basicBlockGap)}>
           {children}
         </BlockToDo>
       )
 
     case 'heading_1':
       return (
-        <BlockHeading type={'h1'} block={block} level={level} className={cn(basicBlockGap)}>
+        <BlockHeading
+          type={'h1'}
+          block={block}
+          level={level}
+          className={cn(basicBlockGap, basicBlockGapHeading)}
+        >
           {children}
         </BlockHeading>
       )
 
     case 'heading_2':
       return (
-        <BlockHeading type={'h2'} block={block} level={level} className={cn(basicBlockGap)}>
+        <BlockHeading
+          type={'h2'}
+          block={block}
+          level={level}
+          className={cn(basicBlockGap, basicBlockGapHeading)}
+        >
           {children}
         </BlockHeading>
       )
 
     case 'heading_3':
       return (
-        <BlockHeading type={'h3'} block={block} level={level} className={cn(basicBlockGap)}>
+        <BlockHeading
+          type={'h3'}
+          block={block}
+          level={level}
+          className={cn(basicBlockGap, basicBlockGapHeading)}
+        >
           {children}
         </BlockHeading>
       )

@@ -415,6 +415,8 @@ export async function getBlocks(
 
   if (!blocks?.length) return []
 
+  // /* ###Thi */ console.log(`👉👉👉 blocks: ${JSON.stringify(blocks)}`)
+
   let number = 1
   for (const block of blocks) {
     /**
@@ -449,8 +451,13 @@ export async function getBlocks(
     }
 
     // mention
-    if (block.type === 'paragraph') {
-      block.paragraph = await parseMention(block.paragraph)
+    // if (block.type === 'paragraph') {
+    //   block.paragraph = await parseMention(block.paragraph)
+    // }
+    if (get(block, `${block.type}.rich_text`)) {
+      // /* ###Thi */ console.log(`👉👉👉 HERE!!!`);
+      const parsedMention = await parseMention(get(block, `${block.type}.rich_text`) as any)
+      set(block, `${block.type}.rich_text`, parsedMention)
     }
 
     if (block.has_children) {
@@ -475,12 +482,10 @@ export async function getBlocks(
  * Add "slug" property when mentioning a page or an author in a paragraph block
  * @param blockParagraph
  */
-async function parseMention(
-  blockParagraph: ParagraphBlockObjectResponse['paragraph']
-): Promise<any> {
-  const richText = blockParagraph?.rich_text as RichTextItemResponse[] | []
-  if (!richText?.length) return blockParagraph
+async function parseMention(richText: RichTextItemResponse[] | []): Promise<any> {
+  if (!richText?.length) return []
   const newRichText = [] as RichTextItemResponse[]
+  // /* ###Thi */ console.log(`👉👉👉 richText: ${JSON.stringify(richText)}`)
   for (const block of richText) {
     if (block.type === 'mention' && block.mention?.type === 'page') {
       const pageId = get(block, 'mention.page.id')
@@ -493,7 +498,8 @@ async function parseMention(
       newRichText.push(block)
     }
   }
-  return { ...blockParagraph, rich_text: newRichText }
+  // return { ...blockParagraph, rich_text: newRichText }
+  return newRichText
 }
 /**
  * Get uri (not slug) of a Notion page

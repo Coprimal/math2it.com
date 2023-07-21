@@ -69,11 +69,11 @@ export function getIndentLevelClass(level: number): string {
     case 0:
       return 'pl-0'
     case 1:
-      return 'pl-4'
+      return 'pl-4 my-3'
     case 2:
-      return 'pl-8'
+      return 'pl-8 my-3'
     default:
-      return 'pl-0'
+      return 'pl-0 my-3'
   }
 }
 
