@@ -1,3 +1,5 @@
+'use client'
+
 import { convertHeadingIdToSlug, getIndentLevelClass, mapColorClass } from '@app/lib/block-helpers'
 import {
   Heading1BlockObjectResponse,
@@ -7,7 +9,9 @@ import {
 } from '@notionhq/client/build/src/api-endpoints'
 import cn from 'classnames'
 import { get } from 'lodash'
+import { useContext } from 'react'
 
+import { BlockOptionContext } from '../../lib/context'
 import BlockHeadingToggle from './BlockHeadingToggle'
 import BlockRichText from './BlockRichText'
 
@@ -20,6 +24,8 @@ export default function BlockHeading(props: {
   children?: React.ReactNode
   className?: string
 }) {
+  const ctx = useContext(BlockOptionContext)
+
   const { type, block, level, className, children } = props
   let heading: { rich_text: RichTextItemResponse[]; color: string }
   let headingElement: JSX.Element
@@ -78,7 +84,7 @@ export default function BlockHeading(props: {
   return (
     <div className={cn(getIndentLevelClass(level))}>
       <div className={cn(mapColorClass(heading?.color), className, 'flex items-start gap-2')}>
-        {anchorElement}
+        {!ctx.disableAnchorHeading && anchorElement}
         {get(heading, 'is_toggleable') && children && (
           <BlockHeadingToggle headingElement={headingElement}>{children}</BlockHeadingToggle>
         )}

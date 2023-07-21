@@ -23,7 +23,13 @@ export default async function AboutPage() {
   try {
     const postHeader = await getPostHeader(ABOUT_PAGE)
     const contentBlocks = await getBlocks(ABOUT_PAGE)
-    return <SinglePostTemplate postHeader={postHeader} contentBlocks={contentBlocks} />
+    return (
+      <SinglePostTemplate
+        blockOptions={{ disableAnchorHeading: true }}
+        postHeader={postHeader}
+        contentBlocks={contentBlocks}
+      />
+    )
   } catch (error) {
     console.log('🚨Error when loading a single post page', error)
     notFound()

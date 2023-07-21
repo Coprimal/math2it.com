@@ -1,3 +1,5 @@
+'use client'
+
 import PostAside from '@c/PostAside'
 import PostBody from '@c/PostBody'
 import PostHeader from '@c/PostHeader'
@@ -10,10 +12,16 @@ import { PostHeaderType } from '@src/interface'
 import cn from 'classnames'
 
 import ScrollToTop from '../components/ScrollToTop'
+import {
+  BlockOptionContext,
+  BlockOptionContextType,
+  defaultBlockOptionContext
+} from '../lib/context'
 
 type SinglePostTemplateProps = {
   postHeader: PostHeaderType
   contentBlocks: ListBlockChildrenResponse['results']
+  blockOptions?: BlockOptionContextType
 }
 
 // Note: If we change the breakpoint here, we have to change the breakpoint of showing TOC on
@@ -22,9 +30,9 @@ const asideClass = cn('hidden 2xl:block flex-1', 'h-[calc(100vh-130px)] sticky t
 
 export default function SinglePostTemplate(props: SinglePostTemplateProps) {
   const { postHeader, contentBlocks } = props
-
+  const blockOpts = props.blockOptions || defaultBlockOptionContext
   return (
-    <>
+    <BlockOptionContext.Provider value={blockOpts}>
       <div className="animate-fadeIn">
         {postHeader && <PostHeader postHeader={postHeader} />}
         <div className={cn('flex justify-center px-5')}>
@@ -53,6 +61,6 @@ export default function SinglePostTemplate(props: SinglePostTemplateProps) {
         </div>
       </div>
       <ScrollToTop />
-    </>
+    </BlockOptionContext.Provider>
   )
 }
