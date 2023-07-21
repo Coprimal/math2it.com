@@ -22,7 +22,7 @@ type PageOfPostsListTemplateProps = {
 }
 
 export const heightCoverPostList = 'min-h-[25vh]'
-export const spacingCoverPostList = 'pb-6 pt-10'
+export const spacingCoverPostList = 'py-12'
 
 export default function PageOfPostsListTemplate(props: PageOfPostsListTemplateProps) {
   const pattern = useGeoPattern(props.title, {

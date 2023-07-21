@@ -40,6 +40,7 @@ export default function BlockRender(props: { block: BlockObjectResponse; level: 
   }
 
   const basicBlockGap = 'my-4'
+  const basicBlockGapList = 'my-2'
   const basicBlockGapHeading = 'mt-6'
 
   switch (block.type) {
@@ -55,7 +56,7 @@ export default function BlockRender(props: { block: BlockObjectResponse; level: 
         <BlockNumberedListItem
           block={block as BlockNumberedListItemType}
           level={level}
-          className={cn(basicBlockGap)}
+          className={cn(basicBlockGapList)}
         >
           {children}
         </BlockNumberedListItem>
@@ -66,7 +67,7 @@ export default function BlockRender(props: { block: BlockObjectResponse; level: 
         <BlockBulletedListItem
           block={block as BlockBulletedListItemType}
           level={level}
-          className={cn(basicBlockGap)}
+          className={cn(basicBlockGapList)}
         >
           {children}
         </BlockBulletedListItem>
@@ -74,7 +75,7 @@ export default function BlockRender(props: { block: BlockObjectResponse; level: 
 
     case 'to_do':
       return (
-        <BlockToDo block={block} level={level} className={cn(basicBlockGap)}>
+        <BlockToDo block={block} level={level} className={cn(basicBlockGapList)}>
           {children}
         </BlockToDo>
       )
