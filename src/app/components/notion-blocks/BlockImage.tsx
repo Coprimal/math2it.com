@@ -27,6 +27,8 @@ export default function BlockImage(props: {
   const blurDataURL = get(block, 'imageInfo.base64', defaultBlurDataURL)
   const caption = block?.image?.caption
 
+  /* ###Thi */ console.log(`👉👉👉 block.imgUrl: ${block.imgUrl}`)
+
   return (
     <div
       className={cn(

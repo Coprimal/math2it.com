@@ -36,7 +36,7 @@ type BulletLevelType = '1' | '2' | '3'
 function bulletType(level: BulletLevelType): JSX.Element {
   switch (level) {
     case '1':
-      return <RxDotFilled className="mt-1 text-xl text-slate-600" />
+      return <RxDotFilled className="mt-0.5 text-xl text-slate-600" />
     case '2':
       return <RxDot className="mt-1 text-lg" />
     case '3':

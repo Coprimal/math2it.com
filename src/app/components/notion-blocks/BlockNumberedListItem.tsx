@@ -19,13 +19,14 @@ export default function BlockNumberedListItem(props: {
         getIndentLevelClass(level),
         className,
         `before:content-['${block['list_item']}']`,
-        'before:mr-2'
+        'before:mr-2',
+        'pl-[1.5rem] before:ml-[-1.5rem]'
       )}
     >
       {block?.numbered_list_item?.rich_text.map((richText, index) => (
         <BlockRichText key={index} richText={richText} />
       ))}
-      {children}
+      <div className="-ml-4">{children}</div>
     </div>
   )
 }

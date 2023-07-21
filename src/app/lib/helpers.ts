@@ -195,6 +195,8 @@ export function parseNotionImageUrl(url?: string, pageIdWithDash?: string): stri
  */
 export const parseImgurUrl = (url?: string, type?: ImgurUrlType) => {
   if (!url || !type || !url.includes('imgur')) return url
+  // if url is a gif, return the original url
+  if (url.includes('.gif')) return url
   // return url + type
   return url.replace(/(\.\w+$)/, `${type}$1`)
 }

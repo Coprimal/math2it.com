@@ -5,6 +5,7 @@
 // For embedded youtube video
 .w-full > iframe {
   width: 100%;
+  height: -webkit-fill-available;
 }
 
 .no-scrollbar::-webkit-scrollbar {
