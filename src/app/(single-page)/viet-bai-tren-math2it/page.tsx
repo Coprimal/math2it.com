@@ -23,7 +23,13 @@ export default async function WriteWithUsPage() {
   try {
     const postHeader = await getPostHeader(WRITE_WITH_US_PAGE)
     const contentBlocks = await getBlocks(WRITE_WITH_US_PAGE)
-    return <SinglePostTemplate postHeader={postHeader} contentBlocks={contentBlocks} />
+    return (
+      <SinglePostTemplate
+        hideWriteWithUs={true}
+        postHeader={postHeader}
+        contentBlocks={contentBlocks}
+      />
+    )
   } catch (error) {
     console.log('🚨Error when loading a single post page', error)
     notFound()

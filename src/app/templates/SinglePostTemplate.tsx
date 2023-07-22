@@ -22,6 +22,7 @@ type SinglePostTemplateProps = {
   postHeader: PostHeaderType
   contentBlocks: ListBlockChildrenResponse['results']
   blockOptions?: BlockOptionContextType
+  hideWriteWithUs?: boolean
 }
 
 // Note: If we change the breakpoint here, we have to change the breakpoint of showing TOC on
@@ -34,7 +35,9 @@ export default function SinglePostTemplate(props: SinglePostTemplateProps) {
   return (
     <BlockOptionContext.Provider value={blockOpts}>
       <div className="animate-fadeIn">
-        {postHeader && <PostHeader postHeader={postHeader} />}
+        {postHeader && (
+          <PostHeader postHeader={postHeader} hideWriteWithUs={props.hideWriteWithUs} />
+        )}
         <div className={cn('flex justify-center px-5')}>
           <aside className={cn(asideClass)}>
             <PostAside position="left">

@@ -13,6 +13,7 @@ export const gapHeaderItems = 'mb-3'
 
 type PostHeaderProps = {
   postHeader: PostHeaderType
+  hideWriteWithUs?: boolean
 }
 
 export const containerHeaderClass = 'max-w-full bg-slate-50 drop-shadow-sm py-4'
@@ -125,18 +126,20 @@ export default function PostHeader(props: PostHeaderProps) {
                 </div>
               )}
 
-              <div className="hidden md:block">
-                <Link
-                  className={cn(
-                    'shadow-md text-white rounded-3xl hover:translate-y-[-2px] hover:transition-all',
-                    'bg-gradient-to-r from-purple-700 to-pink-500',
-                    'text-[0.85rem] h-fit w-fit block py-[2px] px-[15px]'
-                  )}
-                  href={getSlugPrefix('viet-bai')}
-                >
-                  ✍ Viết bài cùng Math2IT
-                </Link>
-              </div>
+              {!props.hideWriteWithUs && (
+                <div className="hidden md:block">
+                  <Link
+                    className={cn(
+                      'shadow-md text-white rounded-3xl hover:translate-y-[-2px] hover:transition-all',
+                      'bg-gradient-to-r from-purple-700 to-pink-500',
+                      'text-[0.85rem] h-fit w-fit block py-[2px] px-[15px]'
+                    )}
+                    href={getSlugPrefix('viet-bai')}
+                  >
+                    ✍ Viết bài cùng Math2IT
+                  </Link>
+                </div>
+              )}
             </div>
           )}
 
