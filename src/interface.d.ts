@@ -222,8 +222,8 @@ export type ImgurUrlType = 't' | 'm' | 'l' | 'h'
 
 export type BookmarkPreview = {
   url: string
-  title: string | null
+  title?: string
   description: string | null
-  favicon: string | null
+  favicon?: string
   imageSrc: string | null
 }

@@ -7,6 +7,7 @@ import {
 import defaultBookCover from '@root/public/featured-images/untitledBook.jpg'
 import {
   Author,
+  BookmarkPreview,
   Category,
   ImageType,
   ImgurUrlType,
@@ -21,6 +22,7 @@ import { get, set } from 'lodash'
 import { StaticImageData } from 'next/image'
 import { getPlaiceholder } from 'plaiceholder'
 import { cache } from 'react'
+import { unfurl } from 'unfurl.js'
 
 import {
   NOTION_DB_AUTHORS,
@@ -40,6 +42,7 @@ import {
   getNotionPageWithoutCache
 } from './db'
 import {
+  cleanText,
   getFilter,
   getPredefinedCategories,
   makeSlugText,
@@ -409,6 +412,7 @@ export async function getBlocks(
         children?: ListBlockChildrenResponse['results']
         imageInfo?: any
         imgUrl?: string
+        bookmark?: BookmarkPreview
       })[]
     | []
 
@@ -463,6 +467,22 @@ export async function getBlocks(
       if (url) {
         block['imgUrl'] = parseImgurUrl(url, 'h') // Resize the image to 1024x1024 max
         block['imageInfo'] = await getPlaceholderImage(url) // { base64, width, height }
+      }
+    }
+
+    // bookmark
+    if (block.type === 'bookmark') {
+      const url = get(block, 'bookmark.url')
+      if (url) {
+        const unfurled = await unfurl(url)
+        const bookmark: BookmarkPreview = {
+          url,
+          title: cleanText(unfurled.title),
+          description: cleanText(unfurled.description) ?? null,
+          favicon: unfurled.favicon,
+          imageSrc: unfurled.open_graph?.images?.[0]?.url ?? null
+        }
+        block['bookmark'] = bookmark as any
       }
     }
   }

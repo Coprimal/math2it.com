@@ -1,8 +1,12 @@
-import { BlockObjectResponse } from '@notionhq/client/build/src/api-endpoints'
+import {
+  BlockObjectResponse,
+  BookmarkBlockObjectResponse
+} from '@notionhq/client/build/src/api-endpoints'
 import cn from 'classnames'
 import { get } from 'lodash'
 import dynamic from 'next/dynamic'
 
+import { BookmarkPreview } from '../../interface'
 import BlockBookmark from './notion-blocks/BlockBookmark'
 import BlockBulletedListItem, {
   BlockBulletedListItemType
@@ -159,7 +163,17 @@ export default function BlockRender(props: { block: BlockObjectResponse; level: 
       return <DynamicVideo block={block} className={cn(basicBlockGap)} />
 
     case 'bookmark':
-      return <BlockBookmark block={block} level={level} className={cn(basicBlockGap)} />
+      return (
+        <BlockBookmark
+          block={
+            block as BookmarkBlockObjectResponse & {
+              bookmark?: BookmarkPreview
+            }
+          }
+          level={level}
+          className={cn(basicBlockGap)}
+        />
+      )
 
     default:
       return null

@@ -133,18 +133,6 @@ Search posts with the unofficial notion api.
 }
 ```
 
----
-
-Get preview of an URL,
-
-**GET** `http://localhost:3000/api/get-url-preview?url=${url}`
-
----
-
-Get related posts of a post
-
-**GET** `http://localhost:3000/api/related-posts?postSlug=${slug}`
-
 ## React Icons
 
 [Official website & used to search icons](https://react-icons.github.io/react-icons/).
