@@ -1,6 +1,5 @@
 import { notFound } from 'next/navigation'
 
-import { ABOUT_PAGE } from '../../lib/config'
 import { getBlocks, getPostHeader } from '../../lib/fetcher'
 import { generateMetaTitle } from '../../lib/helpers'
 import SinglePostTemplate from '../../templates/SinglePostTemplate'
@@ -23,8 +22,8 @@ export const metadata = {
 
 export default async function AboutPage() {
   try {
-    const postHeader = await getPostHeader(ABOUT_PAGE)
-    const contentBlocks = await getBlocks(ABOUT_PAGE)
+    const postHeader = await getPostHeader(process.env.ABOUT_PAGE as string)
+    const contentBlocks = await getBlocks(process.env.ABOUT_PAGE as string)
     return (
       <SinglePostTemplate
         blockOptions={{ disableAnchorHeading: true }}

@@ -1,5 +1,4 @@
 import {
-  ENV_MODE,
   defaultCategoryBgColor,
   defaultCategoryTextColor,
   defaultCustomSizeFM,
@@ -306,7 +305,7 @@ export function getFilter(filter?: any): QueryDatabaseParameters['filter'] {
     }
   })
   // Ignore sandbox posts in production
-  if (ENV_MODE === 'prod') {
+  if (process.env.ENV_MODE === 'prod') {
     defaultFilter.push({
       property: 'published',
       checkbox: {
@@ -325,37 +324,11 @@ export function getFilter(filter?: any): QueryDatabaseParameters['filter'] {
     }
 }
 
-/**
- * Get related posts from all posts with the same category or tag. In case there are not enough
- * posts with the same category or tag, it will get random posts.
- */
-export function getRelatedPosts(posts: Post[], currentPost: Post, limit = 5): Post[] {
-  const relatedPosts = posts.filter(post => {
-    if (post.uri === currentPost.uri) return false
-    if (
-      post.categories?.some(category =>
-        currentPost.categories?.map(category => category.slug).includes(category.slug)
-      )
-    )
-      return true
-
-    if (post.tags?.some(tag => currentPost.tags?.map(tag => tag.slug).includes(tag.slug)))
-      return true
-
-    return false
-  })
-
-  // If there are not enough related posts, get random posts
-  if (relatedPosts.length < limit) {
-    const randomPosts = posts.filter(
-      post => !relatedPosts.includes(post) && post.uri !== currentPost.uri
-    )
-    return relatedPosts.concat(randomPosts.slice(0, limit - relatedPosts.length))
-  }
-
-  return relatedPosts.sort(() => Math.random() - 0.5).slice(0, limit)
-}
-
 export function generateMetaTitle(title: string) {
   return `${title} | Math2IT`
+}
+
+export function cleanText(text?: string) {
+  if (!text) return undefined
+  return text.replace(/\n/g, ' ').replace(/\s+/g, ' ').trim()
 }

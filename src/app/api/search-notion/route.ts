@@ -29,7 +29,7 @@ async function search(params: SearchParams): Promise<any> {
   }
 
   if (!process.env.NOTION_DB_POSTS) {
-    throw new Error('NOTION_DB_POSTS is not defined')
+    throw new Error('process.env.NOTION_DB_POSTS is not defined')
   }
 
   const body = {

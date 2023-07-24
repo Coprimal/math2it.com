@@ -1,4 +1,4 @@
-import { NOTION_DB_POSTS, notionMaxRequest } from '@app/lib/config'
+import { notionMaxRequest } from '@app/lib/config'
 import {
   getAuthors,
   getBlocks,
@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: DynamicSegmentParamsProps): P
   const untitled = 'Bài viết không xác định | Math2IT'
   if (!slug) return { title: untitled }
   const allPosts = await getPosts({
-    dbId: NOTION_DB_POSTS,
+    dbId: process.env.NOTION_DB_POSTS as string,
     pageSize: notionMaxRequest
   })
   const post = allPosts.find(post => post.slug === slug)
@@ -43,7 +43,7 @@ export async function generateMetadata({ params }: DynamicSegmentParamsProps): P
 
 export async function generateStaticParams() {
   const allPosts = await getPosts({
-    dbId: NOTION_DB_POSTS,
+    dbId: process.env.NOTION_DB_POSTS as string,
     pageSize: notionMaxRequest
   })
   const params = allPosts.filter(post => post.slug).map(post => ({ slug: post.slug }))
@@ -61,7 +61,7 @@ export default async function SinglePostPage({ params }: DynamicSegmentParamsPro
     const [tags, authors] = await Promise.all([tagsData, authorsData])
 
     const allPosts = await getPosts({
-      dbId: NOTION_DB_POSTS,
+      dbId: process.env.NOTION_DB_POSTS as string,
       categories,
       tags,
       authors,

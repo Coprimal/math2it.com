@@ -2,7 +2,6 @@ import withPlaiceholder from '@plaiceholder/next'
 
 const nextConfig = {
   // output: 'export',
-  // distDir: 'dist',
   trailingSlash: true, // use "/about/" instead of "/about" (not supported yet by --turbo)
   poweredByHeader: false, // remove "Powered by Next.js" from the header
   transpilePackages: ['react-syntax-highlighter'],
@@ -10,6 +9,9 @@ const nextConfig = {
     scrollRestoration: true // not supported yet by --turbo
   },
   images: {
+    // loader: 'custom',
+    // loaderFile: './src/app/image.ts',
+    // unoptimized: true,
     domains: [
       '0.gravatar.com',
       '1.gravatar.com',

@@ -1,4 +1,3 @@
-import { NOTION_DB_POSTS } from '@app/lib/config'
 import { getAuthors, getCategories, getPosts, getPostsBy, getTags } from '@app/lib/fetcher'
 import { Post } from '@src/interface'
 
@@ -29,7 +28,7 @@ export default async function PostListForHome(props: PostListForHomeProps) {
   switch (props.type) {
     case 'latest':
       posts = await getPosts({
-        dbId: NOTION_DB_POSTS,
+        dbId: process.env.NOTION_DB_POSTS as string,
         categories,
         tags,
         authors,
@@ -39,7 +38,7 @@ export default async function PostListForHome(props: PostListForHomeProps) {
 
     case 'selected':
       posts = await getPosts({
-        dbId: NOTION_DB_POSTS,
+        dbId: process.env.NOTION_DB_POSTS as string,
         categories,
         tags,
         authors,

@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start -H 0.0.0.0 -p ${PORT:-8080}",
+    "start": "next start",
     "lint": "next lint",
     "check": "yarn run prettier && yarn run build",
     "prettier": "prettier --write \"**/*.{tsx,ts,css,scss}\"",

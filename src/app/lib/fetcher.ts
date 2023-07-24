@@ -7,6 +7,7 @@ import {
 import defaultBookCover from '@root/public/featured-images/untitledBook.jpg'
 import {
   Author,
+  BookmarkPreview,
   Category,
   ImageType,
   ImgurUrlType,
@@ -21,11 +22,9 @@ import { get, set } from 'lodash'
 import { StaticImageData } from 'next/image'
 import { getPlaiceholder } from 'plaiceholder'
 import { cache } from 'react'
+import { unfurl } from 'unfurl.js'
 
 import {
-  NOTION_DB_AUTHORS,
-  NOTION_DB_POSTS,
-  NOTION_DB_TAGS,
   defaultFeaturedImage,
   defaultPostDate,
   defaultPostTitle,
@@ -40,6 +39,7 @@ import {
   getNotionPageWithoutCache
 } from './db'
 import {
+  cleanText,
   getFilter,
   getPredefinedCategories,
   makeSlugText,
@@ -125,7 +125,7 @@ export async function getPostsBy(options: {
 }) {
   const { categories, tags, authors, filter, pageSize, startCursor } = options
   const posts = await getPosts({
-    dbId: NOTION_DB_POSTS,
+    dbId: process.env.NOTION_DB_POSTS as string,
     categories,
     tags,
     authors,
@@ -142,20 +142,31 @@ export async function getPostsBy(options: {
 export const getCategories = () => predefinedCategories
 
 /**
- * Get all tags from Notion database (NOTION_DB_TAGS)
+ * Get all tags from Notion database (process.env.NOTION_DB_TAGS)
  */
 export const getTags = async () => {
-  if (!NOTION_DB_TAGS) throw new Error('NOTION_DB_TAGS is not defined')
-  const data = await getNotionDatabase(NOTION_DB_TAGS, undefined, undefined, notionMaxRequest)
+  if (!process.env.NOTION_DB_TAGS) throw new Error('process.env.NOTION_DB_TAGS is not defined')
+  const data = await getNotionDatabase(
+    process.env.NOTION_DB_TAGS,
+    undefined,
+    undefined,
+    notionMaxRequest
+  )
   return transformNotionTagsData(data?.['results'] as any[])
 }
 
 /**
- * Get all authors from Notion database (NOTION_DB_AUTHORS)
+ * Get all authors from Notion database (process.env.NOTION_DB_AUTHORS)
  */
 export const getAuthors = async () => {
-  if (!NOTION_DB_AUTHORS) throw new Error('NOTION_DB_AUTHORS is not defined')
-  const data = await getNotionDatabase(NOTION_DB_AUTHORS, undefined, undefined, notionMaxRequest)
+  if (!process.env.NOTION_DB_AUTHORS)
+    throw new Error('process.env.NOTION_DB_AUTHORS is not defined')
+  const data = await getNotionDatabase(
+    process.env.NOTION_DB_AUTHORS,
+    undefined,
+    undefined,
+    notionMaxRequest
+  )
   return transformNotionAuthorsData(data?.['results'] as any[])
 }
 
@@ -409,6 +420,7 @@ export async function getBlocks(
         children?: ListBlockChildrenResponse['results']
         imageInfo?: any
         imgUrl?: string
+        bookmark?: BookmarkPreview
       })[]
     | []
 
@@ -465,6 +477,22 @@ export async function getBlocks(
         block['imageInfo'] = await getPlaceholderImage(url) // { base64, width, height }
       }
     }
+
+    // bookmark
+    if (block.type === 'bookmark') {
+      const url = get(block, 'bookmark.url')
+      if (url) {
+        const unfurled = await unfurl(url)
+        const bookmark: BookmarkPreview = {
+          url,
+          title: cleanText(unfurled.title),
+          description: cleanText(unfurled.description) ?? null,
+          favicon: unfurled.favicon,
+          imageSrc: unfurled.open_graph?.images?.[0]?.url ?? null
+        }
+        block['bookmark'] = bookmark as any
+      }
+    }
   }
 
   return blocks
@@ -496,7 +524,8 @@ async function parseMention(richText: RichTextItemResponse[] | []): Promise<any>
  */
 async function getPageUri(pageId: string): Promise<string | null> {
   const pageData = await getNotionPage(pageId)
-  const isAuthor = get(pageData, 'parent.database_id', '').replaceAll('-', '') === NOTION_DB_AUTHORS
+  const isAuthor =
+    get(pageData, 'parent.database_id', '').replaceAll('-', '') === process.env.NOTION_DB_AUTHORS
   const slug =
     get(pageData, 'properties.slug.rich_text[0].plain_text', '') ||
     makeSlugText(get(pageData, 'properties.name.title[0].plain_text', ''))

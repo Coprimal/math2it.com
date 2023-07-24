@@ -1,4 +1,4 @@
-import { NOTION_DB_POSTS, getSlugPrefix, notionMaxRequest, numPostsPerPage } from '@app/lib/config'
+import { getSlugPrefix, notionMaxRequest, numPostsPerPage } from '@app/lib/config'
 import { getAuthors, getCategories, getPosts, getTags } from '@app/lib/fetcher'
 import { generateMetaTitle, getFilterOf, getStartCursorForCurrentPage } from '@app/lib/helpers'
 import PageOfPostsListTemplate from '@app/templates/PageOfPostsListTemplate'
@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: OptionalCatchAllProps): Promi
 export async function generateStaticParams() {
   const params = [] as OptionalCatchAllParams[]
   const allPosts = await getPosts({
-    dbId: NOTION_DB_POSTS,
+    dbId: process.env.NOTION_DB_POSTS as string,
     pageSize: notionMaxRequest,
     filter: getFilterOf('selected')
   })
@@ -66,7 +66,7 @@ export default async function SelectedPostsPage({ params }: OptionalCatchAllProp
   const [tags, authors] = await Promise.all([tagsData, authorsData])
 
   const allPosts = await getPosts({
-    dbId: NOTION_DB_POSTS,
+    dbId: process.env.NOTION_DB_POSTS as string,
     categories,
     tags,
     authors,
@@ -87,7 +87,7 @@ export default async function SelectedPostsPage({ params }: OptionalCatchAllProp
   const postsOnThisPage = !allPosts.length
     ? []
     : await getPosts({
-        dbId: NOTION_DB_POSTS,
+        dbId: process.env.NOTION_DB_POSTS as string,
         filter: getFilterOf('selected'),
         categories,
         tags,

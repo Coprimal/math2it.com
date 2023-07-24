@@ -4,7 +4,7 @@ import {
 } from '@notionhq/client/build/src/api-endpoints'
 import { NotionSorts } from '@src/interface'
 
-import { NOTION_TOKEN, NOTION_VERSION, defaultNumPostsRequest } from './config'
+import { defaultNumPostsRequest } from './config'
 
 /**
  * We needs this method to be used in outside-nextjs environment. For example, in ./scripts/ud_images.ts
@@ -27,8 +27,8 @@ export async function getNotionDatabaseWithoutCache(
     const res = await fetch(url, {
       method: 'POST',
       headers: {
-        Authorization: `Bearer ${NOTION_TOKEN}`,
-        'Notion-Version': NOTION_VERSION,
+        Authorization: `Bearer ${process.env.NOTION_TOKEN}`,
+        'Notion-Version': process.env.NOTION_VERSION as string,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(requestBody)
@@ -55,8 +55,8 @@ export const getNotionPageWithoutCache = async (pageId: string) => {
   const res = await fetch(url, {
     method: 'GET',
     headers: {
-      Authorization: `Bearer ${NOTION_TOKEN}`,
-      'Notion-Version': NOTION_VERSION
+      Authorization: `Bearer ${process.env.NOTION_TOKEN}`,
+      'Notion-Version': process.env.NOTION_VERSION as string
     }
   })
   return res.json()
@@ -76,8 +76,8 @@ export const getNotionBlocksWithoutCache = async (
   const res = await fetch(url, {
     method: 'GET',
     headers: {
-      Authorization: `Bearer ${NOTION_TOKEN}`,
-      'Notion-Version': NOTION_VERSION
+      Authorization: `Bearer ${process.env.NOTION_TOKEN}`,
+      'Notion-Version': process.env.NOTION_VERSION as string
     }
   })
   return res.json()
