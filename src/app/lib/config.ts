@@ -5,7 +5,7 @@ import defaultMath from '@root/public/featured-images/math.png'
 import defaultTech from '@root/public/featured-images/tech.png'
 import defaultTool from '@root/public/featured-images/tool.png'
 import defaultTranslate from '@root/public/featured-images/translate.png'
-import { Category, EnvMode, SlugTypeLabels } from '@src/interface'
+import { Category, SlugTypeLabels } from '@src/interface'
 
 export const defaultBlurDataURL =
   'data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwC' +
@@ -29,22 +29,7 @@ export const minNumHeadingsToShowToc = 4 // from this number of headings, show t
 export const mathFontSize = 'text-base'
 export const defaultFeaturedImage = _dImg
 
-/**
- * NOTION
- */
 export const notionMaxRequest = 100
-export const ENV_MODE = (process.env.ENV_MODE || 'dev') as EnvMode
-export const NOTION_DB_POSTS = process.env.NOTION_DB_POSTS as string
-export const NOTION_DB_AUTHORS = process.env.NOTION_DB_AUTHORS as string
-export const NOTION_DB_TAGS = process.env.NOTION_DB_TAGS as string
-export const NOTION_TOKEN = process.env.NOTION_TOKEN as string
-export const NOTION_VERSION = process.env.NOTION_VERSION as string
-// 👇 Read this: https://github.com/NotionX/react-notion-x#private-pages
-export const NOTION_ACTIVE_USER = process.env.NOTION_ACTIVE_USER as string
-export const NOTION_TOKEN_V2 = process.env.NOTION_TOKEN_V2 as string
-// Single pages
-export const WRITE_WITH_US_PAGE = process.env.WRITE_WITH_US_PAGE as string
-export const ABOUT_PAGE = process.env.ABOUT_PAGE as string
 
 // 👇 It's used to sort posts by date
 export const notionDateName = 'finalCreatedDate'

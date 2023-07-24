@@ -1,5 +1,4 @@
 import {
-  ENV_MODE,
   defaultCategoryBgColor,
   defaultCategoryTextColor,
   defaultCustomSizeFM,
@@ -306,7 +305,7 @@ export function getFilter(filter?: any): QueryDatabaseParameters['filter'] {
     }
   })
   // Ignore sandbox posts in production
-  if (ENV_MODE === 'prod') {
+  if (process.env.ENV_MODE === 'prod') {
     defaultFilter.push({
       property: 'published',
       checkbox: {

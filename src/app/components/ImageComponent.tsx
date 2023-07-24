@@ -41,5 +41,17 @@ export default function ImageComponent(props: ImageComponentProps) {
     />
   )
 
+  // // Don't use next/image for now
+  // const url = props.image?.sourceUrl ?? 'https://i.imgur.com/ncYwGMO.jpeg'
+  // const image = (
+  //   // eslint-disable-next-line @next/next/no-img-element
+  //   <img
+  //     alt={props.alt || 'Tên hình không xác định'}
+  //     src={url as any}
+  //     className={props.className}
+  //     {...props.imageProps}
+  //   />
+  // )
+
   return <>{image}</>
 }
