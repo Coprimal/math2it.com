@@ -110,7 +110,7 @@ export default function Home() {
                 </a>
                 <Link
                   className={cn(badgeClassName, 'bg-gradient-to-r from-purple-700 to-pink-500')}
-                  href={getSlugPrefix('viet-bai')}
+                  href={`/${getSlugPrefix('viet-bai')}/`}
                 >
                   ✍ Viết bài cùng Math2IT
                 </Link>
@@ -128,7 +128,7 @@ export default function Home() {
           title="Mới nhất"
           type="latest"
           backgroundClassName="bg-none"
-          moreHref={getSlugPrefix('all')}
+          moreHref={`/${getSlugPrefix('all')}/`}
           postType="PostCardWhiteBgBig"
           postTypeOpts={{ hideAuthor: true, hideDate: true }}
         />
@@ -138,7 +138,7 @@ export default function Home() {
           type="selected"
           postTypeOpts={{ hideDate: true }}
           backgroundClassName="bg-gradient-to-b from-amber-100/50 to-white"
-          moreHref={getSlugPrefix('selected')}
+          moreHref={`/${getSlugPrefix('selected')}/`}
           postType="PostImageBackground"
         />
         {categories.map(category => (

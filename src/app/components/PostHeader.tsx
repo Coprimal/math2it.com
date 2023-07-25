@@ -134,7 +134,7 @@ export default function PostHeader(props: PostHeaderProps) {
                       'bg-gradient-to-r from-purple-700 to-pink-500',
                       'text-[0.85rem] h-fit w-fit block py-[2px] px-[15px]'
                     )}
-                    href={getSlugPrefix('viet-bai')}
+                    href={`/${getSlugPrefix('viet-bai')}/`}
                   >
                     ✍ Viết bài cùng Math2IT
                   </Link>

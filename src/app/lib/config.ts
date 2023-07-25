@@ -64,7 +64,7 @@ export const MenuHome = {
 }
 export const MenuAbout = {
   id: 'id-about',
-  uri: `${getSlugPrefix('about')}`,
+  uri: `/${getSlugPrefix('about')}/`,
   label: 'Giới thiệu',
   navigationItems: {
     navColor: '#ff8094',

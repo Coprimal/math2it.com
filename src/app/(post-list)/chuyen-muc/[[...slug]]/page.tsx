@@ -46,10 +46,11 @@ export async function generateStaticParams() {
     for (let i = 1; i <= totalPages; i++) {
       const path =
         i === 1
-          ? { slug: [getSlugPrefix('category'), category.slug!] }
+          ? { slug: [category.slug!] }
           : {
-              slug: [getSlugPrefix('category'), category.slug!, getSlugPrefix('page'), i.toString()]
+              slug: [category.slug!, getSlugPrefix('page'), i.toString()]
             }
+
       params.push(path)
     }
   }

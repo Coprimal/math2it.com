@@ -36,6 +36,8 @@ export default function SearchModal(props: SearchModalProps) {
   } = useSWR<SearchResult[]>({ query: queryToSearch }, fetcher)
   const data = fullData ? fullData.filter(rs => rs.isPublished) : fullData
 
+  if (error) console.log('🐞 Error in search modal: ', error)
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debounceSearch = useCallback(
     debounce(value => triggerSearch(value), 1000),
@@ -148,7 +150,7 @@ export default function SearchModal(props: SearchModalProps) {
                 {/* Search bar */}
                 <div className={cn('flex items-center gap-3 p-4')}>
                   <div className={cn('grid place-items-center text-slate-500')}>
-                    {(data || error || get(data, '[0].isFake')) && (
+                    {(data || error || get(data, '[0].isFake')) && !isLoading && (
                       <FiSearch className="text-2xl" />
                     )}
                     {isLoading && (
@@ -273,10 +275,11 @@ const fetcher = async (params: any) => {
   const headers: { [key: string]: string } = {
     'Content-Type': 'application/json'
   }
-  const res = await fetch('/api/search-notion', {
+  const res = await fetch('https://math2it-search-server.vercel.app/api/search-notion', {
     headers,
     method: 'POST',
-    body: JSON.stringify(params)
+    body: JSON.stringify(params),
+    mode: 'cors'
   })
   const json = await res.json()
   return json

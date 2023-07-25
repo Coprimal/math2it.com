@@ -35,10 +35,7 @@ export async function generateStaticParams() {
   const numPosts = allPosts?.length || 0
   const totalPages = Math.ceil(numPosts / numPostsPerPage)
   for (let i = 1; i <= totalPages; i++) {
-    const path =
-      i === 1
-        ? { slug: [getSlugPrefix('all')] }
-        : { slug: [getSlugPrefix('all'), getSlugPrefix('page'), i.toString()] }
+    const path = i === 1 ? { slug: [] } : { slug: [getSlugPrefix('page'), i.toString()] }
     params.push(path)
   }
   return params
