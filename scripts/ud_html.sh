@@ -1,0 +1,10 @@
+echo "1️⃣ Start copying..."
+cp -Rf out/* ../math2it-v-nextjs-html/out
+echo "✅ End copying"
+echo "2️⃣ Go to math2it-v-nextjs-html folder"
+cd ../math2it-v-nextjs-html/
+echo "3️⃣ Start updating math2it-v-nextjs-html to Github"
+git add .
+git commit -m "Updated: `date +'%Y-%m-%d %H:%M:%S'`"
+git push
+echo "✅ End updating"
