@@ -23,6 +23,14 @@
    3. `###R`: remarks!
    4. `###Thi` or `###R`: should be removed before building.
 
+
+## Static export and serve html files only
+
+1. Clone this repo to `<whatever>/math2it-v-nextjs/`
+2. Clone https://github.com/dinhanhthi/math2it-v-nextjs-html to `<whatever>/math2it-v-nextjs-html/`
+3. Install normally as in next section.
+4. `yarn ud-hmtl` to update the html site.
+
 ## Installation & Dev
 
 Make sure to enable [TypeScript Plugin](https://nextjs.org/docs/app/building-your-application/configuring/typescript#typescript-plugin).
@@ -32,6 +40,8 @@ Make sure to enable [TypeScript Plugin](https://nextjs.org/docs/app/building-you
 npm install -g yarn
 npm install -g fontello-cli
 ```
+
+🚧 **STATIC EXPORT**: If you run `yarn build` to export html files and serve as static site. Don't forget to clone https://github.com/dinhanhthi/math2it-v-nextjs-html first!
 
 > 🚨 `--turbo`: For a momment (14/6/23), it's not working on MacOS because of this error: "_something went wrong installing the "sharp" module Cannot find module 'relative "../build/Release/sharp-" \<dynamic\> ".node"'_"
 
@@ -73,6 +83,9 @@ yarn reinstall
 # http-server the static build
 # need "yarn build" first (with option "output: 'export'" in next.config.mjs)
 http-server out -p 3003 -a localhost # http://localhost:3003
+
+# Update html files and math2it-v-nextjs-html
+yarn ud-html
 ```
 
 ### imgur
