@@ -69,6 +69,10 @@ yarn clean
 
 # reinstall (only for "yarn")
 yarn reinstall
+
+# http-server the static build
+# need "yarn build" first (with option "output: 'export'" in next.config.mjs)
+http-server out -p 3003 -a localhost # http://localhost:3003
 ```
 
 ### imgur
