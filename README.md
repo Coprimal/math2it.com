@@ -2,93 +2,53 @@
 
 ## Infos & setting up
 
-- Vercel site: https://math2it-nextjs.vercel.app
-- Site built in dev branch:
+- Vercel site: https://math2it-v-nextjs-html.vercel.app/
 - [Project on Notion](https://www.notion.so/math2it/4f043a41b36c4e09a0c915af847f1224?v=e09c3a2b734041ab8dfdcbabf18abae6).
+- Repo contains the html files (which is used to serve the main site): https://github.com/dinhanhthi/math2it-v-nextjs-html
+- Search server: https://github.com/dinhanhthi/math2it-search-server
 - Env vars: check [this file](./example.env.local).
 - Check quota Vercel: https://vercel.com/dashboard/usage
-- **Notes**: Trong trường hợp cái ý tưởng dùng get all posts trong `getStaticProps()` để phân trang (pagination) mà không hiệu quả (khi luợng bài quá nhiều chẳng hạn) -> Có thể dùng đến ý tưởng là đánh số thư tự cho rows trên Notion. Sau đó chỉ cần fetch theo STT này thui. Nhuợc điểm của cách này là khi luợng bài trên Notion quá nhiều thì load trang database khá chậm!
 
 ## ‼️ Rules & Notes
 
-1. Using `id` (or `slug`) for `key={}`.
-2. Query only neccessary fields, not all!
-3. Types in `additional.d.ts` for customized types.
-4. **BEFORE PUSHING**: run `yarn run check` to check if there are errors!
-5. **DON'T** comment on the right side of the variable in `.env.local`!!!
-6. Change something in `.env.local`, MUST restart manually the `yarn dev`!
-7. **Dev tags** (used to search globally in the project)
+1. Types in `additional.d.ts` for customized types.
+2. **BEFORE PUSHING**: run `yarn run check` to check if there are errors!
+3. **DON'T** comment on the right side of the variable in `.env.local`!!!
+4. Change something in `.env.local`, MUST restart manually the `yarn dev`!
+5. **Dev tags** (used to search globally in the project)
    1. `###M`: useful in dev mode, not prod mode.
    2. `###TODO`: to to.
    3. `###R`: remarks!
    4. `###Thi` or `###R`: should be removed before building.
 
 
-## Static export and serve html files only
+## Dev
+
+🚧 We use [static export](https://nextjs.org/docs/app/building-your-application/deploying/static-exports) (export to htmls)
 
 1. Clone this repo to `<whatever>/math2it-v-nextjs/`
-2. Clone https://github.com/dinhanhthi/math2it-v-nextjs-html to `<whatever>/math2it-v-nextjs-html/`
-3. Install normally as in next section.
-4. `yarn ud-hmtl` to update the html site.
+2. Clone https://github.com/dinhanhthi/math2it-v-nextjs-html to `<whatever>/math2it-v-nextjs-html/` (the name **math2it-v-nextjs-html** is important!)
+3. (First time only)
+    Make sure to enable [TypeScript Plugin](https://nextjs.org/docs/app/building-your-application/configuring/typescript#typescript-plugin).
 
-## Installation & Dev
+    ```bash
+    # Global tools
+    npm install -g yarn
+    npm install -g fontello-cli
+    npm install -g http-server
 
-Make sure to enable [TypeScript Plugin](https://nextjs.org/docs/app/building-your-application/configuring/typescript#typescript-plugin).
-
-```bash
-# Global tools
-npm install -g yarn
-npm install -g fontello-cli
-```
-
-🚧 **STATIC EXPORT**: If you run `yarn build` to export html files and serve as static site. Don't forget to clone https://github.com/dinhanhthi/math2it-v-nextjs-html first!
+    # install
+    yarn
+    ```
+4. To develop offline: `yarn dev`
+5. `yarn ud-site` to update the html site. 👈 Build & copy html files to `math2it-v-nextjs-html` & update `math2it-v-nextjs-html/lastUpdate.txt` & push!
+6. To serve html files offline: `http-server out -p 3003 -a localhost` and go to http://localhost:3003
 
 > 🚨 `--turbo`: For a momment (14/6/23), it's not working on MacOS because of this error: "_something went wrong installing the "sharp" module Cannot find module 'relative "../build/Release/sharp-" \<dynamic\> ".node"'_"
 
 > 💡 **TIP**: Because we're using "cache" for requests, if you change something on Notion, don't forget to `Ctrl+Shift+R` (or `cmd+shift+R`) to hard refresh the page.
 
-```bash
-# install
-yarn
-
-# run dev server
-yarn dev
-yarn dev --turbo
-
-# build
-yarn build
-yarn buuld --turbo
-
-# clean then build
-yarn clean-build
-
-# run production server
-yarn start
-
-# lint
-yarn lint
-
-# prettier
-yarn prettier
-
-# check before update prod
-yarn check # prettier then build
-
-# clean
-yarn clean
-
-# reinstall (only for "yarn")
-yarn reinstall
-
-# http-server the static build
-# need "yarn build" first (with option "output: 'export'" in next.config.mjs)
-http-server out -p 3003 -a localhost # http://localhost:3003
-
-# Update html files and math2it-v-nextjs-html
-yarn ud-html
-```
-
-### imgur
+## imgur & update cover and book cover and images in post
 
 If an image on Notion isn't hosted on [imgur](https://imgur.com/), download this image -> upload to imgur -> get the url -> update the corresponding field on notion.
 
