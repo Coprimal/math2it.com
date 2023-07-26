@@ -31,7 +31,8 @@ export async function getNotionDatabaseWithoutCache(
         'Notion-Version': process.env.NOTION_VERSION as string,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(requestBody)
+      body: JSON.stringify(requestBody),
+      cache: 'no-cache'
     })
     return res.json()
   } catch (error: any) {
@@ -57,7 +58,8 @@ export const getNotionPageWithoutCache = async (pageId: string) => {
     headers: {
       Authorization: `Bearer ${process.env.NOTION_TOKEN}`,
       'Notion-Version': process.env.NOTION_VERSION as string
-    }
+    },
+    cache: 'no-cache'
   })
   return res.json()
 }
@@ -78,7 +80,8 @@ export const getNotionBlocksWithoutCache = async (
     headers: {
       Authorization: `Bearer ${process.env.NOTION_TOKEN}`,
       'Notion-Version': process.env.NOTION_VERSION as string
-    }
+    },
+    cache: 'no-cache'
   })
   return res.json()
 }
