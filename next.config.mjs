@@ -1,7 +1,6 @@
 import withPlaiceholder from '@plaiceholder/next'
 
 const nextConfig = {
-  output: 'export',
   trailingSlash: true, // use "/about/" instead of "/about" (not supported yet by --turbo)
   poweredByHeader: false, // remove "Powered by Next.js" from the header
   transpilePackages: ['react-syntax-highlighter'],
