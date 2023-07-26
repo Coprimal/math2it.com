@@ -138,7 +138,9 @@ Usage (`ng` is the field `css` in the config file),
 
 ## Api (`src/api/`)
 
-Search posts with the unofficial notion api.
+✳️ Search posts with the unofficial notion api.
+
+**UPDATE 25/07/23**: Because we use static export, we don't use this api anymore, we use https://github.com/dinhanhthi/math2it-search-server instead.
 
 **POST** `http://localhost:3000/api/search-notion`
 
