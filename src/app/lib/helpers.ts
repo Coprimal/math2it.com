@@ -16,7 +16,9 @@ import {
   SlugTypeLabels,
   Tag
 } from '@src/interface'
+import fs from 'fs'
 import { intersectionWith } from 'lodash'
+import path from 'path'
 
 /**
  * Convert "Nguyễn Văn Đông" to "nguyen-van-dong"
@@ -297,6 +299,24 @@ export function idToUuid(id: string): string | null {
  */
 export function getFilter(filter?: any): QueryDatabaseParameters['filter'] {
   const defaultFilter = [] as any[]
+
+  // Only consider the posts that are updated after the last update
+  try {
+    const filePath = path.join(process.cwd(), '..', 'math2it-v-nextjs-html', 'lastUpdate.txt')
+    const dateFromFile = fs.readFileSync(filePath, 'utf8')
+    if (dateFromFile) {
+      const lastUpdate = new Date(dateFromFile).toISOString()
+      defaultFilter.push({
+        timestamp: 'last_edited_time',
+        last_edited_time: {
+          after: lastUpdate
+        }
+      })
+    }
+  } catch (error) {
+    console.log('🚧 There is no lastUpdate.txt file!')
+  }
+
   // Ignore single page
   defaultFilter.push({
     property: 'isPage',

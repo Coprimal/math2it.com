@@ -52,7 +52,7 @@ export async function generateStaticParams() {
 
 export default async function SinglePostPage({ params }: DynamicSegmentParamsProps) {
   const slug = params.slug || ''
-  if (!slug) return notFound()
+  if (!slug) notFound()
 
   try {
     const categories = getCategories()

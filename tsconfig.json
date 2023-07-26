@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "es6",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -26,18 +22,10 @@
     ],
     "strictNullChecks": true,
     "paths": {
-      "@src/*": [
-        "./src/*"
-      ],
-      "@root/*": [
-        "./*"
-      ],
-      "@c/*": [
-        "./src/app/components/*"
-      ],
-      "@app/*": [
-        "./src/app/*"
-      ]
+      "@src/*": ["./src/*"],
+      "@root/*": ["./*"],
+      "@c/*": ["./src/app/components/*"],
+      "@app/*": ["./src/app/*"]
     }
   },
   "include": [
@@ -49,7 +37,5 @@
     "tailwind.config.ts",
     "dist/types/**/*.ts"
   ],
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules"]
 }

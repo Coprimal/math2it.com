@@ -1,7 +1,7 @@
 {
   "name": "math2it-nextjs",
   "description": "A Next.js version of Math2IT",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "author": "Math2IT Team",
   "private": true,
   "scripts": {
@@ -22,7 +22,8 @@
     "ud-header": "npx tsx -r dotenv/config ./scripts/ud_images.ts dotenv_config_path=.env.local --a header --pid",
     "ud-header-all": "npx tsx -r dotenv/config ./scripts/ud_images.ts dotenv_config_path=.env.local --a header-all",
     "ud-images-post": "npx tsx -r dotenv/config ./scripts/ud_images.ts dotenv_config_path=.env.local --a images-in-post --pid",
-    "ud-html": "sh scripts/ud_html.sh"
+    "ud-html": "sh scripts/ud_html.sh",
+    "ud-site": "yarn build && yarn ud-html"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.15",
@@ -37,6 +38,7 @@
     "classnames": "^2.3.2",
     "eslint": "8.42.0",
     "eslint-config-next": "13.4.4",
+    "fs": "^0.0.1-security",
     "geopattern": "1",
     "got": "^12.6.0",
     "html-react-parser": "^4.0.0",
