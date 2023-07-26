@@ -6,6 +6,7 @@ import WavingHand from '@root/public/waving_hand.webp'
 import cn from 'classnames'
 import Link from 'next/link'
 
+import AlertHomePage from './components/AlertHomePage'
 import PostListForHomeSection from './components/PostListForHomeSection'
 import ScrollToTop from './components/ScrollToTop'
 import { getSlugPrefix } from './lib/config'
@@ -123,6 +124,8 @@ export default function Home() {
       <WaveSplit />
 
       <div className="flex flex-col gap-12 pb-12 pt-8">
+        <AlertHomePage />
+
         <PostListForHomeSection
           listStyle="carousel"
           title="Mới nhất"

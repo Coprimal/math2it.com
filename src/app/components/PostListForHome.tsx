@@ -32,7 +32,8 @@ export default async function PostListForHome(props: PostListForHomeProps) {
         categories,
         tags,
         authors,
-        pageSize: postListHomeCount
+        pageSize: postListHomeCount,
+        getFull: true
       })
       break
 
@@ -43,7 +44,8 @@ export default async function PostListForHome(props: PostListForHomeProps) {
         tags,
         authors,
         pageSize: postListHomeCount,
-        filter: getFilterOf('selected')
+        filter: getFilterOf('selected'),
+        getFull: true
       })
       break
 
@@ -56,7 +58,8 @@ export default async function PostListForHome(props: PostListForHomeProps) {
         tags,
         authors,
         filter: getFilterOf('category', category),
-        pageSize: postListHomeCount
+        pageSize: postListHomeCount,
+        getFull: true
       })
       break
     }

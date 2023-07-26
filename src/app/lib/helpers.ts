@@ -297,24 +297,26 @@ export function idToUuid(id: string): string | null {
 /**
  * Filter to be used in getPosts(). Remark, we ignore single page (where isPage = true on Notion)
  */
-export function getFilter(filter?: any): QueryDatabaseParameters['filter'] {
+export function getFilter(filter?: any, getFull?: boolean): QueryDatabaseParameters['filter'] {
   const defaultFilter = [] as any[]
 
   // Only consider the posts that are updated after the last update
-  try {
-    const filePath = path.join(process.cwd(), '..', 'math2it-v-nextjs-html', 'lastUpdate.txt')
-    const dateFromFile = fs.readFileSync(filePath, 'utf8')
-    if (dateFromFile) {
-      const lastUpdate = new Date(dateFromFile).toISOString()
-      defaultFilter.push({
-        timestamp: 'last_edited_time',
-        last_edited_time: {
-          after: lastUpdate
-        }
-      })
+  if (!getFull) {
+    try {
+      const filePath = path.join(process.cwd(), '..', 'math2it-v-nextjs-html', 'lastUpdate.txt')
+      const dateFromFile = fs.readFileSync(filePath, 'utf8')
+      if (dateFromFile && process.env.ENV_MODE === 'prod') {
+        const lastUpdate = new Date(dateFromFile).toISOString()
+        defaultFilter.push({
+          timestamp: 'last_edited_time',
+          last_edited_time: {
+            after: lastUpdate
+          }
+        })
+      }
+    } catch (error) {
+      console.log('🚧 There is no lastUpdate.txt file!')
     }
-  } catch (error) {
-    console.log('🚧 There is no lastUpdate.txt file!')
   }
 
   // Ignore single page

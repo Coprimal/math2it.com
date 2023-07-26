@@ -66,6 +66,7 @@ import {
  * next_cursor from the previous request.
  * @param options.pageSize - (optional) the number of posts you want to get. If you want to
  * get all available posts, you can pass `notionMaxRequest`.
+ * @param options.getFull - (optional) if you want to get all posts without the filter of the last modified date
  */
 export async function getPosts(options: {
   dbId: string
@@ -76,15 +77,16 @@ export async function getPosts(options: {
   startCursor?: string
   pageSize?: number
   sorts?: NotionSorts[]
+  getFull?: boolean
 }): Promise<Post[]> {
-  const { dbId, filter, categories, tags, authors, startCursor, pageSize, sorts } = options
+  const { dbId, filter, categories, tags, authors, startCursor, pageSize, sorts, getFull } = options
 
   const defaultSort = {
     property: notionDateName,
     direction: 'descending'
   } as NotionSorts
   const sortsToUse: any = sorts?.length ? sorts.push(defaultSort) : [defaultSort]
-  const filterToUse = getFilter(filter)
+  const filterToUse = getFilter(filter, getFull)
 
   let data = await getNotionDatabase(dbId, filterToUse, startCursor, pageSize, sortsToUse)
   let postsList = get(data, 'results', []) as NotionPost[]
@@ -122,8 +124,9 @@ export async function getPostsBy(options: {
   categories?: Category[]
   tags?: Tag[]
   authors?: Author[]
+  getFull?: boolean
 }) {
-  const { categories, tags, authors, filter, pageSize, startCursor } = options
+  const { categories, tags, authors, filter, pageSize, startCursor, getFull } = options
   const posts = await getPosts({
     dbId: process.env.NOTION_DB_POSTS as string,
     categories,
@@ -131,7 +134,8 @@ export async function getPostsBy(options: {
     authors,
     filter,
     pageSize,
-    startCursor
+    startCursor,
+    getFull
   })
   return posts
 }
