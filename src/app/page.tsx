@@ -60,21 +60,25 @@ export default function Home() {
                   'flex flex-col md:flex-row items-center gap-2 justify-center md:justify-start'
                 )}
               >
-                <div
-                  className={cn(
-                    'inline-flex h-9 w-9 origin-[70%_70%] animate-wave items-center justify-center'
-                  )}
-                >
-                  <ImageComponent
-                    image={{
-                      staticImageData: WavingHand
-                    }}
-                    alt="Hình vẫy tay"
-                    className={cn('h-full')}
-                  />
+                <div className="flex gap-2 items-center">
+                  <div
+                    className={cn(
+                      'inline-flex h-9 w-9 origin-[70%_70%] animate-wave items-center justify-center'
+                    )}
+                  >
+                    <ImageComponent
+                      image={{
+                        staticImageData: WavingHand
+                      }}
+                      alt="Hình vẫy tay"
+                      className={cn('h-full')}
+                    />
+                  </div>
+                  <h1 className={cn('flex items-center text-4xl text-white')}>
+                    <span className={cn(righteous.className)}>Math2IT</span>
+                  </h1>
                 </div>
-                <h1 className={cn('flex items-center text-4xl text-white')}>
-                  <span className={cn(righteous.className, 'mr-2')}>Math2IT</span>
+                <h1 className={cn('text-4xl text-white')}>
                   <span className={cn(lobster.className, 'whitespace-nowrap')}>xin chào</span>
                 </h1>
               </div>

@@ -8,11 +8,12 @@ export default function AlertHomePage() {
     <Container maxWidthClass={cn('max-w-5xl')}>
       <div
         className={cn(
-          'bg-amber-100 p-6 rounded-xl flex items-center gap-4 shadow-md text-slate-800'
+          'flex flex-col sm:flex-row items-center sm:items-start gap-4',
+          'bg-amber-100 p-6 rounded-xl shadow-md text-slate-800'
         )}
       >
         <div>
-          <AiOutlineAlert className="text-5xl" />
+          <AiOutlineAlert className="text-6xl sm:text-5xl" />
         </div>
         <div>
           {' '}
