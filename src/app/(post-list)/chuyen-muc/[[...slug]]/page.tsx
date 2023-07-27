@@ -39,7 +39,8 @@ export async function generateStaticParams() {
   for (const category of categories) {
     const allPosts = await getPostsBy({
       filter: getFilterOf('category', category),
-      pageSize: notionMaxRequest
+      pageSize: notionMaxRequest,
+      getFull: true
     })
     const numPosts = allPosts?.length || 0
     const totalPages = Math.ceil(numPosts / numPostsPerPage)
@@ -87,7 +88,8 @@ export default async function CategoryPage({ params }: OptionalCatchAllProps) {
     tags,
     authors,
     filter: getFilterOf('category', category),
-    pageSize: notionMaxRequest
+    pageSize: notionMaxRequest,
+    getFull: true
   })
   const totalPages = Math.ceil(allPosts.length / numPostsPerPage)
 
@@ -108,7 +110,8 @@ export default async function CategoryPage({ params }: OptionalCatchAllProps) {
         authors,
         filter: getFilterOf('category', category),
         startCursor,
-        pageSize: numPostsPerPage
+        pageSize: numPostsPerPage,
+        getFull: true
       })
 
   return (

@@ -31,7 +31,8 @@ export async function generateStaticParams() {
   const allPosts = await getPosts({
     dbId: process.env.NOTION_DB_POSTS as string,
     pageSize: notionMaxRequest,
-    filter: getFilterOf('selected')
+    filter: getFilterOf('selected'),
+    getFull: true
   })
   const numPosts = allPosts?.length || 0
   const totalPages = Math.ceil(numPosts / numPostsPerPage)
@@ -68,7 +69,8 @@ export default async function SelectedPostsPage({ params }: OptionalCatchAllProp
     tags,
     authors,
     pageSize: notionMaxRequest,
-    filter: getFilterOf('selected')
+    filter: getFilterOf('selected'),
+    getFull: true
   })
   const totalPages = Math.ceil(allPosts.length / numPostsPerPage)
 
@@ -90,7 +92,8 @@ export default async function SelectedPostsPage({ params }: OptionalCatchAllProp
         tags,
         authors,
         startCursor,
-        pageSize: numPostsPerPage
+        pageSize: numPostsPerPage,
+        getFull: true
       })
 
   return (

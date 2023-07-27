@@ -30,7 +30,8 @@ export async function generateStaticParams() {
   const params = [] as OptionalCatchAllParams[]
   const allPosts = await getPosts({
     dbId: process.env.NOTION_DB_POSTS as string,
-    pageSize: notionMaxRequest
+    pageSize: notionMaxRequest,
+    getFull: true
   })
   const numPosts = allPosts?.length || 0
   const totalPages = Math.ceil(numPosts / numPostsPerPage)
@@ -66,7 +67,8 @@ export default async function AllPostsPage({ params }: OptionalCatchAllProps) {
     categories,
     tags,
     authors,
-    pageSize: notionMaxRequest
+    pageSize: notionMaxRequest,
+    getFull: true
   })
   const totalPages = Math.ceil(allPosts.length / numPostsPerPage)
 
@@ -87,7 +89,8 @@ export default async function AllPostsPage({ params }: OptionalCatchAllProps) {
         tags,
         authors,
         startCursor,
-        pageSize: numPostsPerPage
+        pageSize: numPostsPerPage,
+        getFull: true
       })
 
   return (

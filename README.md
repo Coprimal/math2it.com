@@ -41,12 +41,28 @@
     yarn
     ```
 4. To develop offline: `yarn dev`
-5. `yarn ud-site` to update the html site. 👈 Build & copy html files to `math2it-v-nextjs-html` & update `math2it-v-nextjs-html/lastUpdate.txt` & push!
-6. To serve html files offline: `http-server out -p 3003 -a localhost` and go to http://localhost:3003
+    - To use [`yarn dev --turbo`](https://nextjs.org/docs/architecture/turbopack), disable `experimental` and `trailingSlash` in `next.config.mjs`! **It's not working on MacOS**!
+    - **TIP**: Because we're using "cache" for requests, if you change something on Notion, don't forget to `Ctrl+Shift+R` (or `cmd+shift+R`) to hard refresh the page.
+5. **Workflow**:
+    ```
+    # dev
+    yarn dev
 
-> 🚨 `--turbo`: For a momment (14/6/23), it's not working on MacOS because of this error: "_something went wrong installing the "sharp" module Cannot find module 'relative "../build/Release/sharp-" \<dynamic\> ".node"'_"
+    # build normally (only take last modifed posts)
+    yarn ud-site
+    # then go to "math2it-v-nextjs-html" and run below to see if everything is ok?
+    http-server out -p 3003 -a localhost
+    # if ok
+    yarn ud-prod
 
-> 💡 **TIP**: Because we're using "cache" for requests, if you change something on Notion, don't forget to `Ctrl+Shift+R` (or `cmd+shift+R`) to hard refresh the page.
+    # build fully (all posts)
+    yarn ud-site-full
+    # next steps are the same as normally!
+    ```
+6. `yarn ud-site` to update the html site. 👈 Build & copy html files to `math2it-v-nextjs-html` & update `math2it-v-nextjs-html/lastUpdate.txt` & push!
+    **Idea of the technique**: When exporting finish, `math2it-v-nextjs-html/lastUpdate.txt` will be updated with the date of exporting. Next time, we don't fetch the post whose `last_edited_time` is earlier than that date.
+7. **Full build**: In case you don't want to use `lastUpdate.txt` technique, just make a full build with `yarn ud-site-full`.
+8. To serve html files offline: `http-server out -p 3003 -a localhost` and go to http://localhost:3003
 
 ## imgur & update cover and book cover and images in post
 

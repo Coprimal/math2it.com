@@ -39,7 +39,8 @@ export async function generateStaticParams() {
   for (const author of authors) {
     const allPosts = await getPostsBy({
       filter: getFilterOf('author', author),
-      pageSize: notionMaxRequest
+      pageSize: notionMaxRequest,
+      getFull: true
     })
     const numPosts = allPosts?.length || 0
     const totalPages = Math.ceil(numPosts / numPostsPerPage)
@@ -82,7 +83,8 @@ export default async function AuthorPage({ params }: OptionalCatchAllProps) {
     tags,
     authors,
     filter: getFilterOf('author', author),
-    pageSize: notionMaxRequest
+    pageSize: notionMaxRequest,
+    getFull: true
   })
   const totalPages = Math.ceil(allPosts.length / numPostsPerPage)
 
@@ -103,7 +105,8 @@ export default async function AuthorPage({ params }: OptionalCatchAllProps) {
         authors,
         filter: getFilterOf('author', author),
         startCursor,
-        pageSize: numPostsPerPage
+        pageSize: numPostsPerPage,
+        getFull: true
       })
 
   return (

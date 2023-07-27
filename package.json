@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "ENV_MODE=prod next build",
+    "build-full": "ENV_MODE=prodFull next build",
     "start": "next start",
     "lint": "next lint",
     "check": "yarn run prettier && yarn run build",
@@ -23,7 +24,9 @@
     "ud-header-all": "npx tsx -r dotenv/config ./scripts/ud_images.ts dotenv_config_path=.env.local --a header-all",
     "ud-images-post": "npx tsx -r dotenv/config ./scripts/ud_images.ts dotenv_config_path=.env.local --a images-in-post --pid",
     "ud-html": "sh scripts/ud_html.sh",
-    "ud-site": "yarn build && yarn ud-html"
+    "ud-prod": "sh scripts/ud_math2it-v-nextjs-html.sh",
+    "ud-site": "yarn build && yarn ud-html",
+    "ud-site-full": "yarn build-full && yarn ud-html -f"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.15",

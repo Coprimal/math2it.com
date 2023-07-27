@@ -327,7 +327,7 @@ export function getFilter(filter?: any, getFull?: boolean): QueryDatabaseParamet
     }
   })
   // Ignore sandbox posts in production
-  if (process.env.ENV_MODE === 'prod') {
+  if (process.env.ENV_MODE === 'prod' || process.env.ENV_MODE === 'prodFull') {
     defaultFilter.push({
       property: 'published',
       checkbox: {
