@@ -14,19 +14,16 @@ export default function BlockNumberedListItem(props: {
 }) {
   const { block, level, className, children } = props
   return (
-    <div
-      className={cn(
-        getIndentLevelClass(level),
-        className,
-        `before:content-['${block['list_item']}']`,
-        'before:mr-2',
-        'pl-[1.5rem] before:ml-[-1.5rem]'
-      )}
-    >
-      {block?.numbered_list_item?.rich_text.map((richText, index) => (
-        <BlockRichText key={index} richText={richText} />
-      ))}
-      <div className="-ml-4">{children}</div>
+    <div className={cn(getIndentLevelClass(level), className)}>
+      <div className="flex items-start gap-2">
+        <div className="flex items-center justify-center">{block['list_item']}</div>
+        <div className="block">
+          {block?.numbered_list_item?.rich_text.map((richText, index) => (
+            <BlockRichText key={index} richText={richText} />
+          ))}
+        </div>
+      </div>
+      {children}
     </div>
   )
 }

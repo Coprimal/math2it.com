@@ -5,7 +5,7 @@ import Container from './Container'
 
 export default function AlertHomePage() {
   return (
-    <Container maxWidthClass={cn('max-w-5xl')}>
+    <Container maxWidthClass={cn('max-w-5xl')} className="px-4 sm:px-6">
       <div
         className={cn(
           'flex flex-col sm:flex-row items-center sm:items-start gap-4',

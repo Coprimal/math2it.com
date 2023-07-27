@@ -8,7 +8,6 @@ export default {
     './src/app/lib/config.ts',
     './src/app/lib/helpers.ts'
   ],
-  safelist: generateNumberedListClasses(20),
   theme: {
     extend: {
       typography: {
@@ -77,24 +76,3 @@ export default {
   },
   plugins: [require('@tailwindcss/typography')]
 } satisfies Config
-
-/**
- * Generate for safelist all the classes in the format of before:content-['x.'] or
- * before:content-['x.y.'] or before:content-['x.y.z.']
- */
-function generateNumberedListClasses(nbr: number) {
-  const numList = [...Array(nbr).keys()].map(key => `${key + 1}.`)
-
-  const classes = []
-  for (const i of numList) {
-    classes.push(i)
-    for (const j of numList) {
-      classes.push(i + j)
-      for (const k of numList) {
-        classes.push(i + j + k)
-      }
-    }
-  }
-
-  return classes.map(item => `before:content-['${item}']`)
-}
