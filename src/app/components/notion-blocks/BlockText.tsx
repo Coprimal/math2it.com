@@ -4,6 +4,7 @@ import {
   TextRichTextItemResponse
 } from '@notionhq/client/build/src/api-endpoints'
 import { AnnotationIgnoreField, TextIgnoreField } from '@src/interface'
+import cn from 'classnames'
 import { get } from 'lodash'
 import Link from 'next/link'
 import React from 'react'
@@ -30,8 +31,6 @@ export default function BlockText(props: TextProps) {
     )
   }
 
-  let richTextNode: React.ReactNode = <>{props.richText.plain_text}</>
-
   // Hyperlink
   if (
     props.richText.type === 'text' &&
@@ -41,12 +40,30 @@ export default function BlockText(props: TextProps) {
     // Link contains "https://math2it.com"
     if (props.richText.href.includes('math2it.com')) {
       const slug = getSlugFromUrl(props.richText.href)
-      richTextNode = (
-        <Link href={`/${getSlugPrefix('singlePost')}/${slug}/`}>{props.richText.plain_text}</Link>
+      return (
+        <Link
+          className={generateTextAnnotationClasses(
+            props.richText.annotations,
+            props.ignore as AnnotationIgnoreField[]
+          )}
+          href={`/${getSlugPrefix('singlePost')}/${slug}/`}
+        >
+          {props.richText.plain_text}
+        </Link>
       )
     } else {
-      richTextNode = (
-        <a className="m2it-link" href={props.richText.href} target="_blank">
+      return (
+        <a
+          className={cn(
+            'm2it-link',
+            generateTextAnnotationClasses(
+              props.richText.annotations,
+              props.ignore as AnnotationIgnoreField[]
+            )
+          )}
+          href={props.richText.href}
+          target="_blank"
+        >
           {props.richText.plain_text}
         </a>
       )
@@ -60,8 +77,16 @@ export default function BlockText(props: TextProps) {
     props.richText.mention?.type === 'page' &&
     get(props.richText, 'mention.page.uri') // "uri" is a custom property defined by Math2IT
   ) {
-    richTextNode = (
-      <Link href={get(props.richText, 'mention.page.uri', '/')}>{props.richText.plain_text}</Link>
+    return (
+      <Link
+        className={generateTextAnnotationClasses(
+          props.richText.annotations,
+          props.ignore as AnnotationIgnoreField[]
+        )}
+        href={get(props.richText, 'mention.page.uri', '/')}
+      >
+        {props.richText.plain_text}
+      </Link>
     )
   }
 
@@ -74,7 +99,7 @@ export default function BlockText(props: TextProps) {
     props.richText.annotations.color === 'default' &&
     !props.richText.href
 
-  if (noDecoration) return richTextNode
+  if (noDecoration) return props.richText.plain_text
 
   return (
     <span
@@ -83,7 +108,7 @@ export default function BlockText(props: TextProps) {
         props.ignore as AnnotationIgnoreField[]
       )}
     >
-      {richTextNode}
+      {props.richText.plain_text}
     </span>
   )
 }
