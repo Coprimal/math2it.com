@@ -193,13 +193,20 @@ export function parseNotionImageUrl(url?: string, pageIdWithDash?: string): stri
  *
  * @param url
  * @param type t (160x160), m (320x320), l (640x640), h (1024x1024) all the image proportions are maintained
+ * @param ignoreImgType in case we don't want to add "type" to the url of certain images
  */
-export const parseImgurUrl = (url?: string, type?: ImgurUrlType) => {
-  if (!url || !type || !url.includes('imgur')) return url
-  // if url is a gif, return the original url
-  if (url.includes('.gif')) return url
+export const parseImgurUrl = (opts: {
+  url?: string
+  type?: ImgurUrlType
+  ignoreImgType?: string
+}) => {
+  if (!opts.url || !opts.type || !opts.url.includes('imgur')) return opts.url
+  // If url is a gif or png, return the original url
+  if (opts.url.includes('.gif') || (opts.ignoreImgType && opts.url.includes(opts.ignoreImgType))) {
+    return opts.url
+  }
   // return url + type
-  return url.replace(/(\.\w+$)/, `${type}$1`)
+  return opts.url.replace(/(\.\w+$)/, `${opts.type}$1`)
 }
 
 /**

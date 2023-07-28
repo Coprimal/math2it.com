@@ -263,7 +263,7 @@ async function parseImage(options: {
   typeImgur?: ImgurUrlType
 }): Promise<ImageType> {
   const { sourceUrl, altText, category, pageIdwithDash, staticImageData, canBeNull } = options
-  const urlToUse = parseImgurUrl(sourceUrl, options.typeImgur)
+  const urlToUse = parseImgurUrl({ url: sourceUrl, type: options.typeImgur })
   const image: ImageType = { altText, sourceUrl: urlToUse }
   const imgUrl = parseNotionImageUrl(urlToUse, pageIdwithDash)
   if (imgUrl) {
@@ -477,7 +477,8 @@ export async function getBlocks(
     if (block.type === 'image') {
       const url = get(block, 'image.file.url') || get(block, 'image.external.url')
       if (url) {
-        block['imgUrl'] = parseImgurUrl(url, 'h') // Resize the image to 1024x1024 max
+        // Resize the image to 1024x1024 max, except for gif and png (with transparent background)
+        block['imgUrl'] = parseImgurUrl({ url, type: 'h', ignoreImgType: 'png' })
         block['imageInfo'] = await getPlaceholderImage(url) // { base64, width, height }
       }
     }
