@@ -275,7 +275,7 @@ const fetcher = async (params: any) => {
   const headers: { [key: string]: string } = {
     'Content-Type': 'application/json'
   }
-  const res = await fetch('https://math2it-search-server.vercel.app/api/search-notion', {
+  const res = await fetch('https://math2it-server.vercel.app/api/search-notion', {
     headers,
     method: 'POST',
     body: JSON.stringify(params),

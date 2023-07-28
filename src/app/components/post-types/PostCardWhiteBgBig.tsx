@@ -30,7 +30,9 @@ export default function PostCardWhiteBgBig({ post, options }: PostTitleCateDateP
           </div>
         </div>
         <div className="p-4">
-          <div className="group-hover:m2it-link-hover text-base font-bold">{title}</div>
+          <div className="group-hover:m2it-link-hover text-base font-bold leading-[1.35]">
+            {title}
+          </div>
           {(!options?.hideDate || !options?.hideAuthor) && (
             <div className="flex justify-center gap-2 p-2">
               {!options?.hideDate && date && (

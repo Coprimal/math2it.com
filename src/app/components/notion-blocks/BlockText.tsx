@@ -8,6 +8,8 @@ import { get } from 'lodash'
 import Link from 'next/link'
 import React from 'react'
 
+import { getSlugPrefix } from '../../lib/config'
+
 type TextProps = {
   richText: TextRichTextItemResponse | MentionRichTextItemResponse
   ignore?: TextIgnoreField[]
@@ -38,14 +40,9 @@ export default function BlockText(props: TextProps) {
   ) {
     // Link contains "https://math2it.com"
     if (props.richText.href.includes('math2it.com')) {
+      const slug = getSlugFromUrl(props.richText.href)
       richTextNode = (
-        <Link
-          href={props.richText.href
-            .replace('https://math2it.com', '')
-            .replace('http://math2it.com', '')}
-        >
-          {props.richText.plain_text}
-        </Link>
+        <Link href={`/${getSlugPrefix('singlePost')}/${slug}/`}>{props.richText.plain_text}</Link>
       )
     } else {
       richTextNode = (
@@ -89,4 +86,21 @@ export default function BlockText(props: TextProps) {
       {richTextNode}
     </span>
   )
+}
+
+function getSlugFromUrl(url: string) {
+  // Remove the protocol (http:// or https://)
+  const withoutProtocol = url.replace(/^(https?:\/\/)/, '')
+
+  // Remove "www" if present
+  const withoutWWW = withoutProtocol.replace(/^www\./, '')
+
+  // Remove trailing slashes
+  const withoutTrailingSlashes = withoutWWW.replace(/\/+$/, '')
+
+  // Extract the slug from the remaining URL
+  const parts = withoutTrailingSlashes.split('/')
+  const slug = parts[parts.length - 1]
+
+  return slug
 }

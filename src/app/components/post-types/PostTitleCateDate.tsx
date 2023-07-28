@@ -49,7 +49,9 @@ export default function PostTitleCateDate({ post, options }: PostTitleCateDatePr
             </div>
           )}
         </div>
-        <div className={cn('group-hover:m2it-link-hover p-2 text-base font-semibold')}>
+        <div
+          className={cn('group-hover:m2it-link-hover p-2 text-base font-semibold leading-[1.35]')}
+        >
           {title}
           {!!post.bookCover && (
             <IoBookOutline className="group-hover:m2it-link-hover mb-[2px] ml-2 inline text-sm text-slate-700" />

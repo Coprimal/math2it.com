@@ -10,8 +10,8 @@ type PostImageBackgroundProps = {
 
 export const PIBHeightClass = 'h-36'
 
-export default function PostImageBackground({ post }: PostImageBackgroundProps) {
-  const { title, featuredImage, uri } = post
+export default function PostImageBackground(props: PostImageBackgroundProps) {
+  const { title, featuredImage, uri } = props.post
   return (
     <div className="group overflow-hidden rounded-md shadow-lg">
       <Link className={cn(comfortaa.className, 'text-center')} href={uri || '/'}>

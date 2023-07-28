@@ -5,7 +5,7 @@
 - Vercel site: https://math2it-v-nextjs-html.vercel.app/
 - [Project on Notion](https://www.notion.so/math2it/4f043a41b36c4e09a0c915af847f1224?v=e09c3a2b734041ab8dfdcbabf18abae6).
 - Repo contains the html files (which is used to serve the main site): https://github.com/dinhanhthi/math2it-v-nextjs-html
-- Search server: https://github.com/dinhanhthi/math2it-search-server
+- Search server: https://github.com/dinhanhthi/math2it-server
 - Env vars: check [this file](./example.env.local).
 - Check quota Vercel: https://vercel.com/dashboard/usage
 
@@ -116,7 +116,7 @@ Usage (`ng` is the field `css` in the config file),
 
 ✳️ Search posts with the unofficial notion api.
 
-**UPDATE 25/07/23**: Because we use static export, we don't use this api anymore, we use https://github.com/dinhanhthi/math2it-search-server instead.
+**UPDATE 25/07/23**: Because we use static export, we don't use this api anymore, we use https://github.com/dinhanhthi/math2it-server instead.
 
 **POST** `http://localhost:3000/api/search-notion`
 
