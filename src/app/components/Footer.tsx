@@ -19,6 +19,10 @@ export default function Footer() {
             Nhóm Facebook <TbExternalLink />
           </a>
           <span>|</span>
+          <a className={cn(aClass)} href="https://www.texmath.com/" target="_blank">
+            TeXMath <TbExternalLink />
+          </a>
+          <span>|</span>
           <Link className={cn(aClass)} href={`/${getSlugPrefix('about')}/`}>
             Giới thiệu
           </Link>

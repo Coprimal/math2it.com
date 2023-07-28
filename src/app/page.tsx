@@ -100,6 +100,13 @@ export default function Home() {
                   Giới thiệu
                 </Link>
                 <a
+                  className={cn('bg-[#1985ff]', badgeClassName)}
+                  href="https://www.texmath.com/"
+                  target="_blank"
+                >
+                  TeXMath
+                </a>
+                <a
                   className={cn('bg-[#eeeeee30]', badgeClassName)}
                   href="https://www.facebook.com/Math2IT/"
                   target="_blank"
