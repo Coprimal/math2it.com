@@ -11,6 +11,7 @@ interface CarouselProps<T> {
 interface CarouselRenderItemProps<T> {
   readonly item: T
   readonly isSnapPoint: boolean
+  readonly index: number
 }
 
 export const Carousel = <T,>({ items, renderItem }: CarouselProps<T>) => {
@@ -33,7 +34,8 @@ export const Carousel = <T,>({ items, renderItem }: CarouselProps<T>) => {
         {items.map((item, i) =>
           renderItem({
             item,
-            isSnapPoint: snapPointIndexes.has(i)
+            isSnapPoint: snapPointIndexes.has(i),
+            index: i
           })
         )}
       </div>

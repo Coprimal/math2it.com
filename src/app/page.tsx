@@ -143,10 +143,9 @@ export default function Home() {
           title="Tuyển chọn"
           iconComponent={<i className="icon-star-circled"></i>}
           type="selected"
-          postTypeOpts={{ hideDate: true }}
           backgroundClassName="bg-gradient-to-b from-amber-100/50 to-white"
           moreHref={`/${getSlugPrefix('selected')}/`}
-          postType="PostImageBackground"
+          postType="PostCardWave"
         />
         {categories.map(category => (
           <PostListForHomeSection

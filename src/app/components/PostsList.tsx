@@ -10,13 +10,17 @@ import React from 'react'
 import { Carousel, CarouselItem } from './Carousel'
 import { PostListStyle } from './PostListForHomeSection'
 import { postListGridCLass } from './SkeletonPostList'
+import PostCardWave from './post-types/PostCardWave'
 
 export type PostType =
   | 'PostTitleCateDate'
   | 'PostCardWhiteBg'
   | 'PostCardWhiteBgBig'
   | 'PostImageBackground'
+  | 'PostCardWave'
+
 export type PostTypeOpts = PostTitleCateDateOpts | PostCardWhiteBgOpts | PostCardWhiteBgBigOpts
+
 type PostListProps = {
   listStyle?: PostListStyle
   posts: Post[]
@@ -33,9 +37,9 @@ export default function PostList(props: PostListProps) {
     <section>
       {(!props.listStyle || props.listStyle === 'default') && (
         <div className={className}>
-          {props.posts.map(post => (
+          {props.posts.map((post, index) => (
             <React.Fragment key={post.uri}>
-              {getPostTypeElement(props.postType, post, props.postTypeOpts)}
+              {getPostTypeElement(props.postType, post, props.postTypeOpts, index)}
             </React.Fragment>
           ))}
         </div>
@@ -43,9 +47,9 @@ export default function PostList(props: PostListProps) {
       {props.listStyle === 'carousel' && (
         <Carousel
           items={props.posts}
-          renderItem={({ item, isSnapPoint }) => (
+          renderItem={({ item, isSnapPoint, index }) => (
             <CarouselItem key={item.id} isSnapPoint={isSnapPoint} widthClass={'w-80'}>
-              {getPostTypeElement(props.postType, item, props.postTypeOpts)}
+              {getPostTypeElement(props.postType, item, props.postTypeOpts, index)}
             </CarouselItem>
           )}
         />
@@ -54,7 +58,12 @@ export default function PostList(props: PostListProps) {
   )
 }
 
-function getPostTypeElement(postType: PostType, post: Post, postTypeOpts?: PostTypeOpts) {
+function getPostTypeElement(
+  postType: PostType,
+  post: Post,
+  postTypeOpts?: PostTypeOpts,
+  index?: number
+) {
   switch (postType) {
     case 'PostTitleCateDate':
       return <PostTitleCateDate post={post} options={postTypeOpts} />
@@ -64,5 +73,7 @@ function getPostTypeElement(postType: PostType, post: Post, postTypeOpts?: PostT
       return <PostCardWhiteBgBig post={post} options={postTypeOpts} />
     case 'PostImageBackground':
       return <PostImageBackground post={post} />
+    case 'PostCardWave':
+      return <PostCardWave post={post} colorIndex={index} />
   }
 }
