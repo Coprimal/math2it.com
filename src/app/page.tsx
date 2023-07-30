@@ -150,7 +150,7 @@ export default function Home() {
           title="Tuyển chọn"
           iconComponent={<i className="icon-star-circled"></i>}
           type="selected"
-          backgroundClassName="bg-gradient-to-b from-amber-100/50 to-white"
+          backgroundClassName="saphire-blue"
           moreHref={`/${getSlugPrefix('selected')}/`}
           postType="PostCardWave"
         />

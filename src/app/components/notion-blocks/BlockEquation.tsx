@@ -14,7 +14,13 @@ export default function BlockEquation(props: {
 }) {
   const { block, level, className } = props
   return (
-    <div className={cn(getIndentLevelClass(level), className, 'text-center overflow-auto')}>
+    <div
+      className={cn(
+        getIndentLevelClass(level),
+        className,
+        'text-center overflow-auto md:overflow-visible'
+      )}
+    >
       <Katex
         className={mathFontSize}
         math={block?.equation?.expression}

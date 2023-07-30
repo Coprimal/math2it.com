@@ -48,7 +48,8 @@ export default function PostListForHomeSection(props: SkeletonPostListForHomePro
             className={cn(
               'text-slate-700 hover:m2it-link-hover italic',
               'flex items-center gap-1',
-              'text-[0.9rem] sm:text-base'
+              'text-[0.9rem] sm:text-base',
+              'xem-them'
             )}
             href={props.moreHref}
           >
@@ -61,7 +62,7 @@ export default function PostListForHomeSection(props: SkeletonPostListForHomePro
         <Suspense
           fallback={
             <SkeletonPostList
-              count={postListHomeCount / 2}
+              count={postListHomeCount}
               postType={props.postType}
               listStyle={props.listStyle}
             />

@@ -2,6 +2,7 @@ import Footer from '@c/Footer'
 import Nav from '@c/nav/Nav'
 import '@src/fontello/css/fontello.css'
 import 'katex/dist/katex.min.css'
+import Script from 'next/script'
 import 'prismjs/themes/prism-tomorrow.css'
 import 'tippy.js/dist/tippy.css'
 
@@ -16,6 +17,16 @@ export const metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
+      <Script src="https://www.googletagmanager.com/gtag/js?id=G-BV04FDDHBJ" />
+      <Script id="google-analytics">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'G-BV04FDDHBJ');
+        `}
+      </Script>
       <body suppressHydrationWarning={true}>
         <div className="flex min-h-screen flex-col justify-between">
           <Nav />

@@ -46,7 +46,7 @@ export default function BlockHeading(props: {
         </h1>
       )
       anchorElement = (
-        <a href={`#${id}`} className={cn('text-sky-600 md:-ml-6', h1Size)}>
+        <a href={`#${id}`} className={cn('text-sky-600 lg:-ml-6', h1Size)}>
           #
         </a>
       )
@@ -60,7 +60,7 @@ export default function BlockHeading(props: {
         </h2>
       )
       anchorElement = (
-        <a href={`#${id}`} className={cn('text-sky-600 md:-ml-6', h2Size)}>
+        <a href={`#${id}`} className={cn('text-sky-600 lg:-ml-6', h2Size)}>
           #
         </a>
       )
@@ -74,7 +74,7 @@ export default function BlockHeading(props: {
         </h3>
       )
       anchorElement = (
-        <a href={`#${id}`} className={cn('text-orange-700 md:-ml-8', h3Size)}>
+        <a href={`#${id}`} className={cn('text-orange-700 lg:-ml-8', h3Size)}>
           ##
         </a>
       )

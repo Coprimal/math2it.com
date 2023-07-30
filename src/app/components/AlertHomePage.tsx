@@ -1,17 +1,9 @@
 import cn from 'classnames'
 import { AiOutlineAlert } from 'react-icons/ai'
 
-import { notionMaxRequest } from '../lib/config'
-import { getPosts } from '../lib/fetcher'
 import Container from './Container'
 
 export default async function AlertHomePage() {
-  const allPosts = await getPosts({
-    dbId: process.env.NOTION_DB_POSTS as string,
-    pageSize: notionMaxRequest,
-    getFull: true
-  })
-  const percent = Math.round((allPosts.length / 120) * 100)
   return (
     <Container maxWidthClass={cn('max-w-5xl')} className="px-4 sm:px-6">
       <div
@@ -35,8 +27,10 @@ export default async function AlertHomePage() {
             Mong bạn thông cảm cho sự bất tiện này.
           </div>
           <div className="text-emerald-600">
-            Đã chuyển giao được <span className="font-semibold">{percent}%</span> trên tổng số bài
-            viết cũ!
+            <span className="font-semibold">100%</span> bài viết cũ đã được chuyển giao.{' '}
+            <span className="font-semibold">
+              Đang trong giai đoạn rà soát và cập nhật nội dung!
+            </span>
           </div>
         </div>
       </div>

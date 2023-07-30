@@ -20,7 +20,13 @@ export default function BlockTable(props: {
     ? block?.['children']?.slice(1)
     : block?.['children']
   return (
-    <div className={cn(getIndentLevelClass(level), className, 'w-full overflow-auto')}>
+    <div
+      className={cn(
+        getIndentLevelClass(level),
+        className,
+        'w-full overflow-auto md:overflow-visible'
+      )}
+    >
       <table className="table-auto">
         {block?.table?.has_row_header && (
           <thead>

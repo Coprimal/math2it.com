@@ -24,6 +24,7 @@ import { getPlaiceholder } from 'plaiceholder'
 import { cache } from 'react'
 import { unfurl } from 'unfurl.js'
 
+import { getJoinedRichText } from './block-helpers'
 import {
   defaultFeaturedImage,
   defaultPostDate,
@@ -196,7 +197,7 @@ export async function transformPostHeader(
   const properties = notionHeader?.properties
 
   // title
-  const title = properties?.name?.title?.[0]?.plain_text || defaultPostTitle
+  const title = getJoinedRichText(properties?.name?.title as any) || defaultPostTitle
 
   // date
   // Because we migrate from WP to Notion, a lot of posts need to use the old created date
@@ -309,7 +310,7 @@ async function transformNotionPostsData(options: {
       const id = get(post, 'id') as string
 
       // title
-      const title = get(post, 'properties.name.title[0].plain_text', defaultPostTitle)
+      const title = getJoinedRichText(get(post, 'properties.name.title') as any) || defaultPostTitle
 
       // date
       // Because we migrate from WP to Notion, a lot of posts need to use the old created date

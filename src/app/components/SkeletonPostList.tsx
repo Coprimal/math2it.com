@@ -52,10 +52,24 @@ function getSkeleton(key: number | string, postType?: PostType) {
     case 'PostImageBackground':
       return <PostImageBackgroundSkeleton key={key} />
 
+    case 'PostCardWave':
+      return <PostCardWaveSkeleton key={key} />
+
     default:
       return <PostTitleCateDateSkeleton key={key} />
   }
 }
+
+const PostCardWaveSkeleton = () => (
+  <div className="flex flex-col justify-center">
+    <div className={cn('flex items-center justify-center w-full rounded-md bg-slate-200', 'h-32')}>
+      <div className="w-full flex flex-col items-center gap-1 p-3">
+        <div className="h-4 w-full rounded-md bg-slate-300"></div>
+        <div className="h-4 w-3/4 rounded-md bg-slate-300"></div>
+      </div>
+    </div>
+  </div>
+)
 
 const PostTitleCateDateSkeleton = () => (
   <div className="flex flex-col justify-center">
