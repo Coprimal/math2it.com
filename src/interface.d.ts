@@ -61,6 +61,7 @@ export type PostHeaderType = {
   selected?: boolean
   bookCover?: ImageType
   showToc?: boolean
+  contentCheck?: boolean // content of this post has been checked after v4?
 }
 
 export interface Post extends PostHeaderType {
@@ -192,6 +193,7 @@ export type NotionHeader = {
     showToc: { checkbox: boolean }
     bookCover: BookCoverProperty
     slug: { rich_text: { plain_text: string }[] }
+    contentCheck?: { checkbox: boolean }
   }
 }
 

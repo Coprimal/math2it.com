@@ -248,7 +248,21 @@ export async function transformPostHeader(
   // showToc
   const showToc = properties?.showToc?.checkbox || false
 
-  return { title, date, categories, tags, authors, featuredImage, selected, bookCover, showToc }
+  // contentCheck
+  const contentCheck = properties?.contentCheck?.checkbox || false
+
+  return {
+    title,
+    date,
+    categories,
+    tags,
+    authors,
+    featuredImage,
+    selected,
+    bookCover,
+    showToc,
+    contentCheck
+  }
 }
 
 /**
