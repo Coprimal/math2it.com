@@ -8,20 +8,23 @@ import {
   BlockObjectResponse,
   ListBlockChildrenResponse
 } from '@notionhq/client/build/src/api-endpoints'
-import { PostHeaderType } from '@src/interface'
+import { Post, PostHeaderType } from '@src/interface'
 import cn from 'classnames'
 import { AiOutlineAlert } from 'react-icons/ai'
 
+import PostList from '../components/PostsList'
 import ScrollToTop from '../components/ScrollToTop'
 import {
   BlockOptionContext,
   BlockOptionContextType,
   defaultBlockOptionContext
 } from '../lib/context'
+import { lobster } from '../lib/fonts'
 
 type SinglePostTemplateProps = {
   postHeader: PostHeaderType
   contentBlocks: ListBlockChildrenResponse['results']
+  relatedPosts?: Post[]
   blockOptions?: BlockOptionContextType
   hideWriteWithUs?: boolean
 }
@@ -53,7 +56,7 @@ export default function SinglePostTemplate(props: SinglePostTemplateProps) {
           <article className={cn('container max-w-3xl')}>
             <div
               className={cn(
-                'mx-auto container p-6 mt-8',
+                'mx-auto container p-6 mt-10',
                 'flex flex-col sm:flex-row items-center sm:items-start gap-4',
                 'bg-amber-100 rounded-xl shadow-md text-slate-800'
               )}
@@ -88,6 +91,23 @@ export default function SinglePostTemplate(props: SinglePostTemplateProps) {
               contentBlocks={contentBlocks as BlockObjectResponse[]}
               showToc={postHeader.showToc}
             ></PostBody>
+
+            {props.relatedPosts && props.relatedPosts.length > 0 && (
+              <div
+                className={cn(
+                  'flex flex-col gap-6 mb-8 bg-slate-50 drop-shadow-sm rounded-2xl p-6'
+                )}
+              >
+                <h2 className={cn(lobster.className, 'text-2xl sm:text-[1.65rem] text-slate-700')}>
+                  Có thể bạn quan tâm?
+                </h2>
+                <PostList
+                  posts={props.relatedPosts}
+                  postType="PostTitleCateDate"
+                  postTypeOpts={{ hideCategory: true, hideDate: true }}
+                />
+              </div>
+            )}
           </article>
 
           <aside className={cn(asideClass)}>

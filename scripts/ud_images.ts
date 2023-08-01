@@ -354,7 +354,7 @@ function flattenAllBlocks(blocks: any[]): any {
   return [...blocks, ...childBlocks.flat()]
 }
 
-function getJoinedRichText(richTextArr: any[]): string {
+function getJoinedRichText(richTextArr?: any[]): string {
   if (!richTextArr || !richTextArr.length) return ''
   const textArr = richTextArr.map((richText: any) => richText.plain_text)
   return textArr.join('')

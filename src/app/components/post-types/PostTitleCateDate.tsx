@@ -50,7 +50,9 @@ export default function PostTitleCateDate({ post, options }: PostTitleCateDatePr
           )}
         </div>
         <div
-          className={cn('group-hover:m2it-link-hover p-2 text-base font-semibold leading-[1.35]')}
+          className={cn(
+            'group-hover:m2it-link-hover p-2 text-[0.95rem] font-semibold leading-[1.35]'
+          )}
         >
           {title}
           {!!post.bookCover && (

@@ -361,3 +361,26 @@ export function cleanText(text?: string) {
   if (!text) return undefined
   return text.replace(/\n/g, ' ').replace(/\s+/g, ' ').trim()
 }
+
+export function getRelatedPosts(allPosts: Post[], post: Post, numPost: number): Post[] {
+  const postCategory = post.categories?.[0]?.name
+  const filteredPosts = postCategory
+    ? allPosts.filter(
+        p => p.categories?.map(c => c.name)?.includes(postCategory) && p.id !== post.id
+      )
+    : allPosts.filter(p => p.id !== post.id)
+
+  // Get a random numPosts posts
+  if (filteredPosts.length > numPost) {
+    const randomPosts: Post[] = []
+    while (randomPosts.length < numPost) {
+      const randomPost = filteredPosts[Math.floor(Math.random() * filteredPosts.length)]
+      if (!randomPosts.includes(randomPost)) {
+        randomPosts.push(randomPost)
+      }
+    }
+    return randomPosts
+  }
+
+  return []
+}

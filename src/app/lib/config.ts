@@ -13,7 +13,6 @@ export const defaultBlurDataURL =
 // 👇 ❗❗ Shouldn't change this! Otherwise, change the "next_cursor" list in the
 // later of this file as well. Read more in the "next_cursor" section!
 export const numPostsPerPage = 20
-// export const numPostsPerPage = 5 // ###Thi <- Change this
 // 👇 Don't change this! By default, notion's page_size is 100, but we only need 10
 export const defaultNumPostsRequest = 10
 

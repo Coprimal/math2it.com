@@ -14,7 +14,7 @@ import { notFound } from 'next/navigation'
 import 'react-medium-image-zoom/dist/styles.css'
 
 import { getJoinedRichText } from '../../lib/block-helpers'
-import { generateMetaTitle } from '../../lib/helpers'
+import { generateMetaTitle, getRelatedPosts } from '../../lib/helpers'
 
 export const revalidate = 60
 
@@ -73,8 +73,15 @@ export default async function SinglePostPage({ params }: DynamicSegmentParamsPro
 
     const postHeader = await getPostHeader(pageIdwithDash)
     const contentBlocks = await getBlocks(pageIdwithDash)
+    const relatedPosts = getRelatedPosts(allPosts, post, 8)
 
-    return <SinglePostTemplate postHeader={postHeader} contentBlocks={contentBlocks} />
+    return (
+      <SinglePostTemplate
+        postHeader={postHeader}
+        contentBlocks={contentBlocks}
+        relatedPosts={relatedPosts}
+      />
+    )
   } catch (error) {
     console.log('🚨Error when loading a single post page', error)
     notFound()
