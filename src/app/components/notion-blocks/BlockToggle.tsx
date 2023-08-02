@@ -28,18 +28,21 @@ export default function BlockToggle(props: {
         {({ open }) => (
           <>
             <Disclosure.Button
-              className={cn('flex gap-2 w-full items-center p-2 rounded-md', {
+              className={cn('flex gap-2 w-full items-start p-2 rounded-md', {
                 'bg-gray-100 hover:bg-gray-200': open,
                 'bg-gray-50 hover:bg-gray-100': !open
               })}
             >
               <BsFillCaretRightFill
-                className={cn('text-base transform ease-in-out transition-all duration-[400ms]', {
-                  'rotate-90': open,
-                  'rotate-0': !open
-                })}
+                className={cn(
+                  'text-base transform ease-in-out transition-all duration-[400ms] mt-[4px]',
+                  {
+                    'rotate-90': open,
+                    'rotate-0': !open
+                  }
+                )}
               />
-              <div>
+              <div className="text-start">
                 {block?.toggle?.rich_text.map((richText, index) => (
                   <BlockRichText key={index} richText={richText} />
                 ))}
