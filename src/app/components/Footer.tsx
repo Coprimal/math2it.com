@@ -8,9 +8,9 @@ import Container from './Container'
 export default function Footer() {
   const aClass = 'hover:text-white whitespace-nowrap flex items-center gap-1 whitespace-nowrap'
   return (
-    <footer className="border-t border-slate-100 bg-[#323541] py-2 text-gray-300">
+    <footer className="border-t border-slate-100 bg-[#323541] py-4 text-gray-300">
       <Container className="!mt-0" maxWidthClass={postWidthContainer}>
-        <div className="flex flex-row flex-wrap items-center justify-center gap-2 py-2 lg:flex-row">
+        <div className="flex flex-row flex-wrap items-center justify-center gap-2 pt-2 pb-1 lg:flex-row">
           <a className={cn(aClass)} href="https://www.facebook.com/Math2IT/" target="_blank">
             Facebook <TbExternalLink />
           </a>{' '}
@@ -26,6 +26,11 @@ export default function Footer() {
           <Link className={cn(aClass)} href={`/${getSlugPrefix('about')}/`}>
             Giới thiệu
           </Link>
+        </div>
+        <div className="flex flex-row flex-wrap items-center justify-center gap-2 pt-1 pb-2 lg:flex-row">
+          <a className={cn(aClass)} href="mailto:contact@math2it.com">
+            💌 contact@math2it.com
+          </a>
           <span>|</span>
           <Link className={cn(aClass)} href={`/${getSlugPrefix('viet-bai')}/`}>
             ✍ Viết bài cùng Math2IT

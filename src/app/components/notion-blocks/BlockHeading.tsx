@@ -83,12 +83,20 @@ export default function BlockHeading(props: {
 
   return (
     <div className={cn(getIndentLevelClass(level))}>
-      <div className={cn(mapColorClass(heading?.color), className, 'flex items-start gap-2')}>
-        {!ctx.disableAnchorHeading && anchorElement}
+      <div
+        className={cn(mapColorClass(heading?.color), className, {
+          'flex items-start gap-2': !get(heading, 'is_toggleable') && !ctx.disableAnchorHeading
+        })}
+      >
         {get(heading, 'is_toggleable') && children && (
           <BlockHeadingToggle headingElement={headingElement}>{children}</BlockHeadingToggle>
         )}
-        {!get(heading, 'is_toggleable') && headingElement}
+        {!get(heading, 'is_toggleable') && (
+          <>
+            {!ctx.disableAnchorHeading && anchorElement}
+            {headingElement}
+          </>
+        )}
       </div>
     </div>
   )

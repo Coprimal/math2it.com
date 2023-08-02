@@ -264,3 +264,12 @@ export function getSlugPrefix(type: SlugTypeLabels): string {
   if (type === 'page') return 'trang'
   return ''
 }
+
+/**
+ * We can use @mention in Notion to link to a post. However, because a single page is written
+ * like a post, we need to distinguish them with a normal post. This is the list of slugs of
+ * single pages.
+ *
+ * REQUIRED: The "slug" on Notion must be the same as the name of the folder of the single page!!!
+ */
+export const SINGLE_PAGE_SLUGS = ['gioi-thieu', 'viet-bai-tren-math2it', 'huong-dan-viet-bai']

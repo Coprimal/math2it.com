@@ -24,6 +24,7 @@ export default async function WriteWithUsPage() {
     const contentBlocks = await getBlocks(process.env.WRITE_WITH_US_PAGE as string)
     return (
       <SinglePostTemplate
+        isPage={true}
         hideWriteWithUs={true}
         postHeader={postHeader}
         contentBlocks={contentBlocks}

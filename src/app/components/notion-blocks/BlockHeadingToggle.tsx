@@ -14,7 +14,7 @@ export default function BlockHeadingToggle(props: BlockHeadingToggleProps) {
     <Disclosure defaultOpen={false}>
       {({ open }) => (
         <>
-          <div className="flex w-full items-center py-1">
+          <div className="flex w-full items-center py-1 ml-[-10px]">
             <Disclosure.Button className="rounded-md p-1 hover:bg-[#99989824]">
               <BsFillCaretRightFill
                 className={cn('transform ease-in-out transition-all duration-[400ms] text-lg', {
@@ -25,8 +25,8 @@ export default function BlockHeadingToggle(props: BlockHeadingToggleProps) {
             </Disclosure.Button>
             {props.headingElement}
           </div>
-          <Disclosure.Panel className="pb-4 pr-4">
-            <div className="-my-2 pl-6">{props.children}</div>
+          <Disclosure.Panel>
+            <div>{props.children}</div>
           </Disclosure.Panel>
         </>
       )}

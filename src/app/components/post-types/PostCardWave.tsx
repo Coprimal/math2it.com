@@ -17,7 +17,7 @@ export default function PostCardWave(props: PostCardWaveProps) {
           className={cn(
             comfortaa.className,
             'card-title font-semibold group-hover:m2it-link-hover text-slate-800',
-            'leading-[1.35]'
+            'leading-[1.35] text-[0.95rem]'
           )}
         >
           {props.post.title}

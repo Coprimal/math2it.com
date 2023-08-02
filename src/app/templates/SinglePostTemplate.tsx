@@ -27,6 +27,7 @@ type SinglePostTemplateProps = {
   relatedPosts?: Post[]
   blockOptions?: BlockOptionContextType
   hideWriteWithUs?: boolean
+  isPage?: boolean
 }
 
 // Note: If we change the breakpoint here, we have to change the breakpoint of showing TOC on
@@ -54,37 +55,39 @@ export default function SinglePostTemplate(props: SinglePostTemplateProps) {
           </aside>
 
           <article className={cn('container max-w-3xl')}>
-            <div
-              className={cn(
-                'mx-auto container p-6 mt-10',
-                'flex flex-col sm:flex-row items-center sm:items-start gap-4',
-                'bg-amber-100 rounded-xl shadow-md text-slate-800'
-              )}
-            >
-              <div>
-                <AiOutlineAlert className="text-6xl sm:text-5xl" />
-              </div>
-              <div className="flex flex-col gap-3">
+            {!props.isPage && (
+              <div
+                className={cn(
+                  'mx-auto container p-6 mt-10',
+                  'flex flex-col sm:flex-row items-center sm:items-start gap-4',
+                  'bg-amber-100 rounded-xl shadow-md text-slate-800'
+                )}
+              >
                 <div>
-                  Math2IT đang trong giai đoạn rà soát nội dung tất cả các bài viết để cập nhật lại
-                  chất lượng và độ chính xác.{' '}
-                  <span className="text-emerald-600">
-                    Tình trạng của bài viết hiện tại là{' '}
-                    <span className="font-semibold">{checkedText}</span>.
-                  </span>
+                  <AiOutlineAlert className="text-6xl sm:text-5xl" />
                 </div>
-                <div>
-                  🤝 Nếu bạn phát hiện điểm nào chưa chính xác, vui lòng{' '}
-                  <a
-                    className="m2it-link hover:m2it-link-hover"
-                    href="mailto:math2itblog@gmail.com"
-                  >
-                    email cho chúng tôi.
-                  </a>{' '}
-                  Chân thành cảm ơn bạn. 😊
+                <div className="flex flex-col gap-3">
+                  <div>
+                    Math2IT đang trong giai đoạn rà soát nội dung tất cả các bài viết để cập nhật
+                    lại chất lượng và độ chính xác.{' '}
+                    <span className="text-emerald-600">
+                      Tình trạng của bài viết hiện tại là{' '}
+                      <span className="font-semibold">{checkedText}</span>.
+                    </span>
+                  </div>
+                  <div>
+                    🤝 Nếu bạn phát hiện điểm nào chưa chính xác, vui lòng{' '}
+                    <a
+                      className="m2it-link hover:m2it-link-hover"
+                      href="mailto:contact@math2it.com"
+                    >
+                      email cho chúng tôi.
+                    </a>{' '}
+                    Chân thành cảm ơn bạn. 😊
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
 
             <PostBody
               className={cn('w-full')}
@@ -95,7 +98,7 @@ export default function SinglePostTemplate(props: SinglePostTemplateProps) {
             {props.relatedPosts && props.relatedPosts.length > 0 && (
               <div
                 className={cn(
-                  'flex flex-col gap-6 mb-8 bg-slate-50 drop-shadow-sm rounded-2xl p-6'
+                  'flex flex-col gap-6 mb-8 bg-gray-100 rounded-xl m2it-box-shadow border-[0.5px] p-6'
                 )}
               >
                 <h2 className={cn(lobster.className, 'text-2xl sm:text-[1.65rem] text-slate-700')}>

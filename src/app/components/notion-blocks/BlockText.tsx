@@ -38,7 +38,7 @@ export default function BlockText(props: TextProps) {
     props.richText.href
   ) {
     // Link contains "https://math2it.com"
-    if (props.richText.href.includes('math2it.com')) {
+    if (props.richText.href.includes('math2it.com') && !props.richText.href.includes('@')) {
       const slug = getSlugFromUrl(props.richText.href)
       return (
         <Link

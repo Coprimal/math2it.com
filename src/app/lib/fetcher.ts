@@ -26,6 +26,7 @@ import { unfurl } from 'unfurl.js'
 
 import { getJoinedRichText } from './block-helpers'
 import {
+  SINGLE_PAGE_SLUGS,
   defaultFeaturedImage,
   defaultPostDate,
   defaultPostTitle,
@@ -551,7 +552,9 @@ async function getPageUri(pageId: string): Promise<string | null> {
     makeSlugText(get(pageData, 'properties.name.title[0].plain_text', ''))
   if (!slug) return null
   return !isAuthor
-    ? `/${getSlugPrefix('singlePost')}/${slug}/`
+    ? !SINGLE_PAGE_SLUGS.includes(slug)
+      ? `/${getSlugPrefix('singlePost')}/${slug}/`
+      : `/${slug}/`
     : `/${getSlugPrefix('author')}/${slug}/`
 }
 

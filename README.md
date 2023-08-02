@@ -59,6 +59,8 @@
     yarn ud-site-full
     # next steps are the same as normally!
     ```
+
+    🚨 **Make sure the 3003 site works normally before running `yarn ud-prod`!**
 6. `yarn ud-site` to update the html site. 👈 Build & copy html files to `math2it-v-nextjs-html` & update `math2it-v-nextjs-html/lastUpdate.txt` & push!
     **Idea of the technique**: When exporting finish, `math2it-v-nextjs-html/lastUpdate.txt` will be updated with the date of exporting. Next time, we don't fetch the post whose `last_edited_time` is earlier than that date.
 7. **Full build**: In case you don't want to use `lastUpdate.txt` technique, just make a full build with `yarn ud-site-full`.

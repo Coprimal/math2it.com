@@ -26,6 +26,7 @@ export default async function AboutPage() {
     const contentBlocks = await getBlocks(process.env.ABOUT_PAGE as string)
     return (
       <SinglePostTemplate
+        isPage={true}
         blockOptions={{ disableAnchorHeading: true }}
         postHeader={postHeader}
         contentBlocks={contentBlocks}
