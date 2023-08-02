@@ -3,7 +3,7 @@ import { getAuthors, getCategories, getPostsBy, getTags } from '@app/lib/fetcher
 import { generateMetaTitle, getFilterOf, getStartCursorForCurrentPage } from '@app/lib/helpers'
 import PageOfPostsListTemplate from '@app/templates/PageOfPostsListTemplate'
 import tagCover from '@root/public/featured-images/tag.png'
-import { OptionalCatchAllParams, OptionalCatchAllProps } from '@src/interface'
+import { OptionalCatchAllParams, OptionalCatchAllProps, Tag } from '@src/interface'
 import { Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
 
@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: OptionalCatchAllProps): Promi
   const slug = params.slug[0] || ''
   const currentPage = +(params?.slug?.[2] || 1)
   const tags = await getTags()
-  const tag = tags.find(t => t.slug === slug)
+  const tag = getTag(slug, tags)
   if (!tag)
     return {
       title: generateMetaTitle('Chủ đề không xác định')
@@ -61,7 +61,7 @@ export default async function TagPage({ params }: OptionalCatchAllProps) {
   const tagsData = getTags()
   const authorsData = getAuthors()
   const [tags, authors] = await Promise.all([tagsData, authorsData])
-  const tag = tags.find(t => t.slug === slug)
+  const tag = getTag(slug, tags)
   if (!tag) notFound()
 
   // All posts in that category, we need these to find the number of pages
@@ -106,4 +106,8 @@ export default async function TagPage({ params }: OptionalCatchAllProps) {
       postTypeOpts={{ hideCategory: false }}
     />
   )
+}
+
+function getTag(slug: string, tags: Tag[]) {
+  return tags.find(t => t.slug === slug || t.slug === slug.replace(/%26/g, '&'))
 }
