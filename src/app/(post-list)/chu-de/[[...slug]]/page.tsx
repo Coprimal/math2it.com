@@ -96,7 +96,7 @@ export default async function TagPage({ params }: OptionalCatchAllProps) {
 
   return (
     <PageOfPostsListTemplate
-      title={`Chủ đề "${tag.name}"`}
+      title={`Thẻ "${tag.name}"`}
       uri={tag.uri}
       posts={postsOnThisPage}
       totalPages={totalPages}

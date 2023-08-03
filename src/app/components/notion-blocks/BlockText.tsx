@@ -70,7 +70,7 @@ export default function BlockText(props: TextProps) {
     }
   }
 
-  // Mention
+  // Mention a page
   if (
     !props.ignore?.includes('hyperlink') &&
     props.richText.type === 'mention' &&
@@ -87,6 +87,20 @@ export default function BlockText(props: TextProps) {
       >
         {props.richText.plain_text}
       </Link>
+    )
+  }
+
+  // Mention a date
+  if (props.richText.type === 'mention' && props.richText.mention?.type === 'date') {
+    return (
+      <span
+        className={generateTextAnnotationClasses(
+          props.richText.annotations,
+          props.ignore as AnnotationIgnoreField[]
+        )}
+      >
+        {formatDate(props.richText.plain_text)}
+      </span>
     )
   }
 
@@ -128,4 +142,14 @@ function getSlugFromUrl(url: string) {
   const slug = parts[parts.length - 1]
 
   return slug
+}
+
+function formatDate(inputString: string) {
+  // Split the input string by the hyphen '-'
+  const [year, month, day] = inputString.split('-')
+
+  // Concatenate the day, month, and year with forward slashes '/'
+  const formattedDate = `${day}/${month}/${year}`
+
+  return formattedDate
 }
