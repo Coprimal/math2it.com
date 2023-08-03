@@ -38,7 +38,7 @@ export default function BlockRender(props: { block: BlockObjectResponse; level: 
       <BlockRender
         key={(childBlock as BlockObjectResponse).id}
         block={childBlock}
-        level={level + 1}
+        level={block.type === 'synced_block' ? level : level + 1}
       />
     ))
   }
@@ -48,6 +48,9 @@ export default function BlockRender(props: { block: BlockObjectResponse; level: 
   const basicBlockGapHeading = 'mt-6'
 
   switch (block.type) {
+    case 'synced_block':
+      return <>{children}</>
+
     case 'paragraph':
       return (
         <BlockParagraph block={block} level={level} className={cn(basicBlockGap)}>
