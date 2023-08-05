@@ -18,10 +18,7 @@ export default function Nav() {
       <div className={`sticky left-0 top-0 z-50 w-full ${navClasses} ${navHeight}`}>
         <div className="container mx-auto flex h-full flex-wrap items-center justify-items-stretch">
           <div className="w-full">
-            <div
-              className="mx-anav-
-            uto px-4 lg:px-2"
-            >
+            <div className="mx-auto px-4 lg:px-2">
               <div className="relative flex items-center justify-between">
                 <nav
                   className={`flex flex-1 items-center justify-center

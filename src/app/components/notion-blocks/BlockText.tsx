@@ -7,9 +7,6 @@ import { AnnotationIgnoreField, TextIgnoreField } from '@src/interface'
 import cn from 'classnames'
 import { get } from 'lodash'
 import Link from 'next/link'
-import React from 'react'
-
-import { getSlugPrefix } from '../../lib/config'
 
 type TextProps = {
   richText: TextRichTextItemResponse | MentionRichTextItemResponse
@@ -37,16 +34,17 @@ export default function BlockText(props: TextProps) {
     !props.ignore?.includes('hyperlink') &&
     props.richText.href
   ) {
-    // Link contains "https://math2it.com"
+    // Link contains "math2it.com"
+    // This is the link coming from the current version of math2it, not the old ones
     if (props.richText.href.includes('math2it.com') && !props.richText.href.includes('@')) {
-      const slug = getSlugFromUrl(props.richText.href)
+      const uri = getUriFromUrl(props.richText.href)
       return (
         <Link
           className={generateTextAnnotationClasses(
             props.richText.annotations,
             props.ignore as AnnotationIgnoreField[]
           )}
-          href={`/${getSlugPrefix('singlePost')}/${slug}/`}
+          href={uri}
         >
           {props.richText.plain_text}
         </Link>
@@ -127,7 +125,7 @@ export default function BlockText(props: TextProps) {
   )
 }
 
-function getSlugFromUrl(url: string) {
+function getUriFromUrl(url: string) {
   // Remove the protocol (http:// or https://)
   const withoutProtocol = url.replace(/^(https?:\/\/)/, '')
 
@@ -137,9 +135,11 @@ function getSlugFromUrl(url: string) {
   // Remove trailing slashes
   const withoutTrailingSlashes = withoutWWW.replace(/\/+$/, '')
 
-  // Extract the slug from the remaining URL
-  const parts = withoutTrailingSlashes.split('/')
-  const slug = parts[parts.length - 1]
+  // Remove "math2it.com" if present
+  const withoutDomain = withoutTrailingSlashes.replace(/math2it.com/, '')
+
+  // Add "/" at the beginning and the end
+  const slug = `${withoutDomain}/`
 
   return slug
 }
