@@ -11,7 +11,6 @@ import {
   Category,
   ImgurUrlType,
   NotionAuthor,
-  NotionTag,
   Post,
   SlugTypeLabels,
   Tag
@@ -23,8 +22,8 @@ import path from 'path'
 /**
  * Convert "Nguyễn Văn Đông" to "nguyen-van-dong"
  */
-export function makeSlugText(text?: string | null): string | null {
-  if (!text) return null
+export function makeSlugText(text?: string | null): string | undefined {
+  if (!text) return undefined
   return text
     .toLowerCase()
     .normalize('NFD')
@@ -76,19 +75,19 @@ export function transformNotionAuthorsData(data: NotionAuthor[]): Author[] {
   )
 }
 
-export function transformNotionTagsData(data?: NotionTag[]): Tag[] {
-  return (
-    data?.map(tag => {
-      const properties = tag?.properties || null
-      const name = properties?.name?.title[0]?.plain_text
-      const description = properties?.description?.rich_text[0]?.plain_text || null
-      const slug = properties?.slug?.rich_text[0]?.plain_text || makeSlugText(name) || null
-      const uri = `/${getSlugPrefix('tag')}/${slug}/`
-      const id = tag?.id || uri
-      return { id, name, uri, description, slug }
-    }) || []
-  )
-}
+// export function transformNotionTagsData(data?: NotionTag[]): Tag[] {
+//   return (
+//     data?.map(tag => {
+//       const properties = tag?.properties || null
+//       const name = properties?.name?.title[0]?.plain_text
+//       const description = properties?.description?.rich_text[0]?.plain_text || null
+//       const slug = properties?.slug?.rich_text[0]?.plain_text || makeSlugText(name) || null
+//       const uri = `/${getSlugPrefix('tag')}/${slug}/`
+//       const id = tag?.id || uri
+//       return { id, name, uri, description, slug }
+//     }) || []
+//   )
+// }
 
 export function parseAuthorsForPost(authorIdsList: string[], authorsList: Author[]): Author[] {
   return intersectionWith(authorsList, authorIdsList, (author, id) => author.id === id)
@@ -257,9 +256,9 @@ export function getFilterOf(type: SlugTypeLabels, data?: Category | Tag | Author
       }
     case 'tag':
       return {
-        property: 'tags',
-        relation: {
-          contains: data?.id
+        property: 'tag',
+        multi_select: {
+          contains: data?.name
         }
       }
     case 'selected':

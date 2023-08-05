@@ -1,12 +1,5 @@
 import { notionMaxRequest } from '@app/lib/config'
-import {
-  getAuthors,
-  getBlocks,
-  getCategories,
-  getPostHeader,
-  getPosts,
-  getTags
-} from '@app/lib/fetcher'
+import { getAuthors, getBlocks, getCategories, getPostHeader, getPosts } from '@app/lib/fetcher'
 import SinglePostTemplate from '@app/templates/SinglePostTemplate'
 import { DynamicSegmentParamsProps } from '@src/interface'
 import { Metadata } from 'next'
@@ -56,14 +49,11 @@ export default async function SinglePostPage({ params }: DynamicSegmentParamsPro
 
   try {
     const categories = getCategories()
-    const tagsData = getTags()
-    const authorsData = getAuthors()
-    const [tags, authors] = await Promise.all([tagsData, authorsData])
+    const authors = await getAuthors()
 
     const allPosts = await getPosts({
       dbId: process.env.NOTION_DB_POSTS as string,
       categories,
-      tags,
       authors,
       pageSize: notionMaxRequest
     })

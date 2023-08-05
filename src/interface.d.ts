@@ -20,6 +20,12 @@ export type OptionalCatchAllParams = { slug: string[] }
 export type DynamicSegmentParamsProps = { params: DynamicSegmentParams }
 export type DynamicSegmentParams = { slug: string }
 
+export type NotionTagData = {
+  id: string
+  name: string
+  color: sting
+}
+
 export type Category = {
   name: string
   uri: string
@@ -40,11 +46,10 @@ export type Category = {
 }
 
 export type Tag = {
-  id: string
   name: string
-  uri: string
-  slug: string | null
-  description?: string | null
+  id?: string
+  slug?: string
+  uri?: string
 }
 
 export type PostAndPageACF = {
@@ -133,8 +138,8 @@ export type NotionPost = {
     categories?: {
       multi_select: { name: string }[]
     }
-    tags?: {
-      multi_select: { name: string }[]
+    tag?: {
+      multi_select: NotionTagData[]
     }
     author?: {
       select: { name: string }
@@ -187,7 +192,7 @@ export type NotionHeader = {
     name: { title: { plain_text: string }[] }
     finalCreatedDate: { formula: { date: { start } } }
     categories: { multi_select: { name: string }[] }
-    tags: { relation: { id: string }[] }
+    tag: { multi_select: NotionTagData[] }
     authors: { relation: { id: string }[] }
     selected: { checkbox: boolean }
     showToc: { checkbox: boolean }

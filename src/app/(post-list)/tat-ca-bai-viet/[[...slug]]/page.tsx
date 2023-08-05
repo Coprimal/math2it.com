@@ -1,5 +1,5 @@
 import { getSlugPrefix, notionMaxRequest, numPostsPerPage } from '@app/lib/config'
-import { getAuthors, getCategories, getPosts, getTags } from '@app/lib/fetcher'
+import { getAuthors, getCategories, getPosts } from '@app/lib/fetcher'
 import { generateMetaTitle, getStartCursorForCurrentPage } from '@app/lib/helpers'
 import PageOfPostsListTemplate from '@app/templates/PageOfPostsListTemplate'
 import allPostsCover from '@root/public/featured-images/all.png'
@@ -58,14 +58,11 @@ export default async function AllPostsPage({ params }: OptionalCatchAllProps) {
   const notRootPage = !!params.slug
 
   const categories = getCategories()
-  const tagsData = getTags()
-  const authorsData = getAuthors()
-  const [tags, authors] = await Promise.all([tagsData, authorsData])
+  const authors = await getAuthors()
 
   const allPosts = await getPosts({
     dbId: process.env.NOTION_DB_POSTS as string,
     categories,
-    tags,
     authors,
     pageSize: notionMaxRequest,
     getFull: true
@@ -86,7 +83,6 @@ export default async function AllPostsPage({ params }: OptionalCatchAllProps) {
     : await getPosts({
         dbId: process.env.NOTION_DB_POSTS as string,
         categories,
-        tags,
         authors,
         startCursor,
         pageSize: numPostsPerPage,

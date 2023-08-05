@@ -14,6 +14,7 @@ import {
   NotionHeader,
   NotionPost,
   NotionSorts,
+  NotionTagData,
   Post,
   PostHeaderType,
   Tag
@@ -38,7 +39,8 @@ import {
 import {
   getNotionBlocksWithoutCache,
   getNotionDatabaseWithoutCache,
-  getNotionPageWithoutCache
+  getNotionPageWithoutCache,
+  retrieveNotionDatabaseWithoutCache
 } from './db'
 import {
   cleanText,
@@ -48,9 +50,7 @@ import {
   parseAuthorsForPost,
   parseImgurUrl,
   parseNotionImageUrl,
-  parseTagsForPost,
-  transformNotionAuthorsData,
-  transformNotionTagsData
+  transformNotionAuthorsData
 } from './helpers'
 
 /**
@@ -73,7 +73,6 @@ import {
 export async function getPosts(options: {
   dbId: string
   categories?: Category[]
-  tags?: Tag[]
   authors?: Author[]
   filter?: unknown
   startCursor?: string
@@ -81,7 +80,7 @@ export async function getPosts(options: {
   sorts?: NotionSorts[]
   getFull?: boolean
 }): Promise<Post[]> {
-  const { dbId, filter, categories, tags, authors, startCursor, pageSize, sorts, getFull } = options
+  const { dbId, filter, categories, authors, startCursor, pageSize, sorts, getFull } = options
 
   const defaultSort = {
     property: notionDateName,
@@ -108,7 +107,6 @@ export async function getPosts(options: {
   const posts = await transformNotionPostsData({
     data: postsList,
     categories,
-    tags,
     authors
   })
   return posts
@@ -124,15 +122,13 @@ export async function getPostsBy(options: {
   pageSize: number
   startCursor?: string
   categories?: Category[]
-  tags?: Tag[]
   authors?: Author[]
   getFull?: boolean
 }) {
-  const { categories, tags, authors, filter, pageSize, startCursor, getFull } = options
+  const { categories, authors, filter, pageSize, startCursor, getFull } = options
   const posts = await getPosts({
     dbId: process.env.NOTION_DB_POSTS as string,
     categories,
-    tags,
     authors,
     filter,
     pageSize,
@@ -151,14 +147,20 @@ export const getCategories = () => predefinedCategories
  * Get all tags from Notion database (process.env.NOTION_DB_TAGS)
  */
 export const getTags = async () => {
-  if (!process.env.NOTION_DB_TAGS) throw new Error('process.env.NOTION_DB_TAGS is not defined')
-  const data = await getNotionDatabase(
-    process.env.NOTION_DB_TAGS,
-    undefined,
-    undefined,
-    notionMaxRequest
+  if (!process.env.NOTION_DB_POSTS) throw new Error('process.env.NOTION_DB_POSTS is not defined')
+  const data = await retrieveNotionDatabase(process.env.NOTION_DB_POSTS)
+  return (
+    data?.properties?.tag?.multi_select?.options?.map((opt: NotionTagData) => mapTag(opt)) || []
   )
-  return transformNotionTagsData(data?.['results'] as any[])
+}
+
+function mapTag(tag: NotionTagData): Tag {
+  return {
+    id: makeSlugText(tag.name),
+    name: tag.name,
+    slug: makeSlugText(tag.name),
+    uri: `/${getSlugPrefix('tag')}/${makeSlugText(tag.name)}/`
+  }
 }
 
 /**
@@ -210,10 +212,7 @@ export async function transformPostHeader(
   const categories = getPredefinedCategories(properties?.categories?.multi_select)
 
   // tags
-  const tagIdsList = properties?.tags?.relation?.map(item => item.id) || []
-  const tagsList = await getTags()
-
-  const tags = parseTagsForPost(tagIdsList, tagsList)
+  const tags = properties?.tag?.multi_select?.map(item => mapTag(item))
 
   // authors
   const authorIdsList = properties?.authors?.relation?.map(item => item.id) || []
@@ -314,10 +313,9 @@ async function parseImage(options: {
 async function transformNotionPostsData(options: {
   data: NotionPost[]
   categories?: Category[]
-  tags?: Tag[]
   authors?: Author[]
 }): Promise<Post[]> {
-  const { data, categories: categoriesList, tags: tagsList, authors: authorsList } = options
+  const { data, categories: categoriesList, authors: authorsList } = options
   if (!data || !data.length) return []
   return Promise.all(
     data?.map(async post => {
@@ -337,13 +335,8 @@ async function transformNotionPostsData(options: {
       const date = new Date(gotDate).toISOString()
 
       // Tags
-      let tags
-      if (tagsList) {
-        const tagIdsList = get(post, 'properties.tags.relation', []).map(
-          (tag: { id: string }) => tag.id
-        )
-        tags = parseTagsForPost(tagIdsList, tagsList)
-      }
+      const tags =
+        post.properties?.tag?.multi_select?.map((tag: NotionTagData) => mapTag(tag)) || []
 
       // Categories
       let categories: Category[]
@@ -605,3 +598,7 @@ export const getPlaceholderImage = cache(async function getPlaceholderImage(src:
   const { base64, metadata } = await getPlaiceholder(buffer)
   return { base64, width: metadata.width, height: metadata.height }
 })
+
+export const retrieveNotionDatabase = cache(async (dataId: string) =>
+  retrieveNotionDatabaseWithoutCache(dataId)
+)

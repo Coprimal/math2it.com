@@ -556,7 +556,6 @@ type NotionHeader = {
     name: { title: { plain_text: string }[] }
     finalCreatedDate: { formula: { date: { start: any } } }
     categories: { multi_select: { name: string }[] }
-    tags: { relation: { id: string }[] }
     authors: { relation: { id: string }[] }
     selected: { checkbox: boolean }
     showToc: { checkbox: boolean }
@@ -583,9 +582,6 @@ type NotionPost = {
     }
     url: string
     categories?: {
-      multi_select: { name: string }[]
-    }
-    tags?: {
       multi_select: { name: string }[]
     }
     author?: {
