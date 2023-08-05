@@ -82,3 +82,18 @@ export const getNotionBlocksWithoutCache = async (
   })
   return res.json()
 }
+
+/**
+ * https://developers.notion.com/reference/retrieve-a-database
+ */
+export async function retrieveNotionDatabaseWithoutCache(dataId: string) {
+  const url = `https://api.notion.com/v1/databases/${dataId}`
+  const res = await fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${process.env.NOTION_TOKEN}`,
+      'Notion-Version': process.env.NOTION_VERSION as string
+    }
+  })
+  return res.json()
+}

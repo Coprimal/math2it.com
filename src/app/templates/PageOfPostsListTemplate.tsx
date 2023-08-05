@@ -10,7 +10,7 @@ import { useGeoPattern } from 'react-geopattern'
 type PageOfPostsListTemplateProps = {
   title: string
   subtitle?: string
-  uri: string
+  uri?: string
   posts: Post[]
   totalPages: number
   currentPage: number
@@ -85,7 +85,9 @@ export default function PageOfPostsListTemplate(props: PageOfPostsListTemplatePr
         </div>
       </div>
       <Container className={cn(spacingCoverPostList, 'max-w-5xl')}>
-        {props.posts.length === 0 && <div className="my-4 text-xl font-bold">No post found</div>}
+        {props.posts.length === 0 && (
+          <div className="my-4 text-xl font-bold">Không tìm thấy bài viết</div>
+        )}
         {props.posts.length > 0 && (
           <>
             <div>
@@ -97,7 +99,7 @@ export default function PageOfPostsListTemplate(props: PageOfPostsListTemplatePr
                 />
               )}
             </div>
-            {props.totalPages > 1 && (
+            {props.totalPages > 1 && props.uri && (
               <Pagination
                 className="my-8"
                 path={props.uri}

@@ -1,5 +1,5 @@
 import { getSlugPrefix, notionMaxRequest, numPostsPerPage } from '@app/lib/config'
-import { getAuthors, getCategories, getPostsBy, getTags } from '@app/lib/fetcher'
+import { getAuthors, getCategories, getPostsBy } from '@app/lib/fetcher'
 import { generateMetaTitle, getFilterOf, getStartCursorForCurrentPage } from '@app/lib/helpers'
 import PageOfPostsListTemplate from '@app/templates/PageOfPostsListTemplate'
 import { OptionalCatchAllParams, OptionalCatchAllProps } from '@src/interface'
@@ -74,9 +74,7 @@ export default async function CategoryPage({ params }: OptionalCatchAllProps) {
   const slug = params.slug[0] || ''
 
   const categories = getCategories()
-  const tagsData = getTags()
-  const authorsData = getAuthors()
-  const [tags, authors] = await Promise.all([tagsData, authorsData])
+  const authors = await getAuthors()
   const category = categories.find(c => c.slug === slug)
   if (!category) notFound()
 
@@ -85,7 +83,6 @@ export default async function CategoryPage({ params }: OptionalCatchAllProps) {
   // All posts in that category, we need these to find the number of pages
   const allPosts = await getPostsBy({
     categories,
-    tags,
     authors,
     filter: getFilterOf('category', category),
     pageSize: notionMaxRequest,
@@ -106,7 +103,6 @@ export default async function CategoryPage({ params }: OptionalCatchAllProps) {
     ? []
     : await getPostsBy({
         categories,
-        tags,
         authors,
         filter: getFilterOf('category', category),
         startCursor,

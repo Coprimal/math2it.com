@@ -67,7 +67,6 @@ export default async function TagPage({ params }: OptionalCatchAllProps) {
   // All posts in that category, we need these to find the number of pages
   const allPosts = await getPostsBy({
     categories,
-    tags,
     authors,
     filter: getFilterOf('tag', tag),
     pageSize: notionMaxRequest
@@ -87,7 +86,6 @@ export default async function TagPage({ params }: OptionalCatchAllProps) {
     ? []
     : await getPostsBy({
         categories,
-        tags,
         authors,
         filter: getFilterOf('tag', tag),
         startCursor,

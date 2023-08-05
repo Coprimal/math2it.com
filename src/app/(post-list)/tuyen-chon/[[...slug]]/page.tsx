@@ -1,5 +1,5 @@
 import { getSlugPrefix, notionMaxRequest, numPostsPerPage } from '@app/lib/config'
-import { getAuthors, getCategories, getPosts, getTags } from '@app/lib/fetcher'
+import { getAuthors, getCategories, getPosts } from '@app/lib/fetcher'
 import { generateMetaTitle, getFilterOf, getStartCursorForCurrentPage } from '@app/lib/helpers'
 import PageOfPostsListTemplate from '@app/templates/PageOfPostsListTemplate'
 import selectedCover from '@root/public/featured-images/selected.png'
@@ -59,14 +59,11 @@ export default async function SelectedPostsPage({ params }: OptionalCatchAllProp
   const notRootPage = !!params.slug
 
   const categories = getCategories()
-  const tagsData = getTags()
-  const authorsData = getAuthors()
-  const [tags, authors] = await Promise.all([tagsData, authorsData])
+  const authors = await getAuthors()
 
   const allPosts = await getPosts({
     dbId: process.env.NOTION_DB_POSTS as string,
     categories,
-    tags,
     authors,
     pageSize: notionMaxRequest,
     filter: getFilterOf('selected'),
@@ -89,7 +86,6 @@ export default async function SelectedPostsPage({ params }: OptionalCatchAllProp
         dbId: process.env.NOTION_DB_POSTS as string,
         filter: getFilterOf('selected'),
         categories,
-        tags,
         authors,
         startCursor,
         pageSize: numPostsPerPage,

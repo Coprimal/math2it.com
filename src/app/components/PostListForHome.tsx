@@ -1,4 +1,4 @@
-import { getAuthors, getCategories, getPosts, getPostsBy, getTags } from '@app/lib/fetcher'
+import { getAuthors, getCategories, getPosts, getPostsBy } from '@app/lib/fetcher'
 import { Post } from '@src/interface'
 
 import { getFilterOf } from '../lib/helpers'
@@ -19,9 +19,7 @@ export const postListHomeCount = 8
 
 export default async function PostListForHome(props: PostListForHomeProps) {
   const categories = getCategories()
-  const tagsData = getTags()
-  const authorsData = getAuthors()
-  const [tags, authors] = await Promise.all([tagsData, authorsData])
+  const authors = await getAuthors()
 
   let posts: Post[] = []
 
@@ -30,7 +28,6 @@ export default async function PostListForHome(props: PostListForHomeProps) {
       posts = await getPosts({
         dbId: process.env.NOTION_DB_POSTS as string,
         categories,
-        tags,
         authors,
         pageSize: postListHomeCount,
         getFull: true
@@ -41,7 +38,6 @@ export default async function PostListForHome(props: PostListForHomeProps) {
       posts = await getPosts({
         dbId: process.env.NOTION_DB_POSTS as string,
         categories,
-        tags,
         authors,
         pageSize: postListHomeCount,
         filter: getFilterOf('selected'),
@@ -55,7 +51,6 @@ export default async function PostListForHome(props: PostListForHomeProps) {
       if (!category) return null
       posts = await getPostsBy({
         categories,
-        tags,
         authors,
         filter: getFilterOf('category', category),
         pageSize: postListHomeCount,
