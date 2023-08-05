@@ -9,7 +9,7 @@ import { useGeoPattern } from 'react-geopattern'
 
 type PageOfPostsListTemplateProps = {
   title: string
-  subtitle?: string
+  subtitle?: string | null
   uri?: string
   posts: Post[]
   totalPages: number
