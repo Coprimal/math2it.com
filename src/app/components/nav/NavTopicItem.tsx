@@ -27,7 +27,8 @@ export default function NavTopicItem(props: NavTopicItemProps) {
       className={cn(
         isActiveClass(areSameUris(uri, currentRoute)),
         menuItemCommonClass,
-        customClass
+        customClass,
+        'select-none'
       )}
       aria-current={areSameUris(uri, currentRoute) ? 'page' : undefined}
       href={uri}

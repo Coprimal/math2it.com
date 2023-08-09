@@ -44,7 +44,7 @@ export default function BlockRender(props: { block: BlockObjectResponse; level: 
   }
 
   const basicBlockGap = 'my-4'
-  const basicBlockGapList = 'my-2'
+  const basicBlockGapList = 'my-1.5'
   const basicBlockGapHeading = 'mt-6'
 
   switch (block.type) {

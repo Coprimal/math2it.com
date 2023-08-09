@@ -58,6 +58,9 @@
     # build fully (all posts)
     yarn ud-site-full
     # next steps are the same as normally!
+
+    # in case need to generate sitemap (it's auto in ud-site or ud-site-full)
+    yarn postbuild
     ```
 
     🚨 **Make sure the 3003 site works normally before running `yarn ud-prod`!**

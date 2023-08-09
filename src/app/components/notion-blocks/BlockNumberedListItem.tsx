@@ -15,7 +15,7 @@ export default function BlockNumberedListItem(props: {
   const { block, level, className, children } = props
   return (
     <div className={cn(getIndentLevelClass(level), className)}>
-      <div className="flex items-start gap-2">
+      <div className="flex items-baseline gap-2">
         <div className="flex items-center justify-center">{block['list_item']}</div>
         <div className="block">
           {block?.numbered_list_item?.rich_text.map((richText, index) => (

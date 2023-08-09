@@ -70,7 +70,7 @@ export default function PostToc(props: PostTocProps) {
               <a
                 key={block.id}
                 href={`#${anchor}`}
-                className={cn('flex items-start gap-2 hover:m2it-link text-sm py-1', {
+                className={cn('flex items-baseline gap-2 hover:m2it-link text-sm py-1', {
                   'pl-4 border-l': block.type === 'heading_3',
                   '-ml-1': block.type === 'heading_2',
                   'm2it-link-hover': activeId === anchor && !props.inPost,
