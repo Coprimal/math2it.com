@@ -5,6 +5,8 @@ if [ "$1" == "-f" ]; then
     mkdir ../math2it-v-nextjs-html/out
 fi
 cp -Rf out/* ../math2it-v-nextjs-html/out
+cp public/robots.txt ../math2it-v-nextjs-html/out
+cp public/sitemap.xml ../math2it-v-nextjs-html/out
 echo "✅ End copying"
 
 # (Temporarily disable) Use script ./ud_math2it-v-nextjs-html.sh instead
