@@ -1,4 +1,4 @@
-import { getIndentLevelClass, mapColorClass } from '@app/lib/block-helpers'
+import { mapColorClass } from '@app/lib/block-helpers'
 import { QuoteBlockObjectResponse } from '@notionhq/client/build/src/api-endpoints'
 import cn from 'classnames'
 
@@ -10,13 +10,12 @@ import BlockRichText from './BlockRichText'
 
 export default function BlockQuote(props: {
   block: QuoteBlockObjectResponse
-  level: number
   children?: React.ReactNode
   className?: string
 }) {
-  const { block, level, children, className } = props
+  const { block, children, className } = props
   return (
-    <div className={cn(getIndentLevelClass(level), className)}>
+    <div className={cn(className)}>
       <div
         className={cn(
           mapColorClass(block?.quote?.color),

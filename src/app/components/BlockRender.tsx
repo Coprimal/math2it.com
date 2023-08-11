@@ -7,6 +7,7 @@ import { get } from 'lodash'
 import dynamic from 'next/dynamic'
 
 import { BookmarkPreview } from '../../interface'
+import { getIndentLevelClass } from '../lib/block-helpers'
 import BlockBookmark from './notion-blocks/BlockBookmark'
 import BlockBulletedListItem, {
   BlockBulletedListItemType
@@ -29,9 +30,16 @@ const DynamicEquation = dynamic(() => import('./notion-blocks/BlockEquation'))
 const DynamicTable = dynamic(() => import('./notion-blocks/BlockTable'))
 const DynamicVideo = dynamic(() => import('./notion-blocks/BlockVideo'))
 
-export default function BlockRender(props: { block: BlockObjectResponse; level: number }) {
+type BlockRenderProps = {
+  block: BlockObjectResponse
+  level: number
+  isInsideList?: boolean
+}
+
+export default function BlockRender(props: BlockRenderProps) {
   const { block, level } = props
   let children: React.ReactNode
+  const isList = block.type === 'bulleted_list_item' || block.type === 'numbered_list_item'
 
   if (block.has_children) {
     children = get(block, 'children', [])?.map(childBlock => (
@@ -39,12 +47,12 @@ export default function BlockRender(props: { block: BlockObjectResponse; level: 
         key={(childBlock as BlockObjectResponse).id}
         block={childBlock}
         level={block.type === 'synced_block' ? level : level + 1}
+        isInsideList={isList}
       />
     ))
   }
 
-  const basicBlockGap = 'my-4'
-  const basicBlockGapList = 'my-1.5'
+  const basicBlockGap = cn(getIndentLevelClass(level, isList, props.isInsideList))
   const basicBlockGapHeading = 'mt-6'
 
   switch (block.type) {
@@ -56,7 +64,7 @@ export default function BlockRender(props: { block: BlockObjectResponse; level: 
 
     case 'paragraph':
       return (
-        <BlockParagraph block={block} level={level} className={cn(basicBlockGap)}>
+        <BlockParagraph block={block} className={cn(basicBlockGap)}>
           {children}
         </BlockParagraph>
       )
@@ -65,8 +73,7 @@ export default function BlockRender(props: { block: BlockObjectResponse; level: 
       return (
         <BlockNumberedListItem
           block={block as BlockNumberedListItemType}
-          level={level}
-          className={cn(basicBlockGapList)}
+          className={cn(basicBlockGap)}
         >
           {children}
         </BlockNumberedListItem>
@@ -76,8 +83,7 @@ export default function BlockRender(props: { block: BlockObjectResponse; level: 
       return (
         <BlockBulletedListItem
           block={block as BlockBulletedListItemType}
-          level={level}
-          className={cn(basicBlockGapList)}
+          className={cn(basicBlockGap)}
         >
           {children}
         </BlockBulletedListItem>
@@ -85,7 +91,7 @@ export default function BlockRender(props: { block: BlockObjectResponse; level: 
 
     case 'to_do':
       return (
-        <BlockToDo block={block} level={level} className={cn(basicBlockGapList)}>
+        <BlockToDo block={block} className={cn(basicBlockGap)}>
           {children}
         </BlockToDo>
       )
@@ -95,7 +101,7 @@ export default function BlockRender(props: { block: BlockObjectResponse; level: 
         <BlockHeading
           type={'h1'}
           block={block}
-          level={level}
+          outerClassName={getIndentLevelClass(level, false, props.isInsideList)}
           className={cn(basicBlockGap, basicBlockGapHeading)}
         >
           {children}
@@ -107,7 +113,7 @@ export default function BlockRender(props: { block: BlockObjectResponse; level: 
         <BlockHeading
           type={'h2'}
           block={block}
-          level={level}
+          outerClassName={getIndentLevelClass(level, false, props.isInsideList)}
           className={cn(basicBlockGap, basicBlockGapHeading)}
         >
           {children}
@@ -119,7 +125,7 @@ export default function BlockRender(props: { block: BlockObjectResponse; level: 
         <BlockHeading
           type={'h3'}
           block={block}
-          level={level}
+          outerClassName={getIndentLevelClass(level, false, props.isInsideList)}
           className={cn(basicBlockGap, basicBlockGapHeading)}
         >
           {children}
@@ -128,42 +134,40 @@ export default function BlockRender(props: { block: BlockObjectResponse; level: 
 
     case 'quote':
       return (
-        <BlockQuote block={block} level={level} className={cn(basicBlockGap)}>
+        <BlockQuote block={block} className={cn(basicBlockGap)}>
           {children}
         </BlockQuote>
       )
 
     // For both code and mermaid
     case 'code':
-      return <DynamicCode block={block} level={level} className={cn(basicBlockGap)} />
+      return <DynamicCode block={block} className={cn(basicBlockGap)} />
 
     case 'equation':
-      return <DynamicEquation block={block} level={level} className={cn(basicBlockGap)} />
+      return <DynamicEquation block={block} className={cn(basicBlockGap)} />
 
     case 'column_list':
       return <BlockColumnList block={block as BlockColumnListType} className={cn(basicBlockGap)} />
 
     case 'table':
-      return (
-        <DynamicTable block={block as BlockTableType} level={level} className={cn(basicBlockGap)} />
-      )
+      return <DynamicTable block={block as BlockTableType} className={cn(basicBlockGap)} />
 
     case 'toggle':
       return (
-        <BlockToggle block={block} level={level} className={cn(basicBlockGap)}>
+        <BlockToggle block={block} className={cn(basicBlockGap)}>
           {children}
         </BlockToggle>
       )
 
     case 'callout':
       return (
-        <BlockCallout block={block} level={level} className={cn(basicBlockGap)}>
+        <BlockCallout block={block} className={cn(basicBlockGap)}>
           {children}
         </BlockCallout>
       )
 
     case 'image':
-      return <DynamicImage block={block} level={level} className={cn(basicBlockGap)} />
+      return <DynamicImage block={block} className={cn(basicBlockGap)} />
 
     case 'video':
       return <DynamicVideo block={block} className={cn(basicBlockGap)} />
@@ -176,7 +180,6 @@ export default function BlockRender(props: { block: BlockObjectResponse; level: 
               bookmark?: BookmarkPreview
             }
           }
-          level={level}
           className={cn(basicBlockGap)}
         />
       )

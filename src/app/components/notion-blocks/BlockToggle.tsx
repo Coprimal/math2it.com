@@ -1,6 +1,6 @@
 'use client'
 
-import { getIndentLevelClass, mapColorClass } from '@app/lib/block-helpers'
+import { mapColorClass } from '@app/lib/block-helpers'
 import { Disclosure } from '@headlessui/react'
 import { ToggleBlockObjectResponse } from '@notionhq/client/build/src/api-endpoints'
 import cn from 'classnames'
@@ -10,15 +10,13 @@ import BlockRichText from './BlockRichText'
 
 export default function BlockToggle(props: {
   block: ToggleBlockObjectResponse
-  level: number
   children?: React.ReactNode
   className?: string
 }) {
-  const { block, level, children, className } = props
+  const { block, children, className } = props
   return (
     <div
       className={cn(
-        getIndentLevelClass(level),
         mapColorClass(block?.toggle?.color),
         'rounded-md border-[0.5px] border-slate-200',
         className

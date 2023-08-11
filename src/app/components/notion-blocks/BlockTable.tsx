@@ -1,4 +1,3 @@
-import { getIndentLevelClass } from '@app/lib/block-helpers'
 import {
   RichTextItemResponse,
   TableBlockObjectResponse,
@@ -10,23 +9,13 @@ import BlockRichText from './BlockRichText'
 
 export type BlockTableType = TableBlockObjectResponse & { children: TableRowBlockObjectResponse[] }
 
-export default function BlockTable(props: {
-  block: BlockTableType
-  level: number
-  className?: string
-}) {
-  const { block, level, className } = props
+export default function BlockTable(props: { block: BlockTableType; className?: string }) {
+  const { block, className } = props
   const bodyRows: TableRowBlockObjectResponse[] = block?.table.has_row_header
     ? block?.['children']?.slice(1)
     : block?.['children']
   return (
-    <div
-      className={cn(
-        getIndentLevelClass(level),
-        className,
-        'w-full overflow-auto md:overflow-visible'
-      )}
-    >
+    <div className={cn(className, 'w-full overflow-auto md:overflow-visible')}>
       <table className="table-auto">
         {block?.table?.has_row_header && (
           <thead>

@@ -1,6 +1,6 @@
 'use client'
 
-import { convertHeadingIdToSlug, getIndentLevelClass, mapColorClass } from '@app/lib/block-helpers'
+import { convertHeadingIdToSlug, mapColorClass } from '@app/lib/block-helpers'
 import {
   Heading1BlockObjectResponse,
   Heading2BlockObjectResponse,
@@ -20,13 +20,14 @@ type headingType = 'h1' | 'h2' | 'h3'
 export default function BlockHeading(props: {
   type: headingType
   block: Heading1BlockObjectResponse | Heading2BlockObjectResponse | Heading3BlockObjectResponse
-  level: number
   children?: React.ReactNode
   className?: string
+  // 👇 in case headings are inside another block, we need this to style the spacing for the entire heading block
+  outerClassName?: string
 }) {
   const ctx = useContext(BlockOptionContext)
 
-  const { type, block, level, className, children } = props
+  const { type, block, className, children } = props
   let heading: { rich_text: RichTextItemResponse[]; color: string }
   let headingElement: JSX.Element
   let anchorElement: JSX.Element
@@ -82,7 +83,7 @@ export default function BlockHeading(props: {
   }
 
   return (
-    <div className={cn(getIndentLevelClass(level))}>
+    <div className={props.outerClassName}>
       <div
         className={cn(mapColorClass(heading?.color), className, {
           'flex items-start gap-2': !get(heading, 'is_toggleable') && !ctx.disableAnchorHeading

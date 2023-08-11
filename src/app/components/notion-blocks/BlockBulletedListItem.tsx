@@ -1,4 +1,3 @@
-import { getIndentLevelClass } from '@app/lib/block-helpers'
 import { BulletedListItemBlockObjectResponse } from '@notionhq/client/build/src/api-endpoints'
 import cn from 'classnames'
 import { GoPrimitiveSquare } from 'react-icons/go'
@@ -12,13 +11,12 @@ export type BlockBulletedListItemType = BulletedListItemBlockObjectResponse & {
 
 export default function BlockBulletedListItem(props: {
   block: BlockBulletedListItemType
-  level: number
   children?: React.ReactNode
   className?: string
 }) {
-  const { block, level, className, children } = props
+  const { block, className, children } = props
   return (
-    <div className={cn(getIndentLevelClass(level), className)}>
+    <div className={cn(className)}>
       <div className="flex items-baseline gap-1">
         <div className="flex items-center justify-center">{bulletType(block['list_item'])}</div>
         <div className="block">

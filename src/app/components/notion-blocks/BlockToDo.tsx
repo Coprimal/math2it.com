@@ -1,4 +1,3 @@
-import { getIndentLevelClass } from '@app/lib/block-helpers'
 import { ToDoBlockObjectResponse } from '@notionhq/client/build/src/api-endpoints'
 import cn from 'classnames'
 import { BsCheckSquare, BsSquare } from 'react-icons/bs'
@@ -7,13 +6,12 @@ import BlockRichText from './BlockRichText'
 
 export default function BlockToDo(props: {
   block: ToDoBlockObjectResponse
-  level: number
   children?: React.ReactNode
   className?: string
 }) {
-  const { block, level, className, children } = props
+  const { block, className, children } = props
   return (
-    <div className={cn(getIndentLevelClass(level), className)}>
+    <div className={cn(className)}>
       <div className="flex items-center gap-2">
         {block?.to_do?.checked && <BsCheckSquare />}
         {!block?.to_do?.checked && <BsSquare />}

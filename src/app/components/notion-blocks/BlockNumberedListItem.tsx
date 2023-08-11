@@ -1,4 +1,3 @@
-import { getIndentLevelClass } from '@app/lib/block-helpers'
 import { NumberedListItemBlockObjectResponse } from '@notionhq/client/build/src/api-endpoints'
 import cn from 'classnames'
 
@@ -8,13 +7,12 @@ export type BlockNumberedListItemType = NumberedListItemBlockObjectResponse & { 
 
 export default function BlockNumberedListItem(props: {
   block: BlockNumberedListItemType
-  level: number
   children?: React.ReactNode
   className?: string
 }) {
-  const { block, level, className, children } = props
+  const { block, className, children } = props
   return (
-    <div className={cn(getIndentLevelClass(level), className)}>
+    <div className={cn(className)}>
       <div className="flex items-baseline gap-2">
         <div className="flex items-center justify-center">{block['list_item']}</div>
         <div className="block">

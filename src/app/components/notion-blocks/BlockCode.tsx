@@ -1,6 +1,6 @@
 'use client'
 
-import { getIndentLevelClass, getJoinedRichText } from '@app/lib/block-helpers'
+import { getJoinedRichText } from '@app/lib/block-helpers'
 import { defaultCodeLanguage } from '@app/lib/config'
 import Mermaid from '@c/Mermaid'
 import { CodeBlockObjectResponse } from '@notionhq/client/build/src/api-endpoints'
@@ -15,12 +15,8 @@ import { dracula } from 'react-syntax-highlighter/dist/esm/styles/prism'
 
 import BlockRichText from './BlockRichText'
 
-export default function BlockCode(props: {
-  block: CodeBlockObjectResponse
-  level: number
-  className?: string
-}) {
-  const { block, level, className } = props
+export default function BlockCode(props: { block: CodeBlockObjectResponse; className?: string }) {
+  const { block, className } = props
   const language = block?.code?.language?.toLowerCase() || defaultCodeLanguage
 
   const [copied, setCopied] = useState(false)
@@ -30,7 +26,7 @@ export default function BlockCode(props: {
   }
 
   return (
-    <div className={cn(getIndentLevelClass(level), className, 'group')}>
+    <div className={cn(className, 'group')}>
       <div className={`language-${formatCodeLang(language)} syntax-highlighter relative`}>
         <SyntaxHighlighter
           language={formatCodeLang(language)}

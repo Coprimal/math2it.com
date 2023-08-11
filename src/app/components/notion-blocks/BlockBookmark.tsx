@@ -10,7 +10,6 @@ export default function BlockBookmark(props: {
   block: BookmarkBlockObjectResponse & {
     bookmark?: BookmarkPreview
   }
-  level: number
   className?: string
 }) {
   const data = props.block.bookmark

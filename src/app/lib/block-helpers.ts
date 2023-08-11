@@ -64,16 +64,26 @@ export function mapColorClass(color: string): string {
   }
 }
 
-export function getIndentLevelClass(level: number): string {
+export function getIndentLevelClass(
+  level: number,
+  isList: boolean,
+  isInsideList?: boolean
+): string {
   switch (level) {
     case 0:
-      return 'pl-0'
+      return cn('pl-0', {
+        'my-4': !isList,
+        'my-1.5': isList
+      })
     case 1:
-      return 'pl-4 my-3'
+      return isInsideList ? 'pl-4 my-1.5' : 'pl-4 my-3'
     case 2:
-      return 'pl-8 my-3'
+      return isInsideList ? 'pl-8 my-1.5' : 'pl-8 my-3'
     default:
-      return 'pl-0 my-3'
+      return cn('pl-0', {
+        'my-4': !isList,
+        'my-1.5': isList
+      })
   }
 }
 

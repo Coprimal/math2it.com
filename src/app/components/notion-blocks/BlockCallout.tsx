@@ -1,4 +1,4 @@
-import { getIndentLevelClass, mapColorClass } from '@app/lib/block-helpers'
+import { mapColorClass } from '@app/lib/block-helpers'
 import { CalloutBlockObjectResponse } from '@notionhq/client/build/src/api-endpoints'
 import cn from 'classnames'
 import { get } from 'lodash'
@@ -7,13 +7,13 @@ import BlockRichText from './BlockRichText'
 
 export default function BlockCallout(props: {
   block: CalloutBlockObjectResponse
-  level: number
+
   className?: string
   children?: React.ReactNode
 }) {
-  const { block, level, children, className } = props
+  const { block, children, className } = props
   return (
-    <div className={cn(getIndentLevelClass(level), className)}>
+    <div className={cn(className)}>
       <div className={cn('flex rounded-md', mapColorClass(block?.callout?.color))}>
         {get(block, 'callout.icon.emoji') && (
           <div className="text-2xl pl-4 pr-2 py-3">{get(block, 'callout.icon.emoji')}</div>
