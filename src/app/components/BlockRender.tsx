@@ -51,6 +51,9 @@ export default function BlockRender(props: { block: BlockObjectResponse; level: 
     case 'synced_block':
       return <>{children}</>
 
+    case 'divider':
+      return <hr className={basicBlockGap} />
+
     case 'paragraph':
       return (
         <BlockParagraph block={block} level={level} className={cn(basicBlockGap)}>
