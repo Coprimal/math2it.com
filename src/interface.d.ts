@@ -23,7 +23,7 @@ export type DynamicSegmentParams = { slug: string }
 export type NotionTagData = {
   id: string
   name: string
-  color: sting
+  color: string
 }
 
 export type Category = {
