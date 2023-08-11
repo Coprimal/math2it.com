@@ -17,7 +17,7 @@ export default function BlockBulletedListItem(props: {
   const { block, className, children } = props
   return (
     <div className={cn(className)}>
-      <div className="flex items-baseline gap-1">
+      <div className="flex items-start gap-1">
         <div className="flex items-center justify-center">{bulletType(block['list_item'])}</div>
         <div className="block">
           {block?.bulleted_list_item?.rich_text.map((richText, index) => (
