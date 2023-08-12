@@ -1,6 +1,6 @@
 import { BulletedListItemBlockObjectResponse } from '@notionhq/client/build/src/api-endpoints'
 import cn from 'classnames'
-import { GoPrimitiveSquare } from 'react-icons/go'
+import { GoSquareFill } from 'react-icons/go'
 import { RxDot, RxDotFilled } from 'react-icons/rx'
 
 import BlockRichText from './BlockRichText'
@@ -38,6 +38,6 @@ function bulletType(level: BulletLevelType): JSX.Element {
     case '2':
       return <RxDot className="mt-1 text-lg" />
     case '3':
-      return <GoPrimitiveSquare className="mr-1 mt-1.5 text-xs" />
+      return <GoSquareFill className="mr-1 mt-1.5 text-xs" />
   }
 }
