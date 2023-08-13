@@ -16,7 +16,7 @@ import PostList from 'notion-nextjs-lib/dist/components/PostsList'
 import ScrollToTop from 'notion-nextjs-lib/dist/components/ScrollToTop'
 import { AiOutlineAlert } from 'react-icons/ai'
 
-import { lobster } from '../lib/fonts'
+import { comfortaa, lobster } from '../lib/fonts'
 
 type SinglePostTemplateProps = {
   postHeader: PostHeaderType
@@ -104,7 +104,11 @@ export default function SinglePostTemplate(props: SinglePostTemplateProps) {
                 <PostList
                   posts={props.relatedPosts}
                   postType="PostTitleCateDate"
-                  postTypeOpts={{ hideCategory: true, hideDate: true }}
+                  postTypeOpts={{
+                    hideCategory: true,
+                    hideDate: true,
+                    fontClassName: comfortaa.className
+                  }}
                 />
               </div>
             )}

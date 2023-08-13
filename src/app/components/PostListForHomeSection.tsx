@@ -5,7 +5,7 @@ import SkeletonPostList from 'notion-nextjs-lib/dist/components/SkeletonPostList
 import { Suspense } from 'react'
 import { MdKeyboardDoubleArrowRight } from 'react-icons/md'
 
-import { lobster } from '../lib/fonts'
+import { comfortaa, lobster } from '../lib/fonts'
 import Container from './Container'
 import PostListForHome, { PostListForHomeType, postListHomeCount } from './PostListForHome'
 
@@ -72,7 +72,7 @@ export default function PostListForHomeSection(props: SkeletonPostListForHomePro
             listStyle={props.listStyle}
             type={props.type}
             categorySlug={props.categorySlug}
-            postTypeOpts={props.postTypeOpts}
+            postTypeOpts={{ ...props.postTypeOpts, fontClassName: comfortaa.className }}
             postType={props.postType}
           />
         </Suspense>
