@@ -1,21 +1,11 @@
 # Math2IT with Next.js
 
-## Infos & setting up
-
-- Vercel site: https://math2it-v-nextjs-html.vercel.app/
-- [Project on Notion](https://www.notion.so/math2it/4f043a41b36c4e09a0c915af847f1224?v=e09c3a2b734041ab8dfdcbabf18abae6).
-- Repo contains the html files (which is used to serve the main site): https://github.com/dinhanhthi/math2it-v-nextjs-html
-- Search server: https://github.com/dinhanhthi/math2it-server
-- Env vars: check [this file](./example.env.local).
-- Check quota Vercel: https://vercel.com/dashboard/usage
-
 ## ‼️ Rules & Notes
 
-1. Types in `additional.d.ts` for customized types.
-2. **BEFORE PUSHING**: run `yarn run check` to check if there are errors!
-3. **DON'T** comment on the right side of the variable in `.env.local`!!!
-4. Change something in `.env.local`, MUST restart manually the `yarn dev`!
-5. **Dev tags** (used to search globally in the project)
+1. **BEFORE PUSHING**: run `yarn run check` to check if there are errors!
+2. **DON'T** comment on the right side of the variable in `.env.local`!!!
+3. Change something in `.env.local`, MUST restart manually the `yarn dev`!
+4. **Dev tags** (used to search globally in the project)
    1. `###M`: useful in dev mode, not prod mode.
    2. `###TODO`: to to.
    3. `###R`: remarks!
@@ -48,6 +38,14 @@
     # dev
     yarn dev
 
+    # just build
+    yarn build # newest modified posts
+    yarn build-full # completely
+
+    # server current ./out folder
+    yarn start # without static-export
+    yarn start-static # with static export
+
     # build normally (only take last modifed posts)
     yarn ud-site
     # then go to "math2it-v-nextjs-html" and run below to see if everything is ok?
@@ -69,7 +67,9 @@
 7. **Full build**: In case you don't want to use `lastUpdate.txt` technique, just make a full build with `yarn ud-site-full`.
 8. To serve html files offline: `http-server out -p 3003 -a localhost` and go to http://localhost:3003
 
-## imgur & update cover and book cover and images in post
+## imgur
+
+__For updating cover and book cover and images in post__!
 
 If an image on Notion isn't hosted on [imgur](https://imgur.com/), download this image -> upload to imgur -> get the url -> update the corresponding field on notion.
 
@@ -112,38 +112,12 @@ Usage (`ng` is the field `css` in the config file),
 
 🚸 Make sure the codes are unique! You can check the tab "Customize Codes" on the fontello page.
 
-**Custom svg icon**:
+<details>
+ <summary>Custom svg icon</summary>
 
 - Drag and drop svg to fontello.
 - If having problem "If image looks not as expected please convert to compound path manually" -> use [this site](https://jakearchibald.github.io/svgomg/) to fix the svg and then download the fixed svg and try again!
-
-## Api (`src/api/`)
-
-✳️ Search posts with the unofficial notion api.
-
-**UPDATE 25/07/23**: Because we use static export, we don't use this api anymore, we use https://github.com/dinhanhthi/math2it-server instead.
-
-**POST** `http://localhost:3000/api/search-notion`
-
-```bash
-# body
-{
-    "query": "check",
-    "limit": 5
-}
-```
-
-## React Icons
-
-[Official website & used to search icons](https://react-icons.github.io/react-icons/).
-
-How to use?
-
-```tsx
-import { BiRightArrow } from 'react-icons/bi'
-
-;<BiRightArrow className="mr-1 text-lg" />
-```
+</details>
 
 ## Update package version
 

@@ -1,8 +1,8 @@
 import { comfortaa } from '@app/lib/fonts'
-import PostFeaturedImage from '@c/PostFeaturedImage'
 import { Post } from '@src/interface'
 import cn from 'classnames'
 import Link from 'next/link'
+import PostFeaturedImage from 'notion-nextjs-lib/dist/components/PostFeaturedImage'
 
 type PostImageBackgroundProps = {
   post: Post

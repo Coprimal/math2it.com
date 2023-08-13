@@ -6,7 +6,8 @@ const nextConfig = {
   poweredByHeader: false, // remove "Powered by Next.js" from the header
   transpilePackages: ['react-syntax-highlighter'],
   experimental: {
-    scrollRestoration: true // not supported yet by --turbo
+    scrollRestoration: true, // not supported yet by --turbo,
+    esmExternals: 'loose'
   },
   images: {
     unoptimized: true,

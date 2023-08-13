@@ -1,10 +1,10 @@
 import { comfortaa } from '@app/lib/fonts'
-import Date from '@c/Date'
-import Excerpt from '@c/Excerpt'
-import PostFeaturedImage from '@c/PostFeaturedImage'
 import { Post } from '@src/interface'
 import cn from 'classnames'
 import Link from 'next/link'
+import Date from 'notion-nextjs-lib/dist/components/Date'
+import Excerpt from 'notion-nextjs-lib/dist/components/Excerpt'
+import PostFeaturedImage from 'notion-nextjs-lib/dist/components/PostFeaturedImage'
 
 export type PostCardWhiteBgBigOpts = {
   hideDate?: boolean
@@ -61,7 +61,7 @@ export default function PostCardWhiteBgBig({ post, options }: PostTitleCateDateP
           )}
           {!options?.hideExcerpt && excerpt && (
             <div className="pt-2 text-[0.8rem] opacity-80 group-hover:opacity-100">
-              <Excerpt excerpt={excerpt}></Excerpt>
+              <Excerpt excerpt={excerpt} defaultExcerpt="Một bài viết trên Math2IT"></Excerpt>
             </div>
           )}
         </div>

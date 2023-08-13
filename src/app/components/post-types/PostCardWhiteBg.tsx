@@ -1,9 +1,9 @@
 import { comfortaa } from '@app/lib/fonts'
-import Date from '@c/Date'
-import PostFeaturedImage from '@c/PostFeaturedImage'
 import { Post } from '@src/interface'
 import cn from 'classnames'
 import Link from 'next/link'
+import Date from 'notion-nextjs-lib/dist/components/Date'
+import PostFeaturedImage from 'notion-nextjs-lib/dist/components/PostFeaturedImage'
 
 export type PostCardWhiteBgOpts = {
   hideDate?: boolean

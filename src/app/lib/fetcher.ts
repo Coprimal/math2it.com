@@ -21,11 +21,11 @@ import {
 } from '@src/interface'
 import { get, set } from 'lodash'
 import { StaticImageData } from 'next/image'
+import { getJoinedRichText } from 'notion-nextjs-lib/dist/helpers/block-helpers'
 import { getPlaiceholder } from 'plaiceholder'
 import { cache } from 'react'
 import { unfurl } from 'unfurl.js'
 
-import { getJoinedRichText } from './block-helpers'
 import {
   SINGLE_PAGE_SLUGS,
   defaultFeaturedImage,

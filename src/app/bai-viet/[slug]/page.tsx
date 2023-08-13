@@ -4,9 +4,9 @@ import SinglePostTemplate from '@app/templates/SinglePostTemplate'
 import { DynamicSegmentParamsProps } from '@src/interface'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
+import { getJoinedRichText } from 'notion-nextjs-lib/dist/helpers/block-helpers'
 import 'react-medium-image-zoom/dist/styles.css'
 
-import { getJoinedRichText } from '../../lib/block-helpers'
 import { generateMetaTitle, getRelatedPosts } from '../../lib/helpers'
 
 export const revalidate = 60

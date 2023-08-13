@@ -1,8 +1,7 @@
 import { BlockObjectResponse } from '@notionhq/client/build/src/api-endpoints'
 import cn from 'classnames'
-
-import BlockRender from './BlockRender'
-import PostToc from './PostToc'
+import BlockRender from 'notion-nextjs-lib/dist/components/BlockRender'
+import PostToc from 'notion-nextjs-lib/dist/components/PostToc'
 
 export const postBodyContainerClass = 'mx-auto container pb-8 pt-4'
 

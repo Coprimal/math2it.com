@@ -2,6 +2,7 @@ import { Client } from '@notionhq/client'
 import chalk from 'chalk'
 import got from 'got'
 import { get } from 'lodash'
+import { getJoinedRichText } from 'notion-nextjs-lib/dist/helpers/block-helpers'
 import yargs, * as yargsType from 'yargs'
 
 // --------------------------------------------------------------------------------------------
@@ -352,12 +353,6 @@ function flattenAllBlocks(blocks: any[]): any {
     })
 
   return [...blocks, ...childBlocks.flat()]
-}
-
-function getJoinedRichText(richTextArr?: any[]): string {
-  if (!richTextArr || !richTextArr.length) return ''
-  const textArr = richTextArr.map((richText: any) => richText.plain_text)
-  return textArr.join('')
 }
 
 // --------------------------------------------------------------------------------------------

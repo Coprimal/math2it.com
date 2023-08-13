@@ -1,11 +1,14 @@
 import Container from '@c/Container'
-import ImageComponent from '@c/ImageComponent'
-import Pagination from '@c/Pagination'
-import PostList, { PostTypeOpts } from '@c/PostsList'
 import { Post } from '@src/interface'
 import cn from 'classnames'
 import { StaticImageData } from 'next/image'
+import ImageComponent from 'notion-nextjs-lib/dist/components/ImageComponent'
+import Pagination from 'notion-nextjs-lib/dist/components/Pagination'
+import PostList, { PostTypeOpts } from 'notion-nextjs-lib/dist/components/PostsList'
 import { useGeoPattern } from 'react-geopattern'
+
+import { defaultFeaturedImage } from '../lib/config'
+import { comfortaa } from '../lib/fonts'
 
 type PageOfPostsListTemplateProps = {
   title: string
@@ -43,6 +46,7 @@ export default function PageOfPostsListTemplate(props: PageOfPostsListTemplatePr
             )}
           >
             <ImageComponent
+              defaultImage={defaultFeaturedImage}
               image={{
                 staticImageData: props.cover
               }}
@@ -95,7 +99,9 @@ export default function PageOfPostsListTemplate(props: PageOfPostsListTemplatePr
                 <PostList
                   posts={props.posts}
                   postType="PostTitleCateDate"
-                  postTypeOpts={props.postTypeOpts ?? { hideCategory: true }}
+                  postTypeOpts={
+                    props.postTypeOpts ?? { hideCategory: true, fontClassName: comfortaa.className }
+                  }
                 />
               )}
             </div>
@@ -105,6 +111,7 @@ export default function PageOfPostsListTemplate(props: PageOfPostsListTemplatePr
                 path={props.uri}
                 total={props.totalPages}
                 current={props.currentPage}
+                pageAlias="trang"
               />
             )}
           </>

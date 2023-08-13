@@ -1,10 +1,11 @@
 'use client'
 
 import cn from 'classnames'
+import SearchModal from 'notion-nextjs-lib/dist/components/SearchModal'
 import { useEffect, useState } from 'react'
 import { FiSearch } from 'react-icons/fi'
 
-import SearchModal from '../SearchModal'
+import { getSlugPrefix } from '../../lib/config'
 
 export default function NavSearch() {
   const [isSearchOpen, setIsSearchOpen] = useState(false)
@@ -57,7 +58,12 @@ export default function NavSearch() {
         </button>
       </div>
       {isSearchOpen && (
-        <SearchModal isOpen={isSearchOpen} closeModal={() => setIsSearchOpen(false)} />
+        <SearchModal
+          url={process.env.SEARCH_URL as string}
+          slugPrefix={getSlugPrefix('singlePost')}
+          isOpen={isSearchOpen}
+          closeModal={() => setIsSearchOpen(false)}
+        />
       )}
     </>
   )

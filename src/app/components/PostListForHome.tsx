@@ -1,9 +1,9 @@
 import { getAuthors, getCategories, getPosts, getPostsBy } from '@app/lib/fetcher'
 import { Post } from '@src/interface'
+import PostList, { PostType, PostTypeOpts } from 'notion-nextjs-lib/dist/components/PostsList'
 
 import { getFilterOf } from '../lib/helpers'
 import { PostListStyle } from './PostListForHomeSection'
-import PostList, { PostType, PostTypeOpts } from './PostsList'
 
 export type PostListForHomeType = 'latest' | 'selected' | 'byCategory'
 

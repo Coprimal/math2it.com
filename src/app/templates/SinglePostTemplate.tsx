@@ -3,17 +3,18 @@
 import PostAside from '@c/PostAside'
 import PostBody from '@c/PostBody'
 import PostHeader from '@c/PostHeader'
-import PostToc from '@c/PostToc'
 import {
   BlockObjectResponse,
   ListBlockChildrenResponse
 } from '@notionhq/client/build/src/api-endpoints'
+import toTopImg from '@root/public/to-top.webp'
 import { Post, PostHeaderType } from '@src/interface'
 import cn from 'classnames'
+import PostToc from 'notion-nextjs-lib/dist/components/PostToc'
+import PostList from 'notion-nextjs-lib/dist/components/PostsList'
+import ScrollToTop from 'notion-nextjs-lib/dist/components/ScrollToTop'
 import { AiOutlineAlert } from 'react-icons/ai'
 
-import PostList from '../components/PostsList'
-import ScrollToTop from '../components/ScrollToTop'
 import {
   BlockOptionContext,
   BlockOptionContextType,
@@ -123,7 +124,7 @@ export default function SinglePostTemplate(props: SinglePostTemplateProps) {
           </aside>
         </div>
       </div>
-      <ScrollToTop />
+      <ScrollToTop image={toTopImg} />
     </BlockOptionContext.Provider>
   )
 }

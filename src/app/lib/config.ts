@@ -35,7 +35,6 @@ export const notionDateName = 'finalCreatedDate'
 
 // Notion Posts defautl
 export const defaultPostTitle = 'Không tựa đề'
-export const defaultPostExcerpt = 'Một bài viết trên Math2IT'
 export const defaultPostDate = new Date().toISOString().split('T')[0]
 
 // Custom sizes for featured images
