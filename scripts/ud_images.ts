@@ -3,6 +3,7 @@ import chalk from 'chalk'
 import got from 'got'
 import { get } from 'lodash'
 import { getJoinedRichText } from 'notion-nextjs-lib/dist/helpers/block-helpers'
+import { makeSlugText } from 'notion-nextjs-lib/dist/helpers/helpers'
 import yargs, * as yargsType from 'yargs'
 
 // --------------------------------------------------------------------------------------------
@@ -319,20 +320,6 @@ const albumHashMap = {
 const predefinedCategories = Object.keys(albumHashMap).filter(
   category => category !== 'cover' && category !== 'bookCover'
 )
-
-function makeSlugText(text?: string | null): string | null {
-  if (!text) return null
-  return text
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/đ/g, 'd')
-    .replace(/Đ/g, 'D')
-    .replace(':', '')
-    .split(' ')
-    .join('-')
-    .replace(/^\/|\/$/g, '') // remove "/" at the beginning and the end
-}
 
 function handleError(errorMessage: string, context: string) {
   console.log(chalk.red(`🚨 [${context}] ${errorMessage}`))

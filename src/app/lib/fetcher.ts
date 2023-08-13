@@ -22,6 +22,7 @@ import {
 import { get, set } from 'lodash'
 import { StaticImageData } from 'next/image'
 import { getJoinedRichText } from 'notion-nextjs-lib/dist/helpers/block-helpers'
+import { cleanText, makeSlugText } from 'notion-nextjs-lib/dist/helpers/helpers'
 import { getPlaiceholder } from 'plaiceholder'
 import { cache } from 'react'
 import { unfurl } from 'unfurl.js'
@@ -43,10 +44,8 @@ import {
   retrieveNotionDatabaseWithoutCache
 } from './db'
 import {
-  cleanText,
   getFilter,
   getPredefinedCategories,
-  makeSlugText,
   parseAuthorsForPost,
   parseImgurUrl,
   parseNotionImageUrl,
