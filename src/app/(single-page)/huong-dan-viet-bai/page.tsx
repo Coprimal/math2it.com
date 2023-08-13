@@ -27,7 +27,7 @@ export default async function AboutPage() {
     return (
       <SinglePostTemplate
         isPage={true}
-        blockOptions={{ disableAnchorHeading: true }}
+        blockOptionsContext={{ disableAnchorHeading: true }}
         postHeader={postHeader}
         contentBlocks={contentBlocks}
       />
