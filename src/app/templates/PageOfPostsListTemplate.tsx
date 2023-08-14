@@ -100,7 +100,10 @@ export default function PageOfPostsListTemplate(props: PageOfPostsListTemplatePr
                   posts={props.posts}
                   postType="PostTitleCateDate"
                   postTypeOpts={
-                    props.postTypeOpts ?? { hideCategory: true, fontClassName: comfortaa.className }
+                    { ...props.postTypeOpts, fontClassName: comfortaa.className } ?? {
+                      hideCategory: true,
+                      fontClassName: comfortaa.className
+                    }
                   }
                 />
               )}
