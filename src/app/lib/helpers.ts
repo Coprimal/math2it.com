@@ -179,7 +179,7 @@ export function parseNotionImageUrl(url?: string, pageIdWithDash?: string): stri
  * @param ignoreImgType in case we don't want to add "type" to the url of certain images
  */
 export const parseImgurUrl = (opts: {
-  url?: string
+  url: string
   type?: ImgurUrlType
   ignoreImgType?: string
 }) => {
