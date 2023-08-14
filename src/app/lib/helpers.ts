@@ -171,26 +171,6 @@ export const parseImgurUrl = (opts: {
   return opts.url.replace(/(\.\w+$)/, `${opts.type}$1`)
 }
 
-/**
- * Get a right start_cursor for pagination based on current page and posts
- * @param posts
- * @param postsPerPage
- * @param currentPage
- * @returns next_cursor or `undefined` (it has to be `undefined`, not `null` because
- * Notion API doesn't accept `null` value for `start_cursor`)
- */
-export function getStartCursorForCurrentPage(
-  currentPage: number,
-  posts: Post[],
-  postsPerPage: number
-): string | undefined {
-  if (posts?.length === 0) return undefined
-  if (currentPage === 1) return undefined
-  const numPages = Math.ceil(posts.length / postsPerPage)
-  if (currentPage > numPages) return undefined
-  return posts[(currentPage - 1) * postsPerPage]?.id
-}
-
 export function getFilterOf(type: SlugTypeLabels, data?: Category | Tag | Author): unknown {
   switch (type) {
     case 'author':
