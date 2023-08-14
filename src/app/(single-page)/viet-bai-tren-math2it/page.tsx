@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation'
 
+import { defaultBlockOptionsContext } from '../../lib/config'
 import { getBlocks, getPostHeader } from '../../lib/fetcher'
 import { generateMetaTitle } from '../../lib/helpers'
 import SinglePostTemplate from '../../templates/SinglePostTemplate'
@@ -28,6 +29,7 @@ export default async function WriteWithUsPage() {
         hideWriteWithUs={true}
         postHeader={postHeader}
         contentBlocks={contentBlocks}
+        blockOptionsContext={defaultBlockOptionsContext}
       />
     )
   } catch (error) {

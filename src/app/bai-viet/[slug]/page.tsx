@@ -1,4 +1,4 @@
-import { notionMaxRequest } from '@app/lib/config'
+import { defaultBlockOptionsContext, notionMaxRequest } from '@app/lib/config'
 import { getAuthors, getBlocks, getCategories, getPostHeader, getPosts } from '@app/lib/fetcher'
 import SinglePostTemplate from '@app/templates/SinglePostTemplate'
 import { Metadata } from 'next'
@@ -70,6 +70,7 @@ export default async function SinglePostPage({ params }: DynamicSegmentParamsPro
         postHeader={postHeader}
         contentBlocks={contentBlocks}
         relatedPosts={relatedPosts}
+        blockOptionsContext={defaultBlockOptionsContext}
       />
     )
   } catch (error) {
