@@ -1,10 +1,10 @@
 import { notionMaxRequest } from '@app/lib/config'
 import { getAuthors, getBlocks, getCategories, getPostHeader, getPosts } from '@app/lib/fetcher'
 import SinglePostTemplate from '@app/templates/SinglePostTemplate'
-import { DynamicSegmentParamsProps } from '@src/interface'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getJoinedRichText } from 'notion-nextjs-lib/dist/helpers/block-helpers'
+import { DynamicSegmentParamsProps } from 'notion-nextjs-lib/dist/interface'
 import 'react-medium-image-zoom/dist/styles.css'
 
 import { generateMetaTitle, getRelatedPosts } from '../../lib/helpers'

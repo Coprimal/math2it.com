@@ -1,10 +1,10 @@
 import Container from '@c/Container'
-import { Post } from '@src/interface'
 import cn from 'classnames'
 import { StaticImageData } from 'next/image'
 import ImageComponent from 'notion-nextjs-lib/dist/components/ImageComponent'
 import Pagination from 'notion-nextjs-lib/dist/components/Pagination'
 import PostList, { PostTypeOpts } from 'notion-nextjs-lib/dist/components/PostsList'
+import { Post } from 'notion-nextjs-lib/dist/interface'
 import { useGeoPattern } from 'react-geopattern'
 
 import { defaultFeaturedImage } from '../lib/config'

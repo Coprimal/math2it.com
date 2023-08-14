@@ -6,18 +6,11 @@ import {
   predefinedCategories
 } from '@app/lib/config'
 import { QueryDatabaseParameters } from '@notionhq/client/build/src/api-endpoints'
-import {
-  Author,
-  Category,
-  ImgurUrlType,
-  NotionAuthor,
-  Post,
-  SlugTypeLabels,
-  Tag
-} from '@src/interface'
+import { ImgurUrlType, NotionAuthor, SlugTypeLabels } from '@src/interface'
 import fs from 'fs'
 import { intersectionWith } from 'lodash'
 import { makeSlugText } from 'notion-nextjs-lib/dist/helpers/helpers'
+import { Author, Category, Post, Tag } from 'notion-nextjs-lib/dist/interface'
 import path from 'path'
 
 /**
@@ -58,20 +51,6 @@ export function transformNotionAuthorsData(data: NotionAuthor[]): Author[] {
     }) || []
   )
 }
-
-// export function transformNotionTagsData(data?: NotionTag[]): Tag[] {
-//   return (
-//     data?.map(tag => {
-//       const properties = tag?.properties || null
-//       const name = properties?.name?.title[0]?.plain_text
-//       const description = properties?.description?.rich_text[0]?.plain_text || null
-//       const slug = properties?.slug?.rich_text[0]?.plain_text || makeSlugText(name) || null
-//       const uri = `/${getSlugPrefix('tag')}/${slug}/`
-//       const id = tag?.id || uri
-//       return { id, name, uri, description, slug }
-//     }) || []
-//   )
-// }
 
 export function parseAuthorsForPost(authorIdsList: string[], authorsList: Author[]): Author[] {
   return intersectionWith(authorsList, authorIdsList, (author, id) => author.id === id)
@@ -312,11 +291,6 @@ export function getFilter(filter?: any, getFull?: boolean): QueryDatabaseParamet
 export function generateMetaTitle(title: string) {
   return `${title} | Math2IT`
 }
-
-// export function cleanText(text?: string) {
-//   if (!text) return undefined
-//   return text.replace(/\n/g, ' ').replace(/\s+/g, ' ').trim()
-// }
 
 export function getRelatedPosts(allPosts: Post[], post: Post, numPost: number): Post[] {
   const postCategory = post.categories?.[0]?.name

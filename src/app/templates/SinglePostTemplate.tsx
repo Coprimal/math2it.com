@@ -8,12 +8,12 @@ import {
   ListBlockChildrenResponse
 } from '@notionhq/client/build/src/api-endpoints'
 import toTopImg from '@root/public/to-top.webp'
-import { Post, PostHeaderType } from '@src/interface'
 import cn from 'classnames'
 import { BlockOptionsContextType } from 'notion-nextjs-lib/dist/components/BlockRender'
 import PostToc from 'notion-nextjs-lib/dist/components/PostToc'
 import PostList from 'notion-nextjs-lib/dist/components/PostsList'
 import ScrollToTop from 'notion-nextjs-lib/dist/components/ScrollToTop'
+import { Post, PostHeaderType } from 'notion-nextjs-lib/dist/interface'
 import { AiOutlineAlert } from 'react-icons/ai'
 
 import { comfortaa, lobster } from '../lib/fonts'

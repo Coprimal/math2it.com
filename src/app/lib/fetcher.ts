@@ -3,23 +3,20 @@ import {
   QueryDatabaseParameters
 } from '@notionhq/client/build/src/api-endpoints'
 import defaultBookCover from '@root/public/featured-images/untitledBook.jpg'
-import {
-  Author,
-  Category,
-  ImageType,
-  ImgurUrlType,
-  NotionHeader,
-  NotionPost,
-  NotionSorts,
-  NotionTagData,
-  Post,
-  PostHeaderType,
-  Tag
-} from '@src/interface'
+import { ImgurUrlType, NotionHeader, NotionPost, NotionTagData } from '@src/interface'
 import { get } from 'lodash'
 import { StaticImageData } from 'next/image'
 import { getJoinedRichText } from 'notion-nextjs-lib/dist/helpers/block-helpers'
 import { makeSlugText } from 'notion-nextjs-lib/dist/helpers/helpers'
+import {
+  Author,
+  Category,
+  ImageType,
+  NotionSorts,
+  Post,
+  PostHeaderType,
+  Tag
+} from 'notion-nextjs-lib/dist/interface'
 import {
   getBlocks as getNotionBlocks,
   getNotionDatabaseWithoutCache,

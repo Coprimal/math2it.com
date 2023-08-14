@@ -5,7 +5,8 @@ import defaultMath from '@root/public/featured-images/math.png'
 import defaultTech from '@root/public/featured-images/tech.png'
 import defaultTool from '@root/public/featured-images/tool.png'
 import defaultTranslate from '@root/public/featured-images/translate.png'
-import { Category, SlugTypeLabels } from '@src/interface'
+import { SlugTypeLabels } from '@src/interface'
+import { Category } from 'notion-nextjs-lib/dist/interface'
 
 // 👇 ❗❗ Shouldn't change this! Otherwise, change the "next_cursor" list in the
 // later of this file as well. Read more in the "next_cursor" section!

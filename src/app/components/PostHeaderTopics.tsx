@@ -1,7 +1,7 @@
 import { getSlugPrefix } from '@app/lib/config'
-import { Category, Tag } from '@src/interface'
 import cn from 'classnames'
 import Link from 'next/link'
+import { Category, Tag } from 'notion-nextjs-lib/dist/interface'
 
 type PostHeaderTopicsProps = {
   className?: string

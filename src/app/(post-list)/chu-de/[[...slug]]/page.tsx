@@ -3,9 +3,13 @@ import { getAuthors, getCategories, getPostsBy, getTags } from '@app/lib/fetcher
 import { generateMetaTitle, getFilterOf, getStartCursorForCurrentPage } from '@app/lib/helpers'
 import PageOfPostsListTemplate from '@app/templates/PageOfPostsListTemplate'
 import tagCover from '@root/public/featured-images/tag.png'
-import { OptionalCatchAllParams, OptionalCatchAllProps, Tag } from '@src/interface'
 import { Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
+import {
+  OptionalCatchAllParams,
+  OptionalCatchAllProps,
+  Tag
+} from 'notion-nextjs-lib/dist/interface'
 
 export const revalidate = 60
 

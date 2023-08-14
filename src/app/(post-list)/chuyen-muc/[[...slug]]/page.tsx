@@ -2,9 +2,9 @@ import { getSlugPrefix, notionMaxRequest, numPostsPerPage } from '@app/lib/confi
 import { getAuthors, getCategories, getPostsBy } from '@app/lib/fetcher'
 import { generateMetaTitle, getFilterOf, getStartCursorForCurrentPage } from '@app/lib/helpers'
 import PageOfPostsListTemplate from '@app/templates/PageOfPostsListTemplate'
-import { OptionalCatchAllParams, OptionalCatchAllProps } from '@src/interface'
 import { Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
+import { OptionalCatchAllParams, OptionalCatchAllProps } from 'notion-nextjs-lib/dist/interface'
 
 export const revalidate = 60
 

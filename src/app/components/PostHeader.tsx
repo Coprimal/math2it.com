@@ -1,9 +1,9 @@
 import { anonymAuthor, getSlugPrefix, postWidthContainer } from '@app/lib/config'
-import { PostHeaderType } from '@src/interface'
 import cn from 'classnames'
 import Link from 'next/link'
 import Date from 'notion-nextjs-lib/dist/components/Date'
 import ImageComponent from 'notion-nextjs-lib/dist/components/ImageComponent'
+import { PostHeaderType } from 'notion-nextjs-lib/dist/interface'
 
 import { defaultFeaturedImage } from '../lib/config'
 import Container from './Container'
