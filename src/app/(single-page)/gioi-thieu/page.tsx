@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation'
 
+import { defaultBlockOptionsContext } from '../../lib/config'
 import { getBlocks, getPostHeader } from '../../lib/fetcher'
 import { generateMetaTitle } from '../../lib/helpers'
 import SinglePostTemplate from '../../templates/SinglePostTemplate'
@@ -27,7 +28,7 @@ export default async function AboutPage() {
     return (
       <SinglePostTemplate
         isPage={true}
-        blockOptions={{ disableAnchorHeading: true }}
+        blockOptionsContext={{ disableAnchorHeading: true, ...defaultBlockOptionsContext }}
         postHeader={postHeader}
         contentBlocks={contentBlocks}
       />

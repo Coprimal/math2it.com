@@ -1,13 +1,13 @@
 import cn from 'classnames'
 import Link from 'next/link'
+import { PostType, PostTypeOpts } from 'notion-nextjs-lib/dist/components/PostsList'
+import SkeletonPostList from 'notion-nextjs-lib/dist/components/SkeletonPostList'
 import { Suspense } from 'react'
 import { MdKeyboardDoubleArrowRight } from 'react-icons/md'
 
-import { lobster } from '../lib/fonts'
+import { comfortaa, lobster } from '../lib/fonts'
 import Container from './Container'
 import PostListForHome, { PostListForHomeType, postListHomeCount } from './PostListForHome'
-import { PostType, PostTypeOpts } from './PostsList'
-import SkeletonPostList from './SkeletonPostList'
 
 export type PostListStyle = 'default' | 'carousel'
 
@@ -72,7 +72,7 @@ export default function PostListForHomeSection(props: SkeletonPostListForHomePro
             listStyle={props.listStyle}
             type={props.type}
             categorySlug={props.categorySlug}
-            postTypeOpts={props.postTypeOpts}
+            postTypeOpts={{ ...props.postTypeOpts, fontClassName: comfortaa.className }}
             postType={props.postType}
           />
         </Suspense>

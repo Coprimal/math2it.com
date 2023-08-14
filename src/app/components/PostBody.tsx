@@ -1,8 +1,7 @@
 import { BlockObjectResponse } from '@notionhq/client/build/src/api-endpoints'
 import cn from 'classnames'
-
-import BlockRender from './BlockRender'
-import PostToc from './PostToc'
+import BlockRender, { BlockOptionsContextType } from 'notion-nextjs-lib/dist/components/BlockRender'
+import PostToc from 'notion-nextjs-lib/dist/components/PostToc'
 
 export const postBodyContainerClass = 'mx-auto container pb-8 pt-4'
 
@@ -10,6 +9,7 @@ type PostBodyProps = {
   contentBlocks: BlockObjectResponse[]
   className?: string
   showToc?: boolean
+  blockOptionsContext?: BlockOptionsContextType
 }
 
 export default function PostBody(props: PostBodyProps) {
@@ -22,7 +22,14 @@ export default function PostBody(props: PostBodyProps) {
         contentBlocks={contentBlocks as BlockObjectResponse[]}
       />
       {!!contentBlocks.length &&
-        contentBlocks.map(block => <BlockRender key={block.id} block={block} level={0} />)}
+        contentBlocks.map(block => (
+          <BlockRender
+            blockOptionsContext={props.blockOptionsContext}
+            key={block.id}
+            block={block}
+            level={0}
+          />
+        ))}
       {!contentBlocks.length && <p>This post has no content.</p>}
     </div>
   )

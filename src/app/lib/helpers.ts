@@ -6,35 +6,12 @@ import {
   predefinedCategories
 } from '@app/lib/config'
 import { QueryDatabaseParameters } from '@notionhq/client/build/src/api-endpoints'
-import {
-  Author,
-  Category,
-  ImgurUrlType,
-  NotionAuthor,
-  Post,
-  SlugTypeLabels,
-  Tag
-} from '@src/interface'
+import { ImgurUrlType, NotionAuthor, SlugTypeLabels } from '@src/interface'
 import fs from 'fs'
 import { intersectionWith } from 'lodash'
+import { makeSlugText } from 'notion-nextjs-lib/dist/helpers/helpers'
+import { Author, Category, Post, Tag } from 'notion-nextjs-lib/dist/interface'
 import path from 'path'
-
-/**
- * Convert "Nguyễn Văn Đông" to "nguyen-van-dong"
- */
-export function makeSlugText(text?: string | null): string | undefined {
-  if (!text) return undefined
-  return text
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/đ/g, 'd')
-    .replace(/Đ/g, 'D')
-    .replace(':', '')
-    .split(' ')
-    .join('-')
-    .replace(/^\/|\/$/g, '') // remove "/" at the beginning and the end
-}
 
 /**
  * We use "null" to avoid the "undefined" error when parsing to a JSON format!
@@ -74,20 +51,6 @@ export function transformNotionAuthorsData(data: NotionAuthor[]): Author[] {
     }) || []
   )
 }
-
-// export function transformNotionTagsData(data?: NotionTag[]): Tag[] {
-//   return (
-//     data?.map(tag => {
-//       const properties = tag?.properties || null
-//       const name = properties?.name?.title[0]?.plain_text
-//       const description = properties?.description?.rich_text[0]?.plain_text || null
-//       const slug = properties?.slug?.rich_text[0]?.plain_text || makeSlugText(name) || null
-//       const uri = `/${getSlugPrefix('tag')}/${slug}/`
-//       const id = tag?.id || uri
-//       return { id, name, uri, description, slug }
-//     }) || []
-//   )
-// }
 
 export function parseAuthorsForPost(authorIdsList: string[], authorsList: Author[]): Author[] {
   return intersectionWith(authorsList, authorIdsList, (author, id) => author.id === id)
@@ -195,7 +158,7 @@ export function parseNotionImageUrl(url?: string, pageIdWithDash?: string): stri
  * @param ignoreImgType in case we don't want to add "type" to the url of certain images
  */
 export const parseImgurUrl = (opts: {
-  url?: string
+  url: string
   type?: ImgurUrlType
   ignoreImgType?: string
 }) => {
@@ -274,33 +237,6 @@ export function getFilterOf(type: SlugTypeLabels, data?: Category | Tag | Author
 }
 
 /**
- * Convert "7c2e54318e52416ca5769831454bf08d" or "7c2e5431-8e52-416c-a576-9831454bf08d"
- * to "7c2e5431-8e52-416c-a576-9831454bf08d"
- */
-export function idToUuid(id: string): string | null {
-  if (!id) {
-    return null
-  }
-
-  id = id.split('?')[0]
-  const match = id.match(/\b([a-f0-9]{32})\b/)
-
-  if (match) {
-    return `${id.slice(0, 8)}-${id.slice(8, 4 + 8)}-${id.slice(12, 4 + 12)}-${id.slice(
-      16,
-      4 + 16
-    )}-${id.slice(20)}`
-  }
-
-  const match2 = id.match(/\b([a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})\b/)
-  if (match2) {
-    return match2[1]
-  }
-
-  return null
-}
-
-/**
  * Filter to be used in getPosts(). Remark, we ignore single page (where isPage = true on Notion)
  */
 export function getFilter(filter?: any, getFull?: boolean): QueryDatabaseParameters['filter'] {
@@ -354,11 +290,6 @@ export function getFilter(filter?: any, getFull?: boolean): QueryDatabaseParamet
 
 export function generateMetaTitle(title: string) {
   return `${title} | Math2IT`
-}
-
-export function cleanText(text?: string) {
-  if (!text) return undefined
-  return text.replace(/\n/g, ' ').replace(/\s+/g, ' ').trim()
 }
 
 export function getRelatedPosts(allPosts: Post[], post: Post, numPost: number): Post[] {

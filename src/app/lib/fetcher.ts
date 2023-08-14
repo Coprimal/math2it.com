@@ -1,31 +1,31 @@
 import {
-  BlockObjectResponse,
   ListBlockChildrenResponse,
-  QueryDatabaseParameters,
-  RichTextItemResponse
+  QueryDatabaseParameters
 } from '@notionhq/client/build/src/api-endpoints'
 import defaultBookCover from '@root/public/featured-images/untitledBook.jpg'
+import { ImgurUrlType, NotionHeader, NotionPost, NotionTagData } from '@src/interface'
+import { get } from 'lodash'
+import { StaticImageData } from 'next/image'
+import { getJoinedRichText } from 'notion-nextjs-lib/dist/helpers/block-helpers'
+import { makeSlugText } from 'notion-nextjs-lib/dist/helpers/helpers'
 import {
   Author,
-  BookmarkPreview,
   Category,
   ImageType,
-  ImgurUrlType,
-  NotionHeader,
-  NotionPost,
   NotionSorts,
-  NotionTagData,
   Post,
   PostHeaderType,
   Tag
-} from '@src/interface'
-import { get, set } from 'lodash'
-import { StaticImageData } from 'next/image'
-import { getPlaiceholder } from 'plaiceholder'
+} from 'notion-nextjs-lib/dist/interface'
+import {
+  getBlocks as getNotionBlocks,
+  getNotionDatabaseWithoutCache,
+  getNotionPageWithoutCache,
+  getPlaceholderImage,
+  retrieveNotionDatabaseWithoutCache
+} from 'notion-nextjs-lib/dist/lib/db'
 import { cache } from 'react'
-import { unfurl } from 'unfurl.js'
 
-import { getJoinedRichText } from './block-helpers'
 import {
   SINGLE_PAGE_SLUGS,
   defaultFeaturedImage,
@@ -37,16 +37,8 @@ import {
   predefinedCategories
 } from './config'
 import {
-  getNotionBlocksWithoutCache,
-  getNotionDatabaseWithoutCache,
-  getNotionPageWithoutCache,
-  retrieveNotionDatabaseWithoutCache
-} from './db'
-import {
-  cleanText,
   getFilter,
   getPredefinedCategories,
-  makeSlugText,
   parseAuthorsForPost,
   parseImgurUrl,
   parseNotionImageUrl,
@@ -278,6 +270,7 @@ async function parseImage(options: {
   typeImgur?: ImgurUrlType
 }): Promise<ImageType> {
   const { sourceUrl, altText, category, pageIdwithDash, staticImageData, canBeNull } = options
+  if (!sourceUrl) return null
   const urlToUse = parseImgurUrl({ url: sourceUrl, type: options.typeImgur })
   const image: ImageType = { altText, sourceUrl: urlToUse }
   const imgUrl = parseNotionImageUrl(urlToUse, pageIdwithDash)
@@ -418,148 +411,38 @@ async function transformNotionPostsData(options: {
   )
 }
 
-/**
- * Get all nested blocks (in all levels) of a block.
- *
- */
-export async function getBlocks(
-  blockId: string,
-  initNumbering?: string
-): Promise<ListBlockChildrenResponse['results']> {
-  const data = await getNotionBlocks(blockId)
-  const blocks = data?.results as
-    | (BlockObjectResponse & {
-        list_item?: string
-        children?: ListBlockChildrenResponse['results']
-        imageInfo?: any
-        imgUrl?: string
-        bookmark?: BookmarkPreview
-      })[]
-    | []
-
-  if (!blocks?.length) return []
-
-  let number = 1
-  for (const block of blocks) {
-    /**
-     * Remark: Consider 2 cases:
-     * ++ First:
-     * 1. Item 1
-     * Paragraph
-     * 1. Item 2
-     *
-     * ++ Second:
-     * 1. Item 1
-     * 2. Item 2
-     *
-     * The Notion API doesn't give any information in that Item 1 and Item 2 of the first case are
-     * in diffrent uls while in the second case, they are in the same ul.
-     *
-     * They are both in the same structure.
-     * Check: https://developers.notion.com/reference/block#numbered-list-item-blocks
-     *
-     * That's why we add some additional information to the block.
-     */
-    if (block.type === 'numbered_list_item') {
-      if (initNumbering && ['1', '2', '3'].includes(initNumbering)) initNumbering = undefined
-      block['list_item'] = (initNumbering ?? '') + `${number}.`
-      number++
-    } else {
-      number = 1
-    }
-
-    if (block.type === 'bulleted_list_item') {
-      block['list_item'] = !initNumbering ? '1' : initNumbering === '1' ? '2' : '3'
-    }
-
-    if (get(block, `${block.type}.rich_text`)) {
-      const parsedMention = await parseMention(get(block, `${block.type}.rich_text`) as any)
-      set(block, `${block.type}.rich_text`, parsedMention)
-    }
-
-    if (block.has_children) {
-      const children = await getBlocks(block.id, block['list_item'])
-      block['children'] = children
-    }
-
-    // Get real image size (width and height) of an image block
-    if (block.type === 'image') {
-      const url = get(block, 'image.file.url') || get(block, 'image.external.url')
-      if (url) {
-        // Resize the image to 1024x1024 max, except for gif and png (with transparent background)
-        block['imgUrl'] = parseImgurUrl({ url, type: 'h', ignoreImgType: 'png' })
-        block['imageInfo'] = await getPlaceholderImage(url) // { base64, width, height }
-      }
-    }
-
-    // bookmark
-    if (block.type === 'bookmark') {
-      const url = get(block, 'bookmark.url')
-      if (url) {
-        const unfurled = await unfurl(url)
-        const bookmark: BookmarkPreview = {
-          url,
-          title: cleanText(unfurled.title),
-          description: cleanText(unfurled.description) ?? null,
-          favicon: unfurled.favicon,
-          imageSrc: unfurled.open_graph?.images?.[0]?.url ?? null
-        }
-        block['bookmark'] = bookmark as any
-      }
-    }
-  }
-
-  return blocks
+export async function getBlocks(blockId: string): Promise<ListBlockChildrenResponse['results']> {
+  return await getNotionBlocks(
+    blockId,
+    process.env.NOTION_TOKEN as string,
+    process.env.NOTION_VERSION as string,
+    undefined,
+    getPageUri,
+    parseImgurUrlForGettingBlocks
+  )
 }
 
-/**
- * Add "slug" property when mentioning a page or an author in a paragraph block
- * @param blockParagraph
- */
-async function parseMention(richText: RichTextItemResponse[] | []): Promise<any> {
-  if (!richText?.length) return []
-  const newRichText = [] as RichTextItemResponse[]
-  for (const block of richText) {
-    if (block.type === 'mention' && block.mention?.type === 'page') {
-      const pageId = get(block, 'mention.page.id')
-      if (pageId) {
-        const pageUri = await getPageUri(pageId)
-        set(block, 'mention.page.uri', pageUri)
-      }
-      newRichText.push(block)
-    } else {
-      newRichText.push(block)
-    }
-  }
-  return newRichText
+function parseImgurUrlForGettingBlocks(url: string) {
+  return parseImgurUrl({ url, type: 'h', ignoreImgType: 'png' })
 }
+
 /**
  * Get uri (not slug) of a Notion page
  */
-async function getPageUri(pageId: string): Promise<string | null> {
+async function getPageUri(pageId: string): Promise<string | undefined> {
   const pageData = await getNotionPage(pageId)
   const isAuthor =
     get(pageData, 'parent.database_id', '').replaceAll('-', '') === process.env.NOTION_DB_AUTHORS
   const slug =
     get(pageData, 'properties.slug.rich_text[0].plain_text', '') ||
     makeSlugText(get(pageData, 'properties.name.title[0].plain_text', ''))
-  if (!slug) return null
+  if (!slug) return undefined
   return !isAuthor
     ? !SINGLE_PAGE_SLUGS.includes(slug)
       ? `/${getSlugPrefix('singlePost')}/${slug}/`
       : `/${slug}/`
     : `/${getSlugPrefix('author')}/${slug}/`
 }
-
-/**
- * Get all blocks of a Notion Page by pageId
- *
- * @see {@link https://developers.notion.com/reference/get-block-children Get block children - Notion API}
- */
-export const getNotionBlocks = cache(
-  async (pageId: string, pageSize?: number, startCursor?: string) =>
-    getNotionBlocksWithoutCache(pageId, pageSize, startCursor)
-)
 
 /**
  * Get data from Notion using the official Notion APIs. We use React cache() to cache the data.
@@ -575,7 +458,16 @@ export const getNotionDatabase = cache(
     startCursor?: string,
     pageSize?: number,
     sorts?: NotionSorts[]
-  ) => getNotionDatabaseWithoutCache(dataId, filter, startCursor, pageSize, sorts)
+  ) =>
+    getNotionDatabaseWithoutCache(
+      dataId,
+      process.env.NOTION_TOKEN as string,
+      process.env.NOTION_VERSION as string,
+      filter,
+      startCursor,
+      pageSize,
+      sorts
+    )
 )
 
 /**
@@ -585,20 +477,18 @@ export const getNotionDatabase = cache(
  *
  * @see {@link https://developers.notion.com/reference/retrieve-a-page Retrieve a page - Notion API}
  */
-export const getNotionPage = cache(async (pageId: string) => getNotionPageWithoutCache(pageId))
-
-/**
- * Get blurDataURL (base64) of an image
- *
- * REMARK: This method MUST be placed in this file, otherwise, there will be an error of "Can't resolve 'fs'"
- */
-export const getPlaceholderImage = cache(async function getPlaceholderImage(src: string) {
-  const buffer = await fetch(src).then(async res => Buffer.from(await res.arrayBuffer()))
-
-  const { base64, metadata } = await getPlaiceholder(buffer)
-  return { base64, width: metadata.width, height: metadata.height }
-})
+export const getNotionPage = cache(async (pageId: string) =>
+  getNotionPageWithoutCache(
+    pageId,
+    process.env.NOTION_TOKEN as string,
+    process.env.NOTION_VERSION as string
+  )
+)
 
 export const retrieveNotionDatabase = cache(async (dataId: string) =>
-  retrieveNotionDatabaseWithoutCache(dataId)
+  retrieveNotionDatabaseWithoutCache(
+    dataId,
+    process.env.NOTION_TOKEN as string,
+    process.env.NOTION_VERSION as string
+  )
 )

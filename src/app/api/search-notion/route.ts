@@ -1,7 +1,7 @@
-import { idToUuid, makeSlugText } from '@app/lib/helpers'
 import got from 'got'
+import { idToUuid, makeSlugText } from 'notion-nextjs-lib/dist/helpers/helpers'
+import { SearchResult } from 'notion-nextjs-lib/dist/interface'
 
-import { SearchResult } from '../../../interface'
 import { UNOFFICIAL_NOTION_KEYS, defaultPostTitle } from '../../lib/config'
 
 type SearchParams = {

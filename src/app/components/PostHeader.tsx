@@ -1,11 +1,12 @@
 import { anonymAuthor, getSlugPrefix, postWidthContainer } from '@app/lib/config'
-import { PostHeaderType } from '@src/interface'
 import cn from 'classnames'
 import Link from 'next/link'
+import Date from 'notion-nextjs-lib/dist/components/Date'
+import ImageComponent from 'notion-nextjs-lib/dist/components/ImageComponent'
+import { PostHeaderType } from 'notion-nextjs-lib/dist/interface'
 
+import { defaultFeaturedImage } from '../lib/config'
 import Container from './Container'
-import Date from './Date'
-import ImageComponent from './ImageComponent'
 import PostHeaderTopics from './PostHeaderTopics'
 
 export const fullWidthPostCoverHeight = 'h-[25vh] max-h-[25vh] min-h-[25vh]'
@@ -29,6 +30,7 @@ export default function PostHeader(props: PostHeaderProps) {
         {/* 👇 Because Image auto create position absolute, we have to wrap this with a relative div */}
         <div className="relative flex h-full w-full items-center overflow-hidden">
           <ImageComponent
+            defaultImage={defaultFeaturedImage}
             image={featuredImage}
             alt={`Hình đại diện của bài viết "${title}"`}
             className={cn('object-cover group-hover:scale-105 duration-500', {

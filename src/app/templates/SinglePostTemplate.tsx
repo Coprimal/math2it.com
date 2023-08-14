@@ -3,29 +3,26 @@
 import PostAside from '@c/PostAside'
 import PostBody from '@c/PostBody'
 import PostHeader from '@c/PostHeader'
-import PostToc from '@c/PostToc'
 import {
   BlockObjectResponse,
   ListBlockChildrenResponse
 } from '@notionhq/client/build/src/api-endpoints'
-import { Post, PostHeaderType } from '@src/interface'
+import toTopImg from '@root/public/to-top.webp'
 import cn from 'classnames'
+import { BlockOptionsContextType } from 'notion-nextjs-lib/dist/components/BlockRender'
+import PostToc from 'notion-nextjs-lib/dist/components/PostToc'
+import PostList from 'notion-nextjs-lib/dist/components/PostsList'
+import ScrollToTop from 'notion-nextjs-lib/dist/components/ScrollToTop'
+import { Post, PostHeaderType } from 'notion-nextjs-lib/dist/interface'
 import { AiOutlineAlert } from 'react-icons/ai'
 
-import PostList from '../components/PostsList'
-import ScrollToTop from '../components/ScrollToTop'
-import {
-  BlockOptionContext,
-  BlockOptionContextType,
-  defaultBlockOptionContext
-} from '../lib/context'
-import { lobster } from '../lib/fonts'
+import { comfortaa, lobster } from '../lib/fonts'
 
 type SinglePostTemplateProps = {
   postHeader: PostHeaderType
   contentBlocks: ListBlockChildrenResponse['results']
   relatedPosts?: Post[]
-  blockOptions?: BlockOptionContextType
+  blockOptionsContext?: BlockOptionsContextType
   hideWriteWithUs?: boolean
   isPage?: boolean
 }
@@ -36,13 +33,12 @@ const asideClass = cn('hidden 2xl:block flex-1', 'h-[calc(100vh-130px)] sticky t
 
 export default function SinglePostTemplate(props: SinglePostTemplateProps) {
   const { postHeader, contentBlocks } = props
-  const blockOpts = props.blockOptions || defaultBlockOptionContext
   const checkedText = props.postHeader?.contentCheck
     ? 'hoàn tất rà soát 🎉'
     : 'chưa hoàn tất rà soát'
 
   return (
-    <BlockOptionContext.Provider value={blockOpts}>
+    <>
       <div className="animate-fadeIn">
         {postHeader && (
           <PostHeader postHeader={postHeader} hideWriteWithUs={props.hideWriteWithUs} />
@@ -93,6 +89,7 @@ export default function SinglePostTemplate(props: SinglePostTemplateProps) {
               className={cn('w-full')}
               contentBlocks={contentBlocks as BlockObjectResponse[]}
               showToc={postHeader.showToc}
+              blockOptionsContext={props.blockOptionsContext}
             ></PostBody>
 
             {props.relatedPosts && props.relatedPosts.length > 0 && (
@@ -107,7 +104,11 @@ export default function SinglePostTemplate(props: SinglePostTemplateProps) {
                 <PostList
                   posts={props.relatedPosts}
                   postType="PostTitleCateDate"
-                  postTypeOpts={{ hideCategory: true, hideDate: true }}
+                  postTypeOpts={{
+                    hideCategory: true,
+                    hideDate: true,
+                    fontClassName: comfortaa.className
+                  }}
                 />
               </div>
             )}
@@ -123,7 +124,7 @@ export default function SinglePostTemplate(props: SinglePostTemplateProps) {
           </aside>
         </div>
       </div>
-      <ScrollToTop />
-    </BlockOptionContext.Provider>
+      <ScrollToTop image={toTopImg} />
+    </>
   )
 }

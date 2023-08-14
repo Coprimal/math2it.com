@@ -5,16 +5,19 @@ import defaultMath from '@root/public/featured-images/math.png'
 import defaultTech from '@root/public/featured-images/tech.png'
 import defaultTool from '@root/public/featured-images/tool.png'
 import defaultTranslate from '@root/public/featured-images/translate.png'
-import { Category, SlugTypeLabels } from '@src/interface'
+import { SlugTypeLabels } from '@src/interface'
+import { BlockOptionsContextType } from 'notion-nextjs-lib/dist/components/BlockRender'
+import { Category } from 'notion-nextjs-lib/dist/interface'
 
-export const defaultBlurDataURL =
-  'data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwC' +
-  'AAAAC0lEQVR42mN8XA8AAksBZG7LpHYAAAAASUVORK5CYII='
 // 👇 ❗❗ Shouldn't change this! Otherwise, change the "next_cursor" list in the
 // later of this file as well. Read more in the "next_cursor" section!
 export const numPostsPerPage = 20
 // 👇 Don't change this! By default, notion's page_size is 100, but we only need 10
 export const defaultNumPostsRequest = 10
+
+export const defaultBlockOptionsContext: BlockOptionsContextType = {
+  siteDomain: 'math2it.com'
+}
 
 /**
  * Single post settings
@@ -35,7 +38,6 @@ export const notionDateName = 'finalCreatedDate'
 
 // Notion Posts defautl
 export const defaultPostTitle = 'Không tựa đề'
-export const defaultPostExcerpt = 'Một bài viết trên Math2IT'
 export const defaultPostDate = new Date().toISOString().split('T')[0]
 
 // Custom sizes for featured images

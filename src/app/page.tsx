@@ -1,15 +1,16 @@
 import { comfortaa, lobster, righteous } from '@app/lib/fonts'
 import Container from '@c/Container'
-import ImageComponent from '@c/ImageComponent'
-import WaveSplit from '@c/WaveSplit'
+import toTopImg from '@root/public/to-top.webp'
 import WavingHand from '@root/public/waving_hand.webp'
 import cn from 'classnames'
 import Link from 'next/link'
+import ImageComponent from 'notion-nextjs-lib/dist/components/ImageComponent'
+import ScrollToTop from 'notion-nextjs-lib/dist/components/ScrollToTop'
+import WaveSplit from 'notion-nextjs-lib/dist/components/WaveSplit'
 
 import AlertHomePage from './components/AlertHomePage'
 import PostListForHomeSection from './components/PostListForHomeSection'
-import ScrollToTop from './components/ScrollToTop'
-import { getSlugPrefix } from './lib/config'
+import { defaultFeaturedImage, getSlugPrefix } from './lib/config'
 import { getCategories } from './lib/fetcher'
 
 export const revalidate = 60
@@ -67,6 +68,7 @@ export default function Home() {
                     )}
                   >
                     <ImageComponent
+                      defaultImage={defaultFeaturedImage}
                       image={{
                         staticImageData: WavingHand
                       }}
@@ -168,7 +170,7 @@ export default function Home() {
         ))}
       </div>
 
-      <ScrollToTop />
+      <ScrollToTop image={toTopImg} />
     </>
   )
 }
