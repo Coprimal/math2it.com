@@ -1,8 +1,8 @@
 import cn from 'classnames'
+import { postBodyContainerClass } from 'notion-nextjs-lib/dist/components/PostBody'
 
 import { postWidthContainer } from '../lib/config'
 import Container from './Container'
-import { postBodyContainerClass } from './PostBody'
 import { containerHeaderClass, fullWidthPostCoverHeight, gapHeaderItems } from './PostHeader'
 
 type SkeletonPostProps = {

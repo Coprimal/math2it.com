@@ -185,7 +185,7 @@ export async function getPostHeader(pageId: string): Promise<PostHeaderType> {
  * REMARK: This method MUST be placed in this file (not in helpers.ts) because it uses
  * some methods that require the "cache()" from react.
  */
-export async function transformPostHeader(
+async function transformPostHeader(
   notionHeader: NotionHeader,
   pageIdwithDash: string
 ): Promise<PostHeaderType> {
@@ -451,7 +451,7 @@ async function getPageUri(pageId: string): Promise<string | undefined> {
  * @see {@link https://nextjs.org/docs/app/building-your-application/data-fetching/caching#react-cache React cache()}
  * @see {@link https://developers.notion.com/reference/request-limits Notion API request limits}
  */
-export const getNotionDatabase = cache(
+const getNotionDatabase = cache(
   async (
     dataId: string,
     filter?: QueryDatabaseParameters['filter'],
@@ -477,7 +477,7 @@ export const getNotionDatabase = cache(
  *
  * @see {@link https://developers.notion.com/reference/retrieve-a-page Retrieve a page - Notion API}
  */
-export const getNotionPage = cache(async (pageId: string) =>
+const getNotionPage = cache(async (pageId: string) =>
   getNotionPageWithoutCache(
     pageId,
     process.env.NOTION_TOKEN as string,
@@ -485,7 +485,7 @@ export const getNotionPage = cache(async (pageId: string) =>
   )
 )
 
-export const retrieveNotionDatabase = cache(async (dataId: string) =>
+const retrieveNotionDatabase = cache(async (dataId: string) =>
   retrieveNotionDatabaseWithoutCache(
     dataId,
     process.env.NOTION_TOKEN as string,

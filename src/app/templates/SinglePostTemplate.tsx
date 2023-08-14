@@ -1,7 +1,6 @@
 'use client'
 
 import PostAside from '@c/PostAside'
-import PostBody from '@c/PostBody'
 import PostHeader from '@c/PostHeader'
 import {
   BlockObjectResponse,
@@ -10,6 +9,7 @@ import {
 import toTopImg from '@root/public/to-top.webp'
 import cn from 'classnames'
 import { BlockOptionsContextType } from 'notion-nextjs-lib/dist/components/BlockRender'
+import PostBody from 'notion-nextjs-lib/dist/components/PostBody'
 import PostToc from 'notion-nextjs-lib/dist/components/PostToc'
 import PostList from 'notion-nextjs-lib/dist/components/PostsList'
 import ScrollToTop from 'notion-nextjs-lib/dist/components/ScrollToTop'
