@@ -59,7 +59,8 @@ export default function NavSearch() {
       </div>
       {isSearchOpen && (
         <SearchModal
-          url={process.env.SEARCH_URL as string}
+          // Cannot use process.env here because of 'use client' at the top
+          url="https://math2it-server.vercel.app/api/search-notion"
           slugPrefix={getSlugPrefix('singlePost')}
           isOpen={isSearchOpen}
           closeModal={() => setIsSearchOpen(false)}
