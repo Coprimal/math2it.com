@@ -218,6 +218,10 @@ export function getFilterOf(type: SlugTypeLabels, data?: Category | Tag | Author
 
 /**
  * Filter to be used in getPosts(). Remark, we ignore single page (where isPage = true on Notion)
+ *
+ * getFull: true -> force to get all posts, otherwise, depending on ENV_MODE, we will get only
+ * the posts that are updated after the last update (fact: that's why we name it "getFull" instead of
+ * "getNewest").
  */
 export function getFilter(filter?: any, getFull?: boolean): QueryDatabaseParameters['filter'] {
   const defaultFilter = [] as any[]

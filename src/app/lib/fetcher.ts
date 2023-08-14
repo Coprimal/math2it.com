@@ -123,8 +123,8 @@ export async function getPostsBy(options: {
     categories,
     authors,
     filter,
-    pageSize,
     startCursor,
+    pageSize,
     getFull
   })
   return posts
