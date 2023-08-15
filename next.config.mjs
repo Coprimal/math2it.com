@@ -7,6 +7,7 @@ const nextConfig = {
   transpilePackages: ['react-syntax-highlighter'],
   experimental: {
     scrollRestoration: true, // not supported yet by --turbo,
+    // 👇 https://nextjs.org/docs/messages/import-esm-externals (error: react-medium-image-zoom)
     esmExternals: 'loose'
   },
   images: {

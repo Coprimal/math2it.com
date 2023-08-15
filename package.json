@@ -54,7 +54,6 @@
     "react-dom": "18.2.0",
     "react-geopattern": "^2.0.0",
     "react-icons": "^4.9.0",
-    "react-medium-image-zoom": "^5.1.6",
     "sharp": "^0.32.1",
     "typescript": "5.1.3"
   },

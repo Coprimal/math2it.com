@@ -5,7 +5,6 @@ import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getJoinedRichText } from 'notion-nextjs-lib/dist/helpers/block-helpers'
 import { DynamicSegmentParamsProps } from 'notion-nextjs-lib/dist/interface'
-import 'react-medium-image-zoom/dist/styles.css'
 
 import { generateMetaTitle, getRelatedPosts } from '../../lib/helpers'
 
