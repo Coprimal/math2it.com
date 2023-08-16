@@ -3,8 +3,6 @@ import Nav from '@c/nav/Nav'
 import '@src/fontello/css/fontello.css'
 import Script from 'next/script'
 import 'notion-nextjs-lib/dist/styles.css'
-import 'prismjs/themes/prism-tomorrow.css'
-import 'tippy.js/dist/tippy.css'
 
 import './globals.scss'
 
