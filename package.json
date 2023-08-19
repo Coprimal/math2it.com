@@ -17,7 +17,7 @@
     "prettier": "prettier --write \"**/*.{tsx,ts,css,scss}\"",
     "clean": "rimraf .next && rimraf .vercel && rimraf .netlify",
     "clean-build": "yarn run clean && yarn run build",
-    "reinstall": "yarn run clean && rimraf node_modules && rm yarn.lock && yarn install",
+    "reinstall": "yarn run clean && rimraf node_modules && rimraf yarn.lock && yarn install",
     "ud-fontello": "rimraf .fontello-session && fontello-cli --config src/fontello/config.json --css src/fontello/css --font src/fontello/font install",
     "ud-cover": "npx tsx -r dotenv/config ./scripts/ud_images.ts dotenv_config_path=.env.local --a cover --pid",
     "ud-cover-all": "npx tsx -r dotenv/config ./scripts/ud_images.ts dotenv_config_path=.env.local --a cover-all",
@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "@headlessui/react": "^1.7.15",
-    "@notionhq/client": "^2.2.5",
+    "@notionhq/client": "2.2.11",
     "@plaiceholder/next": "^3.0.0",
     "autoprefixer": "10.4.14",
     "classnames": "^2.3.2",

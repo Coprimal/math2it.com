@@ -16,7 +16,9 @@ export const numPostsPerPage = 20
 export const defaultNumPostsRequest = 10
 
 export const defaultBlockOptionsContext: BlockOptionsContextType = {
-  siteDomain: 'math2it.com'
+  siteDomain: 'math2it.com',
+  blockCodeCopiedText: 'Đã sao chép',
+  blockCodeCopyText: 'Sao chép'
 }
 
 /**

@@ -64,6 +64,10 @@ export default function NavSearch() {
           slugPrefix={getSlugPrefix('singlePost')}
           isOpen={isSearchOpen}
           closeModal={() => setIsSearchOpen(false)}
+          errorMessage="Có lỗi trong quá trình tải dữ liệu, vui lòng thử lại hoặc liên hệ Math2IT!"
+          noResultsMessage="Không tìm thấy bài viết phù hợp!"
+          foundResultsMessage="Tìm thấy {{count}} kết quả."
+          placeholder="Tìm bài viết..."
         />
       )}
     </>

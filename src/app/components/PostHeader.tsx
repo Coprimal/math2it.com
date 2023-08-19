@@ -2,12 +2,12 @@ import { anonymAuthor, getSlugPrefix, postWidthContainer } from '@app/lib/config
 import cn from 'classnames'
 import Link from 'next/link'
 import Date from 'notion-nextjs-lib/dist/components/Date'
-import ImageComponent from 'notion-nextjs-lib/dist/components/ImageComponent'
+import PostHeaderCover from 'notion-nextjs-lib/dist/components/PostHeaderCover'
+import PostHeaderTopics from 'notion-nextjs-lib/dist/components/PostHeaderTopics'
 import { PostHeaderType } from 'notion-nextjs-lib/dist/interface'
 
 import { defaultFeaturedImage } from '../lib/config'
 import Container from './Container'
-import PostHeaderTopics from './PostHeaderTopics'
 
 export const fullWidthPostCoverHeight = 'h-[25vh] max-h-[25vh] min-h-[25vh]'
 export const gapHeaderItems = 'mb-3'
@@ -25,42 +25,16 @@ export default function PostHeader(props: PostHeaderProps) {
 
   return (
     <>
-      {/* Featured image */}
-      <div className={cn('flex w-full items-center justify-center', fullWidthPostCoverHeight)}>
-        {/* 👇 Because Image auto create position absolute, we have to wrap this with a relative div */}
-        <div className="relative flex h-full w-full items-center overflow-hidden">
-          <ImageComponent
-            defaultImage={defaultFeaturedImage}
-            image={featuredImage}
-            alt={`Hình đại diện của bài viết "${title}"`}
-            className={cn('object-cover group-hover:scale-105 duration-500', {
-              'blur-sm': !!bookCover,
-              // Fix: blur image problem on the edge of the image
-              'w-full': !bookCover,
-              '!w-[calc(100%+10px)] !max-w-[calc(100%+10px)] !h-[calc(100%+10px)] !left-[-5px] !top-[-5px]':
-                !!bookCover
-            })}
-            imageProps={{
-              fill: true
-            }}
-          />
-          {bookCover && (
-            <div
-              className={cn('absolute left-0 top-0 flex h-full w-full items-center justify-center')}
-            >
-              <ImageComponent
-                image={bookCover}
-                alt={`Bìa sách "${title}"`}
-                className={cn('rounded-md shadow-xl h-4/5 w-auto')}
-                imageProps={{
-                  width: bookCover.width,
-                  height: bookCover.height
-                }}
-              />
-            </div>
-          )}
-        </div>
-      </div>
+      {featuredImage && (
+        <PostHeaderCover
+          defaultCover={defaultFeaturedImage}
+          cover={featuredImage}
+          alt={`Hình đại diện của bài viết "${title}"`}
+          coverHeight="h-[25vh] max-h-[25vh] min-h-[25vh]"
+          bookCover={bookCover}
+          altBookCover={`Bìa sách "${title}"`}
+        />
+      )}
 
       {/* Main header with infos */}
       <Container className={containerHeaderClass} maxWidthClass={postWidthContainer}>
@@ -71,7 +45,8 @@ export default function PostHeader(props: PostHeaderProps) {
               <PostHeaderTopics
                 categories={categories}
                 className="justify-start"
-                selected={selected}
+                selectedName="Tuyển chọn"
+                selectedUri={selected ? `/${getSlugPrefix('selected')}/` : undefined}
               />
             </div>
           )}
