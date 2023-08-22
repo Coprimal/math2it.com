@@ -1,5 +1,5 @@
 import cn from 'classnames'
-import { AiOutlineAlert } from 'react-icons/ai'
+import AiOutlineAlert from 'notion-nextjs-lib/dist/icons/AiOutlineAlert'
 
 import Container from './Container'
 

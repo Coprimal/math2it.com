@@ -2,8 +2,8 @@
 
 import { Popover, Transition } from '@headlessui/react'
 import Link from 'next/link'
+import FiChevronDown from 'notion-nextjs-lib/dist/icons/FiChevronDown'
 import { Fragment, useRef } from 'react'
-import { FiChevronDown } from 'react-icons/fi'
 
 import { predefinedCategories } from '../../lib/config'
 import { menuItemCommonClass } from './NavTopicItem'

@@ -1,7 +1,7 @@
 import { getSlugPrefix, postWidthContainer } from '@app/lib/config'
 import cn from 'classnames'
 import Link from 'next/link'
-import { TbExternalLink } from 'react-icons/tb'
+import TbExternalLink from 'notion-nextjs-lib/dist/icons/TbExternalLink'
 
 import Container from './Container'
 

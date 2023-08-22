@@ -2,8 +2,8 @@
 
 import cn from 'classnames'
 import SearchModal from 'notion-nextjs-lib/dist/components/SearchModal'
+import FiSearch from 'notion-nextjs-lib/dist/icons/FiSearch'
 import { useEffect, useState } from 'react'
-import { FiSearch } from 'react-icons/fi'
 
 import { getSlugPrefix } from '../../lib/config'
 

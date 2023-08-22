@@ -13,8 +13,8 @@ import PostBody from 'notion-nextjs-lib/dist/components/PostBody'
 import PostToc from 'notion-nextjs-lib/dist/components/PostToc'
 import PostList from 'notion-nextjs-lib/dist/components/PostsList'
 import ScrollToTop from 'notion-nextjs-lib/dist/components/ScrollToTop'
+import AiOutlineAlert from 'notion-nextjs-lib/dist/icons/AiOutlineAlert'
 import { Post, PostHeaderType } from 'notion-nextjs-lib/dist/interface'
-import { AiOutlineAlert } from 'react-icons/ai'
 
 import { comfortaa, lobster } from '../lib/fonts'
 
