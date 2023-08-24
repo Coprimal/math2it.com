@@ -1,7 +1,7 @@
 import { anonymAuthor, getSlugPrefix, postWidthContainer } from '@app/lib/config'
 import cn from 'classnames'
 import Link from 'next/link'
-import Date from 'notion-nextjs-lib/dist/components/Date'
+import DateComponent from 'notion-nextjs-lib/dist/components/Date'
 import PostHeaderCover from 'notion-nextjs-lib/dist/components/PostHeaderCover'
 import PostHeaderTopics from 'notion-nextjs-lib/dist/components/PostHeaderTopics'
 import { PostHeaderType } from 'notion-nextjs-lib/dist/interface'
@@ -99,7 +99,7 @@ export default function PostHeader(props: PostHeaderProps) {
               {date && (
                 <div className="flex items-center gap-1 text-base opacity-80">
                   <i className="icon-clock"></i>
-                  <Date dateString={date} />
+                  <DateComponent dateString={date} />
                 </div>
               )}
 

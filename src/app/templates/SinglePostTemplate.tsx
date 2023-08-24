@@ -90,6 +90,7 @@ export default function SinglePostTemplate(props: SinglePostTemplateProps) {
               contentBlocks={contentBlocks as BlockObjectResponse[]}
               showToc={postHeader.showToc}
               blockOptionsContext={props.blockOptionsContext}
+              labelTocTitle="Trong bài này"
             ></PostBody>
 
             {props.relatedPosts && props.relatedPosts.length > 0 && (
@@ -119,6 +120,7 @@ export default function SinglePostTemplate(props: SinglePostTemplateProps) {
               <PostToc
                 showToc={postHeader.showToc}
                 contentBlocks={contentBlocks as BlockObjectResponse[]}
+                labelTocTitle="Trong bài này"
               />
             </PostAside>
           </aside>

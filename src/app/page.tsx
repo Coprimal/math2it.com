@@ -6,7 +6,6 @@ import cn from 'classnames'
 import Link from 'next/link'
 import ImageComponent from 'notion-nextjs-lib/dist/components/ImageComponent'
 import ScrollToTop from 'notion-nextjs-lib/dist/components/ScrollToTop'
-import WaveSplit from 'notion-nextjs-lib/dist/components/WaveSplit'
 
 import AlertHomePage from './components/AlertHomePage'
 import PostListForHomeSection from './components/PostListForHomeSection'
@@ -134,9 +133,9 @@ export default function Home() {
         </Container>
       </div>
 
-      <WaveSplit />
+      <div className="bg-wave-top-white"></div>
 
-      <div className="flex flex-col gap-12 pb-12 pt-8">
+      <div className="flex flex-col gap-12 py-12">
         <AlertHomePage />
 
         <PostListForHomeSection
