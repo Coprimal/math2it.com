@@ -43,7 +43,7 @@
     "geopattern": "1",
     "got": "^12.6.0",
     "lodash": "^4.17.21",
-    "next": "13.4.4",
+    "next": "13.4.7",
     "next-sitemap": "^4.1.8",
     "node-fetch": "^3.3.1",
     "notion-nextjs-lib": "dinhanhthi/notion-nextjs-lib.git",
