@@ -51,7 +51,7 @@ export default function SinglePostTemplate(props: SinglePostTemplateProps) {
           </aside>
 
           <article className={cn('container max-w-3xl')}>
-            {!props.isPage && (
+            {!props.isPage && !props.postHeader?.contentCheck && (
               <div
                 className={cn(
                   'mx-auto container p-6 mt-10',
