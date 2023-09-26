@@ -14,60 +14,43 @@
 
 ## Dev
 
-🚧 We use [static export](https://nextjs.org/docs/app/building-your-application/deploying/static-exports) (export to htmls)
+**First time only**,
 
-1. Clone this repo to `<whatever>/math2it-v-nextjs/`
-2. Clone https://github.com/dinhanhthi/math2it-v-nextjs-html to `<whatever>/math2it-v-nextjs-html/` (the name **math2it-v-nextjs-html** is important!)
-3. (First time only)
-    Make sure to enable [TypeScript Plugin](https://nextjs.org/docs/app/building-your-application/configuring/typescript#typescript-plugin).
+```bash
+# Global tools
+npm install -g yarn
+npm install -g fontello-cli
 
-    ```bash
-    # Global tools
-    npm install -g yarn
-    npm install -g fontello-cli
-    npm install -g http-server
+# install
+yarn
 
-    # install
-    yarn
-    ```
-4. To develop offline: `yarn dev`
-    - To use [`yarn dev --turbo`](https://nextjs.org/docs/architecture/turbopack), disable `experimental` and `trailingSlash` in `next.config.mjs`! **It's not working on MacOS**!
-    - **TIP**: Because we're using "cache" for requests, if you change something on Notion, don't forget to `Ctrl+Shift+R` (or `cmd+shift+R`) to hard refresh the page.
-5. **Workflow**:
-    ```
-    # dev
-    yarn dev
+# clone submodule too
+git submodule update --init --recursive
+```
 
-    # just build
-    yarn build # newest modified posts
-    yarn build-full # completely
+Daily dev,
 
-    # server current ./out folder
-    yarn start # without static-export
-    yarn start-static # with static export
+```bash
+yarn dev # port 3003
 
-    # build normally (only take last modifed posts)
-    yarn ud-site
-    # then go to "math2it-v-nextjs-html" and run below to see if everything is ok?
-    http-server out -p 3003 -a localhost
-    # if ok
-    yarn ud-prod
+# build before deploying
+yarn build
+# serve locally what are built
+yarn start # port 3003
 
-    # build fully (all posts)
-    yarn ud-site-full
-    # next steps are the same as normally!
+# lint
+yarn prettier
 
-    # in case need to generate sitemap (it's auto in ud-site or ud-site-full)
-    yarn postbuild
-    ```
-
-    🚨 **Make sure the 3003 site works normally before running `yarn ud-prod`!**
-6. `yarn ud-site` to update the html site. 👈 Build & copy html files to `math2it-v-nextjs-html` & update `math2it-v-nextjs-html/lastUpdate.txt` & push!
-    **Idea of the technique**: When exporting finish, `math2it-v-nextjs-html/lastUpdate.txt` will be updated with the date of exporting. Next time, we don't fetch the post whose `last_edited_time` is earlier than that date.
-7. **Full build**: In case you don't want to use `lastUpdate.txt` technique, just make a full build with `yarn ud-site-full`.
-8. To serve html files offline: `http-server out -p 3003 -a localhost` and go to http://localhost:3003
+# ud notion-x lib
+yarn getlib
+```
 
 ## imgur
+
+**UPDATE 25/9/23**: This step is nolonger needed.
+
+<details>
+<summary>Show the content</summary>
 
 __For updating cover and book cover and images in post__!
 
@@ -93,6 +76,7 @@ yarn ud-header-all
 # Update image blocks in post
 yarn ud-images-post <postId>
 ```
+</details>
 
 ## Fontello
 

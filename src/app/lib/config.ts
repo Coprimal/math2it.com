@@ -1,20 +1,22 @@
-import _dImg from '@root/public/featured-images/_default.png'
-import defaultBook from '@root/public/featured-images/book.png'
-import defaultEdu from '@root/public/featured-images/edu.png'
-import defaultMath from '@root/public/featured-images/math.png'
-import defaultTech from '@root/public/featured-images/tech.png'
-import defaultTool from '@root/public/featured-images/tool.png'
-import defaultTranslate from '@root/public/featured-images/translate.png'
+import _dImg from '@/public/featured-images/_default.png'
+import defaultBook from '@/public/featured-images/book.png'
+import defaultEdu from '@/public/featured-images/edu.png'
+import defaultMath from '@/public/featured-images/math.png'
+import defaultTech from '@/public/featured-images/tech.png'
+import defaultTool from '@/public/featured-images/tool.png'
+import defaultTranslate from '@/public/featured-images/translate.png'
+import { BlockOptionsContextType } from '@notion-x/context'
+import { Category } from '@notion-x/interface'
 import { SlugTypeLabels } from '@src/interface'
-import { BlockOptionsContextType } from 'notion-nextjs-lib/dist/components/BlockRender'
-import { Category } from 'notion-nextjs-lib/dist/interface'
 
 export const numPostsPerPage = 20
 
-export const defaultBlockOptionsContext: BlockOptionsContextType = {
+export const defaultBlockOptions: BlockOptionsContextType = {
   siteDomain: 'math2it.com',
   blockCodeCopiedText: 'Đã sao chép',
-  blockCodeCopyText: 'Sao chép'
+  blockCodeCopyText: 'Sao chép',
+  headingScrollMarginTopClass: 'scroll-mt-[70px]',
+  labelTocTitle: 'Trong bài này'
 }
 
 /**

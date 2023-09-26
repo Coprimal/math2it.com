@@ -5,13 +5,11 @@ import {
   getSlugPrefix,
   predefinedCategories
 } from '@app/lib/config'
+import { makeSlugText } from '@notion-x/helpers'
+import { Author, Category, Post, Tag } from '@notion-x/interface'
 import { QueryDatabaseParameters } from '@notionhq/client/build/src/api-endpoints'
 import { ImgurUrlType, NotionAuthor, SlugTypeLabels } from '@src/interface'
-import fs from 'fs'
 import { intersectionWith } from 'lodash'
-import { makeSlugText } from 'notion-nextjs-lib/dist/helpers/helpers'
-import { Author, Category, Post, Tag } from 'notion-nextjs-lib/dist/interface'
-import path from 'path'
 
 /**
  * We use "null" to avoid the "undefined" error when parsing to a JSON format!
@@ -222,28 +220,31 @@ export function getFilterOf(type: SlugTypeLabels, data?: Category | Tag | Author
  * getFull: true -> force to get all posts, otherwise, depending on ENV_MODE, we will get only
  * the posts that are updated after the last update (fact: that's why we name it "getFull" instead of
  * "getNewest").
+ *
+ * Update 25/9/23: getFull=true always because we use notion-x and build auto on vercel
  */
-export function getFilter(filter?: any, getFull?: boolean): QueryDatabaseParameters['filter'] {
+export function getFilter(filter?: any, getFull = true): QueryDatabaseParameters['filter'] {
   const defaultFilter = [] as any[]
 
+  // ARCHIVED: We don't use this anymore because we use notion-x and build auto on vercel
   // Only consider the posts that are updated after the last update
-  if (!getFull) {
-    try {
-      const filePath = path.join(process.cwd(), '..', 'math2it-v-nextjs-html', 'lastUpdate.txt')
-      const dateFromFile = fs.readFileSync(filePath, 'utf8')
-      if (dateFromFile && process.env.ENV_MODE === 'prod') {
-        const lastUpdate = new Date(dateFromFile).toISOString()
-        defaultFilter.push({
-          timestamp: 'last_edited_time',
-          last_edited_time: {
-            after: lastUpdate
-          }
-        })
-      }
-    } catch (error) {
-      console.log('🚧 There is no lastUpdate.txt file!')
-    }
-  }
+  // if (!getFull) {
+  //   try {
+  //     const filePath = path.join(process.cwd(), '..', 'math2it-v-nextjs-html', 'lastUpdate.txt')
+  //     const dateFromFile = fs.readFileSync(filePath, 'utf8')
+  //     if (dateFromFile && process.env.ENV_MODE === 'prod') {
+  //       const lastUpdate = new Date(dateFromFile).toISOString()
+  //       defaultFilter.push({
+  //         timestamp: 'last_edited_time',
+  //         last_edited_time: {
+  //           after: lastUpdate
+  //         }
+  //       })
+  //     }
+  //   } catch (error) {
+  //     console.log('🚧 There is no lastUpdate.txt file!')
+  //   }
+  // }
 
   // Ignore single page
   defaultFilter.push({

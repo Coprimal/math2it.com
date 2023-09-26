@@ -1,4 +1,4 @@
-import Avatar from '@root/public/avatar.png'
+import Avatar from '@/public/avatar.png'
 import Image from 'next/image'
 import Link from 'next/link'
 

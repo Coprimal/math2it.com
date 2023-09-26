@@ -2,27 +2,24 @@
 
 import PostAside from '@c/PostAside'
 import PostHeader from '@c/PostHeader'
-import {
-  BlockObjectResponse,
-  ListBlockChildrenResponse
-} from '@notionhq/client/build/src/api-endpoints'
-import toTopImg from '@root/public/to-top.webp'
+import PostBody from '@notion-x/components/PostBody'
+import PostToc from '@notion-x/components/PostToc'
+import PostList from '@notion-x/components/PostsList'
+import { BlockOptionsContextType } from '@notion-x/context'
+import AiOutlineAlert from '@notion-x/icons/AiOutlineAlert'
+import { Author, Post } from '@notion-x/interface'
 import cn from 'classnames'
-import { BlockOptionsContextType } from 'notion-nextjs-lib/dist/components/BlockRender'
-import PostBody from 'notion-nextjs-lib/dist/components/PostBody'
-import PostToc from 'notion-nextjs-lib/dist/components/PostToc'
-import PostList from 'notion-nextjs-lib/dist/components/PostsList'
-import ScrollToTop from 'notion-nextjs-lib/dist/components/ScrollToTop'
-import AiOutlineAlert from 'notion-nextjs-lib/dist/icons/AiOutlineAlert'
-import { Post, PostHeaderType } from 'notion-nextjs-lib/dist/interface'
+import { ExtendedRecordMap, PageBlock } from 'notion-types'
+import { getPageTableOfContents } from 'notion-utils'
 
+import { defaultBlockOptions } from '../lib/config'
 import { comfortaa, lobster } from '../lib/fonts'
 
 type SinglePostTemplateProps = {
-  postHeader: PostHeaderType
-  contentBlocks: ListBlockChildrenResponse['results']
+  recordMap: ExtendedRecordMap
+  authors: Author[]
   relatedPosts?: Post[]
-  blockOptionsContext?: BlockOptionsContextType
+  blockOptions?: BlockOptionsContextType
   hideWriteWithUs?: boolean
   isPage?: boolean
 }
@@ -32,17 +29,28 @@ type SinglePostTemplateProps = {
 const asideClass = cn('hidden 2xl:block flex-1', 'h-[calc(100vh-130px)] sticky top-[70px] pt-8')
 
 export default function SinglePostTemplate(props: SinglePostTemplateProps) {
-  const { postHeader, contentBlocks } = props
-  const checkedText = props.postHeader?.contentCheck
-    ? 'hoàn tất rà soát 🎉'
-    : 'chưa hoàn tất rà soát'
+  const id = Object.keys(props.recordMap.block)[0]
+  const block = props.recordMap.block[id]?.value
+
+  const contentChecked =
+    props.recordMap.block[id]?.value?.properties?.[
+      `${process.env.NEXT_PUBLIC_CONTENT_CHECKED}`
+    ]?.[0]?.[0] === 'Yes'
+  const checkedText = contentChecked ? 'hoàn tất rà soát 🎉' : 'chưa hoàn tất rà soát'
+  const authorIds = block?.properties?.[`${process.env.NEXT_PUBLIC_ID_AUTHORS}`]
+    ?.filter((aBlock: any) => aBlock?.length > 1)
+    ?.map((aBlock: any) => aBlock?.[1]?.[0]?.[1])
+  const authorsOfPost = props.authors.filter(author => authorIds?.includes(author.id))
+  const tocs = getPageTableOfContents(block as PageBlock, props.recordMap)
 
   return (
     <>
       <div className="animate-fadeIn">
-        {postHeader && (
-          <PostHeader postHeader={postHeader} hideWriteWithUs={props.hideWriteWithUs} />
-        )}
+        <PostHeader
+          recordMap={props.recordMap}
+          authors={authorsOfPost}
+          hideWriteWithUs={props.hideWriteWithUs}
+        />
         <div className={cn('flex justify-center px-5')}>
           <aside className={cn(asideClass)}>
             <PostAside position="left">
@@ -51,7 +59,7 @@ export default function SinglePostTemplate(props: SinglePostTemplateProps) {
           </aside>
 
           <article className={cn('container max-w-3xl')}>
-            {!props.isPage && !props.postHeader?.contentCheck && (
+            {!props.isPage && !contentChecked && (
               <div
                 className={cn(
                   'mx-auto container p-6 mt-10',
@@ -86,12 +94,10 @@ export default function SinglePostTemplate(props: SinglePostTemplateProps) {
             )}
 
             <PostBody
-              className={cn('w-full')}
-              contentBlocks={contentBlocks as BlockObjectResponse[]}
-              showToc={postHeader.showToc}
-              blockOptionsContext={props.blockOptionsContext}
-              labelTocTitle="Trong bài này"
-            ></PostBody>
+              className="w-full"
+              recordMap={props.recordMap}
+              blockOptions={defaultBlockOptions}
+            />
 
             {props.relatedPosts && props.relatedPosts.length > 0 && (
               <div
@@ -117,16 +123,11 @@ export default function SinglePostTemplate(props: SinglePostTemplateProps) {
 
           <aside className={cn(asideClass)}>
             <PostAside position="right">
-              <PostToc
-                showToc={postHeader.showToc}
-                contentBlocks={contentBlocks as BlockObjectResponse[]}
-                labelTocTitle="Trong bài này"
-              />
+              <PostToc showToc={true} tocs={tocs} labelTocTitle="Trong bài này" />
             </PostAside>
           </aside>
         </div>
       </div>
-      <ScrollToTop image={toTopImg} />
     </>
   )
 }

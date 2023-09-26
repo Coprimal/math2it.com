@@ -1,5 +1,5 @@
+import AiOutlineAlert from '@notion-x/icons/AiOutlineAlert'
 import cn from 'classnames'
-import AiOutlineAlert from 'notion-nextjs-lib/dist/icons/AiOutlineAlert'
 
 import Container from './Container'
 

@@ -1,11 +1,12 @@
+import { notionX } from '@notion-x/notionx'
 import { notFound } from 'next/navigation'
 
-import { defaultBlockOptionsContext } from '../../lib/config'
-import { getBlocks, getPostHeader } from '../../lib/fetcher'
+import { defaultBlockOptions } from '../../lib/config'
+import { getAuthors } from '../../lib/fetcher'
 import { generateMetaTitle } from '../../lib/helpers'
 import SinglePostTemplate from '../../templates/SinglePostTemplate'
 
-export const revalidate = 60
+export const revalidate = 20
 
 export const metadata = {
   title: generateMetaTitle('Hướng dẫn viết bài'),
@@ -23,18 +24,18 @@ export const metadata = {
 
 export default async function AboutPage() {
   try {
-    const postHeader = await getPostHeader(process.env.WRITING_GUIDELINES_PAGE as string)
-    const contentBlocks = await getBlocks(process.env.WRITING_GUIDELINES_PAGE as string)
+    const recordMap = await notionX.getPage(process.env.WRITING_GUIDELINES_PAGE as string)
+    const authors = await getAuthors()
     return (
       <SinglePostTemplate
+        recordMap={recordMap}
         isPage={true}
-        blockOptionsContext={{ disableAnchorHeading: true, ...defaultBlockOptionsContext }}
-        postHeader={postHeader}
-        contentBlocks={contentBlocks}
+        authors={authors}
+        blockOptions={defaultBlockOptions}
       />
     )
   } catch (error) {
-    console.log('🚨Error when loading a single post page', error)
+    console.log('🚨 Lỗi khi load trang "Hướng dẫn viết bài"', error)
     notFound()
   }
 }
