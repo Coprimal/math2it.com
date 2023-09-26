@@ -1,12 +1,14 @@
+import toTopImg from '@/public/to-top.webp'
 import Footer from '@c/Footer'
 import Nav from '@c/nav/Nav'
+import ScrollToTop from '@notion-x/components/ScrollToTop'
+import '@notion-x/notion-x.scss'
 import '@src/fontello/css/fontello.css'
 import Script from 'next/script'
-import 'notion-nextjs-lib/dist/styles.css'
 
 import './globals.scss'
 
-export const revalidate = 60
+export const revalidate = 20
 
 export const metadata = {
   metadataBase: new URL('https://math2it.com')
@@ -31,6 +33,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div className="mb-auto">
             <main>{children}</main>
           </div>
+          <ScrollToTop image={toTopImg} />
           <Footer />
         </div>
       </body>

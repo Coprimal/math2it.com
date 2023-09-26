@@ -2,12 +2,12 @@ import { getSlugPrefix, notionMaxRequest, numPostsPerPage } from '@app/lib/confi
 import { getAuthors, getCategories, getPostsBy } from '@app/lib/fetcher'
 import { generateMetaTitle, getFilterOf } from '@app/lib/helpers'
 import PageOfPostsListTemplate from '@app/templates/PageOfPostsListTemplate'
+import { getStartCursorForCurrentPage } from '@notion-x/helpers'
+import { OptionalCatchAllParams, OptionalCatchAllProps } from '@notion-x/interface'
 import { Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
-import { getStartCursorForCurrentPage } from 'notion-nextjs-lib/dist/helpers/helpers'
-import { OptionalCatchAllParams, OptionalCatchAllProps } from 'notion-nextjs-lib/dist/interface'
 
-export const revalidate = 60
+export const revalidate = 20
 
 export async function generateMetadata({ params }: OptionalCatchAllProps): Promise<Metadata> {
   const slug = params.slug[0] || ''

@@ -1,18 +1,16 @@
+import WavingHand from '@/public/waving_hand.webp'
 import { comfortaa, lobster, righteous } from '@app/lib/fonts'
 import Container from '@c/Container'
-import toTopImg from '@root/public/to-top.webp'
-import WavingHand from '@root/public/waving_hand.webp'
+import ImageComponent from '@notion-x/components/ImageComponent'
 import cn from 'classnames'
 import Link from 'next/link'
-import ImageComponent from 'notion-nextjs-lib/dist/components/ImageComponent'
-import ScrollToTop from 'notion-nextjs-lib/dist/components/ScrollToTop'
 
 import AlertHomePage from './components/AlertHomePage'
 import PostListForHomeSection from './components/PostListForHomeSection'
 import { defaultFeaturedImage, getSlugPrefix } from './lib/config'
 import { getCategories } from './lib/fetcher'
 
-export const revalidate = 60
+export const revalidate = 20
 
 export const metadata = {
   metadataBase: new URL('https://math2it.com'),
@@ -168,8 +166,6 @@ export default function Home() {
           />
         ))}
       </div>
-
-      <ScrollToTop image={toTopImg} />
     </>
   )
 }

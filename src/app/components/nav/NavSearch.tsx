@@ -1,8 +1,8 @@
 'use client'
 
+import SearchModal from '@notion-x/components/SearchModal'
+import FiSearch from '@notion-x/icons/FiSearch'
 import cn from 'classnames'
-import SearchModal from 'notion-nextjs-lib/dist/components/SearchModal'
-import FiSearch from 'notion-nextjs-lib/dist/icons/FiSearch'
 import { useEffect, useState } from 'react'
 
 import { getSlugPrefix } from '../../lib/config'
@@ -59,8 +59,7 @@ export default function NavSearch() {
       </div>
       {isSearchOpen && (
         <SearchModal
-          // Cannot use process.env here because of 'use client' at the top
-          url="https://math2it-server.vercel.app/api/search-notion"
+          url="/api/search-notion"
           slugPrefix={getSlugPrefix('singlePost')}
           isOpen={isSearchOpen}
           closeModal={() => setIsSearchOpen(false)}

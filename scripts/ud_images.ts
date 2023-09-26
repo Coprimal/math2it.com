@@ -1,9 +1,8 @@
+import { getJoinedRichText, makeSlugText } from '@notion-x/helpers'
 import { Client } from '@notionhq/client'
 import chalk from 'chalk'
 import got from 'got'
 import { get } from 'lodash'
-import { getJoinedRichText } from 'notion-nextjs-lib/dist/helpers/block-helpers'
-import { makeSlugText } from 'notion-nextjs-lib/dist/helpers/helpers'
 import yargs, * as yargsType from 'yargs'
 
 // --------------------------------------------------------------------------------------------

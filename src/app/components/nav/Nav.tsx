@@ -1,5 +1,5 @@
 import { MenuAbout, MenuHome, predefinedCategories } from '@app/lib/config'
-import { Category } from 'notion-nextjs-lib/dist/interface'
+import { Category } from '@notion-x/interface'
 
 import NavAvatar from './NavAvatar'
 import NavSearch from './NavSearch'

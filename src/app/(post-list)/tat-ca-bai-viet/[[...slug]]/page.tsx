@@ -1,14 +1,14 @@
+import allPostsCover from '@/public/featured-images/all.png'
 import { getSlugPrefix, notionMaxRequest, numPostsPerPage } from '@app/lib/config'
 import { getAuthors, getCategories, getPosts } from '@app/lib/fetcher'
 import { generateMetaTitle } from '@app/lib/helpers'
 import PageOfPostsListTemplate from '@app/templates/PageOfPostsListTemplate'
-import allPostsCover from '@root/public/featured-images/all.png'
+import { getStartCursorForCurrentPage } from '@notion-x/helpers'
+import { OptionalCatchAllParams, OptionalCatchAllProps } from '@notion-x/interface'
 import { Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
-import { getStartCursorForCurrentPage } from 'notion-nextjs-lib/dist/helpers/helpers'
-import { OptionalCatchAllParams, OptionalCatchAllProps } from 'notion-nextjs-lib/dist/interface'
 
-export const revalidate = 60
+export const revalidate = 20
 
 export async function generateMetadata({ params }: OptionalCatchAllProps): Promise<Metadata> {
   const currentPage = +(params?.slug?.[1] || 1)

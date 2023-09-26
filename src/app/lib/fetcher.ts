@@ -1,29 +1,20 @@
-import {
-  ListBlockChildrenResponse,
-  QueryDatabaseParameters
-} from '@notionhq/client/build/src/api-endpoints'
-import defaultBookCover from '@root/public/featured-images/untitledBook.jpg'
-import { ImgurUrlType, NotionHeader, NotionPost, NotionTagData } from '@src/interface'
-import { get } from 'lodash'
-import { StaticImageData } from 'next/image'
-import { getJoinedRichText } from 'notion-nextjs-lib/dist/helpers/block-helpers'
-import { makeSlugText } from 'notion-nextjs-lib/dist/helpers/helpers'
-import {
-  Author,
-  Category,
-  ImageType,
-  NotionSorts,
-  Post,
-  PostHeaderType,
-  Tag
-} from 'notion-nextjs-lib/dist/interface'
+import defaultBookCover from '@/public/featured-images/untitledBook.jpg'
 import {
   getBlocks as getNotionBlocks,
   getNotionDatabaseWithoutCache,
   getNotionPageWithoutCache,
   getPlaceholderImage,
   retrieveNotionDatabaseWithoutCache
-} from 'notion-nextjs-lib/dist/lib/db'
+} from '@notion-x/db'
+import { getJoinedRichText, makeSlugText } from '@notion-x/helpers'
+import { Author, Category, ImageType, NotionSorts, Post, Tag } from '@notion-x/interface'
+import {
+  ListBlockChildrenResponse,
+  QueryDatabaseParameters
+} from '@notionhq/client/build/src/api-endpoints'
+import { ImgurUrlType, NotionPost, NotionTagData } from '@src/interface'
+import { get } from 'lodash'
+import { StaticImageData } from 'next/image'
 import { cache } from 'react'
 
 import {
@@ -38,7 +29,6 @@ import {
 } from './config'
 import {
   getFilter,
-  getPredefinedCategories,
   parseAuthorsForPost,
   parseImgurUrl,
   parseNotionImageUrl,
@@ -171,13 +161,14 @@ export const getAuthors = async () => {
 }
 
 /**
+ * ARCHIVED: We use the information in the recordMap instead of this method
  * Get header of a single post from Notion
  *
  */
-export async function getPostHeader(pageId: string): Promise<PostHeaderType> {
-  const pageData = await getNotionPage(pageId)
-  return await transformPostHeader(pageData, pageId)
-}
+// export async function getPostHeader(pageId: string): Promise<PostHeaderType> {
+//   const pageData = await getNotionPage(pageId)
+//   return await transformPostHeader(pageData, pageId)
+// }
 
 /**
  * Transform Notion data to PostHeaderType
@@ -185,77 +176,73 @@ export async function getPostHeader(pageId: string): Promise<PostHeaderType> {
  * REMARK: This method MUST be placed in this file (not in helpers.ts) because it uses
  * some methods that require the "cache()" from react.
  */
-async function transformPostHeader(
-  notionHeader: NotionHeader,
-  pageIdwithDash: string
-): Promise<PostHeaderType> {
-  const properties = notionHeader?.properties
+// async function transformPostHeader(
+//   notionHeader: NotionHeader,
+//   pageIdwithDash: string
+// ): Promise<PostHeaderType> {
+//   const properties = notionHeader?.properties
 
-  // title
-  const title = getJoinedRichText(properties?.name?.title as any) || defaultPostTitle
+//   // title
+//   const title = getJoinedRichText(properties?.name?.title as any) || defaultPostTitle
 
-  // date
-  // Because we migrate from WP to Notion, a lot of posts need to use the old created date
-  const finalCreatedDate =
-    properties?.finalCreatedDate?.formula?.date?.start || new Date().toISOString()
-  const date = new Date(finalCreatedDate).toISOString()
+//   // date
+//   // Because we migrate from WP to Notion, a lot of posts need to use the old created date
+//   const finalCreatedDate =
+//     properties?.finalCreatedDate?.formula?.date?.start || new Date().toISOString()
+//   const date = new Date(finalCreatedDate).toISOString()
 
-  // categories
-  const categories = getPredefinedCategories(properties?.categories?.multi_select)
+//   // categories
+//   const categories = getPredefinedCategories(properties?.categories?.multi_select)
 
-  // tags
-  const tags = properties?.tag?.multi_select?.map(item => mapTag(item))
+//   // tags
+//   const tags = properties?.tag?.multi_select?.map(item => mapTag(item))
 
-  // authors
-  const authorIdsList = properties?.authors?.relation?.map(item => item.id) || []
-  const authorsList = await getAuthors()
-  const authors = parseAuthorsForPost(authorIdsList, authorsList)
+//   // authors
+//   const authorIdsList = properties?.authors?.relation?.map(item => item.id) || []
+//   const authorsList = await getAuthors()
+//   const authors = parseAuthorsForPost(authorIdsList, authorsList)
 
-  // featured image
-  const sourceUrl = notionHeader?.cover?.external?.url || notionHeader?.cover?.file?.url
-  const featuredImage = await parseImage({
-    sourceUrl,
-    altText: `Ảnh đại diện cho bài viết "${title}"`,
-    category: categories[0],
-    pageIdwithDash,
-    staticImageData: defaultFeaturedImage,
-    typeImgur: 'h'
-  })
+//   // featured image
+//   const sourceUrl = notionHeader?.cover?.external?.url || notionHeader?.cover?.file?.url
+//   const featuredImage = await parseImage({
+//     sourceUrl,
+//     altText: `Ảnh đại diện cho bài viết "${title}"`,
+//     category: categories[0],
+//     pageIdwithDash,
+//     staticImageData: defaultFeaturedImage,
+//     typeImgur: 'h'
+//   })
 
-  // selected
-  const selected = properties?.selected?.checkbox || false
+//   // selected
+//   const selected = properties?.selected?.checkbox || false
 
-  // bookCover
-  const bookCoverUrl =
-    properties?.bookCover?.files?.[0]?.external?.url || properties?.bookCover?.files?.[0]?.file?.url
-  const bookCover = await parseImage({
-    sourceUrl: bookCoverUrl,
-    altText: `Ảnh bìa sách "${title}"`,
-    pageIdwithDash,
-    staticImageData: defaultBookCover,
-    canBeNull: true,
-    typeImgur: 'm'
-  })
+//   // bookCover
+//   const bookCoverUrl =
+//     properties?.bookCover?.files?.[0]?.external?.url || properties?.bookCover?.files?.[0]?.file?.url
+//   const bookCover = await parseImage({
+//     sourceUrl: bookCoverUrl,
+//     altText: `Ảnh bìa sách "${title}"`,
+//     pageIdwithDash,
+//     staticImageData: defaultBookCover,
+//     canBeNull: true,
+//     typeImgur: 'm'
+//   })
 
-  // showToc
-  const showToc = properties?.showToc?.checkbox || false
+//   // contentCheck
+//   const contentCheck = properties?.contentCheck?.checkbox || false
 
-  // contentCheck
-  const contentCheck = properties?.contentCheck?.checkbox || false
-
-  return {
-    title,
-    date,
-    categories,
-    tags,
-    authors,
-    featuredImage,
-    selected,
-    bookCover,
-    showToc,
-    contentCheck
-  }
-}
+//   return {
+//     title,
+//     date,
+//     categories,
+//     tags,
+//     authors,
+//     featuredImage,
+//     selected,
+//     bookCover,
+//     contentCheck
+//   }
+// }
 
 /**
  * Make sure that the return of this method is always an image (from Notion or from the default image)
@@ -270,16 +257,10 @@ async function parseImage(options: {
   typeImgur?: ImgurUrlType
 }): Promise<ImageType> {
   const { sourceUrl, altText, category, pageIdwithDash, staticImageData, canBeNull } = options
-  if (!sourceUrl) return null
-  const urlToUse = parseImgurUrl({ url: sourceUrl, type: options.typeImgur })
-  const image: ImageType = { altText, sourceUrl: urlToUse }
-  const imgUrl = parseNotionImageUrl(urlToUse, pageIdwithDash)
-  if (imgUrl) {
-    const { base64, width, height } = await getPlaceholderImage(imgUrl)
-    image.blurDataURL = base64
-    image.width = width
-    image.height = height
-  } else {
+  if (!sourceUrl && !staticImageData) return null
+  const image: ImageType = { altText }
+
+  if (!sourceUrl) {
     if (canBeNull) return null
     // If there is no featured image, we will use the default featured image of the category
     if (category && category.featuredImage?.staticImageData) {
@@ -288,8 +269,17 @@ async function parseImage(options: {
       // If the post has no category
       image.staticImageData = staticImageData
     }
+  } else {
+    const urlToUse = parseImgurUrl({ url: sourceUrl, type: options.typeImgur })
+    image.sourceUrl = urlToUse
+    const imgUrl = parseNotionImageUrl(urlToUse, pageIdwithDash)
+    if (imgUrl) {
+      const { base64, width, height } = await getPlaceholderImage(imgUrl)
+      image.blurDataURL = base64
+      image.width = width
+      image.height = height
+    }
   }
-
   return image
 }
 

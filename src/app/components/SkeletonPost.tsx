@@ -1,9 +1,8 @@
 import cn from 'classnames'
-import { postBodyContainerClass } from 'notion-nextjs-lib/dist/components/PostBody'
 
 import { postWidthContainer } from '../lib/config'
 import Container from './Container'
-import { containerHeaderClass, fullWidthPostCoverHeight, gapHeaderItems } from './PostHeader'
+import { containerHeaderClass, fullWidthPostCoverHeight } from './PostHeader'
 
 type SkeletonPostProps = {
   hideCategories?: boolean
@@ -18,12 +17,12 @@ type SkeletonPostProps = {
  * loading placeholder has the same shape as the one to be loaded!
  */
 export default function SkeletonPost(props: SkeletonPostProps) {
+  const gapHeaderItems = 'mb-3'
+
   return (
     <article className="animate-pulse">
       {/* Featured Image */}
-      <div>
-        <div className={cn('w-full bg-slate-200', fullWidthPostCoverHeight)}></div>
-      </div>
+      <div className={cn('w-full bg-slate-200 h-[217px]', fullWidthPostCoverHeight)}></div>
       <Container className={containerHeaderClass} maxWidthClass={postWidthContainer}>
         <div className="pb-4 pt-8">
           {/* Categories */}
@@ -71,7 +70,7 @@ export default function SkeletonPost(props: SkeletonPostProps) {
 
       {/* Content */}
       <Container maxWidthClass={postWidthContainer}>
-        <div className={cn(postBodyContainerClass)}>
+        <div>
           <div className="w-100 mt-4 mb-2 h-5 rounded-2xl bg-slate-200"></div>
           <div className="w-100 mb-2 h-5 rounded-2xl bg-slate-200"></div>
           <div className="w-100 mb-2 h-5 rounded-2xl bg-slate-200"></div>

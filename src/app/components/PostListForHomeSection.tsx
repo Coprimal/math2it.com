@@ -1,8 +1,8 @@
+import SkeletonPostList from '@notion-x/SkeletonPostList'
+import { PostType, PostTypeOpts } from '@notion-x/components/PostsList'
+import MdKeyboardDoubleArrowRight from '@notion-x/icons/MdKeyboardDoubleArrowRight'
 import cn from 'classnames'
 import Link from 'next/link'
-import { PostType, PostTypeOpts } from 'notion-nextjs-lib/dist/components/PostsList'
-import SkeletonPostList from 'notion-nextjs-lib/dist/components/SkeletonPostList'
-import MdKeyboardDoubleArrowRight from 'notion-nextjs-lib/dist/icons/MdKeyboardDoubleArrowRight'
 import { Suspense } from 'react'
 
 import { comfortaa, lobster } from '../lib/fonts'

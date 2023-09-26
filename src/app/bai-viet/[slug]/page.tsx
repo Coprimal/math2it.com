@@ -1,14 +1,15 @@
-import { defaultBlockOptionsContext, notionMaxRequest } from '@app/lib/config'
-import { getAuthors, getBlocks, getCategories, getPostHeader, getPosts } from '@app/lib/fetcher'
+import { defaultBlockOptions, notionMaxRequest } from '@app/lib/config'
+import { getAuthors, getCategories, getPosts } from '@app/lib/fetcher'
 import SinglePostTemplate from '@app/templates/SinglePostTemplate'
+import { getJoinedRichText } from '@notion-x/helpers'
+import { DynamicSegmentParamsProps } from '@notion-x/interface'
+import { notionX } from '@notion-x/notionx'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { getJoinedRichText } from 'notion-nextjs-lib/dist/helpers/block-helpers'
-import { DynamicSegmentParamsProps } from 'notion-nextjs-lib/dist/interface'
 
 import { generateMetaTitle, getRelatedPosts } from '../../lib/helpers'
 
-export const revalidate = 60
+export const revalidate = 20
 
 export async function generateMetadata({ params }: DynamicSegmentParamsProps): Promise<Metadata> {
   const slug = params.slug || ''
@@ -60,16 +61,15 @@ export default async function SinglePostPage({ params }: DynamicSegmentParamsPro
     const pageIdwithDash = post?.id
     if (!pageIdwithDash) notFound()
 
-    const postHeader = await getPostHeader(pageIdwithDash)
-    const contentBlocks = await getBlocks(pageIdwithDash)
+    const recordMap = await notionX.getPage(pageIdwithDash)
     const relatedPosts = getRelatedPosts(allPosts, post, 8)
 
     return (
       <SinglePostTemplate
-        postHeader={postHeader}
-        contentBlocks={contentBlocks}
+        recordMap={recordMap}
+        authors={authors}
         relatedPosts={relatedPosts}
-        blockOptionsContext={defaultBlockOptionsContext}
+        blockOptions={defaultBlockOptions}
       />
     )
   } catch (error) {

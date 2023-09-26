@@ -1,7 +1,8 @@
+import { notionX } from '@notion-x/notionx'
 import { notFound } from 'next/navigation'
 
-import { defaultBlockOptionsContext } from '../../lib/config'
-import { getBlocks, getPostHeader } from '../../lib/fetcher'
+import { defaultBlockOptions } from '../../lib/config'
+import { getAuthors } from '../../lib/fetcher'
 import { generateMetaTitle } from '../../lib/helpers'
 import SinglePostTemplate from '../../templates/SinglePostTemplate'
 
@@ -21,19 +22,18 @@ export const metadata = {
 
 export default async function WriteWithUsPage() {
   try {
-    const postHeader = await getPostHeader(process.env.WRITE_WITH_US_PAGE as string)
-    const contentBlocks = await getBlocks(process.env.WRITE_WITH_US_PAGE as string)
+    const recordMap = await notionX.getPage(process.env.WRITE_WITH_US_PAGE as string)
+    const authors = await getAuthors()
     return (
       <SinglePostTemplate
+        recordMap={recordMap}
         isPage={true}
-        hideWriteWithUs={true}
-        postHeader={postHeader}
-        contentBlocks={contentBlocks}
-        blockOptionsContext={defaultBlockOptionsContext}
+        authors={authors}
+        blockOptions={defaultBlockOptions}
       />
     )
   } catch (error) {
-    console.log('🚨Error when loading a single post page', error)
+    console.log('🚨 Lỗi khi load trang "Viết bài cùng Math2IT"', error)
     notFound()
   }
 }

@@ -23,9 +23,10 @@
     "strictNullChecks": true,
     "paths": {
       "@src/*": ["./src/*"],
-      "@root/*": ["./*"],
+      "@/*": ["./*"],
       "@c/*": ["./src/app/components/*"],
-      "@app/*": ["./src/app/*"]
+      "@app/*": ["./src/app/*"],
+      "@notion-x/*": ["./notion-x/*"]
     }
   },
   "include": [
