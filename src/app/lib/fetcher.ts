@@ -1,5 +1,5 @@
 import defaultBookCover from '@/public/featured-images/untitledBook.jpg'
-import { getPosts as getPostsWithoutCache, queryDatabase, retrieveDatabase } from '@notion-x/db'
+import { queryDatabase, retrieveDatabase } from '@notion-x/db'
 import { defaultBlurData, getJoinedRichText, makeSlugText } from '@notion-x/helpers'
 import { Author, Category, ImageType, NotionSorts, Post, Tag } from '@notion-x/interface'
 import { QueryDatabaseParameters } from '@notionhq/client/build/src/api-endpoints'
@@ -41,7 +41,7 @@ export const getPosts = cache(
     } as NotionSorts
     const sortsToUse: any = sorts?.length ? sorts.push(defaultSort) : [defaultSort]
     const filterToUse = getFilter(filter)
-    const postList = await getPostsWithoutCache({
+    const data = await queryDatabase({
       dbId: process.env.NOTION_DB_POSTS as string,
       filter: filterToUse,
       startCursor,
@@ -49,7 +49,7 @@ export const getPosts = cache(
       sorts: sortsToUse
     })
     return await transformNotionPostsData({
-      data: postList,
+      data: data?.results as any[],
       categories,
       authors
     })
