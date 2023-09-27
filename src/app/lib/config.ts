@@ -31,9 +31,6 @@ export const defaultFeaturedImage = _dImg
 
 export const notionMaxRequest = 100
 
-// 👇 It's used to sort posts by date
-export const notionDateName = 'finalCreatedDate'
-
 // Notion Posts defautl
 export const defaultPostTitle = 'Không tựa đề'
 export const defaultPostDate = new Date().toISOString().split('T')[0]

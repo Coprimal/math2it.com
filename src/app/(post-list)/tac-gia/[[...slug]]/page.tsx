@@ -1,6 +1,6 @@
 import authorCover from '@/public/featured-images/author.png'
 import { getSlugPrefix, notionMaxRequest } from '@app/lib/config'
-import { getAuthors, getCategories, getPostsBy } from '@app/lib/fetcher'
+import { getAuthors, getCategories, getPosts } from '@app/lib/fetcher'
 import { generateMetaTitle, getFilterOf } from '@app/lib/helpers'
 import PageOfPostsListTemplate from '@app/templates/PageOfPostsListTemplate'
 import { getStartCursorForCurrentPage } from '@notion-x/helpers'
@@ -38,10 +38,9 @@ export async function generateStaticParams() {
   const authors = await getAuthors()
   const params = [] as OptionalCatchAllParams[]
   for (const author of authors) {
-    const allPosts = await getPostsBy({
+    const allPosts = await getPosts({
       filter: getFilterOf('author', author),
-      pageSize: notionMaxRequest,
-      getFull: true
+      pageSize: notionMaxRequest
     })
     const numPosts = allPosts?.length || 0
     const totalPages = Math.ceil(numPosts / +process.env.POSTS_PER_PAGE!)
@@ -79,12 +78,10 @@ export default async function AuthorPage({ params }: OptionalCatchAllProps) {
   if (!author) notFound()
 
   // All posts in that category, we need these to find the number of pages
-  const allPosts = await getPostsBy({
+  const allPosts = await getPosts({
     categories,
     authors,
-    filter: getFilterOf('author', author),
-    pageSize: notionMaxRequest,
-    getFull: true
+    filter: getFilterOf('author', author)
   })
   const totalPages = Math.ceil(allPosts.length / +process.env.POSTS_PER_PAGE!)
 
@@ -103,13 +100,12 @@ export default async function AuthorPage({ params }: OptionalCatchAllProps) {
   )
   const postsOnThisPage = !allPosts.length
     ? []
-    : await getPostsBy({
+    : await getPosts({
         categories,
         authors,
         filter: getFilterOf('author', author),
         startCursor,
-        pageSize: +process.env.POSTS_PER_PAGE!,
-        getFull: true
+        pageSize: +process.env.POSTS_PER_PAGE!
       })
 
   return (

@@ -30,9 +30,7 @@ export async function generateMetadata({ params }: OptionalCatchAllProps): Promi
 export async function generateStaticParams() {
   const params = [] as OptionalCatchAllParams[]
   const allPosts = await getPosts({
-    dbId: process.env.NOTION_DB_POSTS as string,
-    pageSize: notionMaxRequest,
-    getFull: true
+    pageSize: notionMaxRequest
   })
   const numPosts = allPosts?.length || 0
   const totalPages = Math.ceil(numPosts / +process.env.POSTS_PER_PAGE!)
@@ -64,11 +62,9 @@ export default async function AllPostsPage({ params }: OptionalCatchAllProps) {
   const authors = await getAuthors()
 
   const allPosts = await getPosts({
-    dbId: process.env.NOTION_DB_POSTS as string,
     categories,
     authors,
-    pageSize: notionMaxRequest,
-    getFull: true
+    pageSize: notionMaxRequest
   })
   const totalPages = Math.ceil(allPosts.length / +process.env.POSTS_PER_PAGE!)
 
@@ -88,12 +84,10 @@ export default async function AllPostsPage({ params }: OptionalCatchAllProps) {
   const postsOnThisPage = !allPosts.length
     ? []
     : await getPosts({
-        dbId: process.env.NOTION_DB_POSTS as string,
         categories,
         authors,
         startCursor,
-        pageSize: +process.env.POSTS_PER_PAGE!,
-        getFull: true
+        pageSize: +process.env.POSTS_PER_PAGE!
       })
 
   return (

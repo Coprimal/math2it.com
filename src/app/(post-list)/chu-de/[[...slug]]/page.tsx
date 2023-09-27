@@ -1,6 +1,6 @@
 import tagCover from '@/public/featured-images/tag.png'
-import { getSlugPrefix, notionMaxRequest } from '@app/lib/config'
-import { getAuthors, getCategories, getPostsBy, getTags } from '@app/lib/fetcher'
+import { getSlugPrefix } from '@app/lib/config'
+import { getAuthors, getCategories, getPosts, getTags } from '@app/lib/fetcher'
 import { generateMetaTitle, getFilterOf } from '@app/lib/helpers'
 import PageOfPostsListTemplate from '@app/templates/PageOfPostsListTemplate'
 import { getStartCursorForCurrentPage } from '@notion-x/helpers'
@@ -28,10 +28,8 @@ export async function generateStaticParams() {
   const tags = await getTags()
   const params = [] as OptionalCatchAllParams[]
   for (const tag of tags) {
-    const allPosts = await getPostsBy({
-      filter: getFilterOf('tag', tag),
-      pageSize: notionMaxRequest,
-      getFull: true
+    const allPosts = await getPosts({
+      filter: getFilterOf('tag', tag)
     })
     const numPosts = allPosts?.length || 0
     const totalPages = Math.ceil(numPosts / +process.env.POSTS_PER_PAGE!)
@@ -69,12 +67,10 @@ export default async function TagPage({ params }: OptionalCatchAllProps) {
   if (!tag) notFound()
 
   // All posts in that category, we need these to find the number of pages
-  const allPosts = await getPostsBy({
+  const allPosts = await getPosts({
     categories,
     authors,
-    filter: getFilterOf('tag', tag),
-    pageSize: notionMaxRequest,
-    getFull: true
+    filter: getFilterOf('tag', tag)
   })
   const totalPages = Math.ceil(allPosts.length / +process.env.POSTS_PER_PAGE!)
 
@@ -93,13 +89,12 @@ export default async function TagPage({ params }: OptionalCatchAllProps) {
   )
   const postsOnThisPage = !allPosts.length
     ? []
-    : await getPostsBy({
+    : await getPosts({
         categories,
         authors,
         filter: getFilterOf('tag', tag),
         startCursor,
-        pageSize: +process.env.POSTS_PER_PAGE!,
-        getFull: true
+        pageSize: +process.env.POSTS_PER_PAGE!
       })
 
   return (

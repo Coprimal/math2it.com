@@ -1,5 +1,3 @@
-import withPlaiceholder from '@plaiceholder/next'
-
 const nextConfig = {
   // output: 'export', // Update 25/9/13: use notion-x & auto build on vercel
   trailingSlash: true, // use "/about/" instead of "/about" (not supported yet by --turbo)
@@ -43,4 +41,4 @@ const nextConfig = {
   }
 }
 
-export default withPlaiceholder(nextConfig)
+export default nextConfig

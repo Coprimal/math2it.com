@@ -1,29 +1,18 @@
 import defaultBookCover from '@/public/featured-images/untitledBook.jpg'
-import {
-  getBlocks as getNotionBlocks,
-  getNotionDatabaseWithoutCache,
-  getNotionPageWithoutCache,
-  retrieveNotionDatabaseWithoutCache
-} from '@notion-x/db'
-import { getJoinedRichText, makeSlugText } from '@notion-x/helpers'
+import { getPosts as getPostsWithoutCache, queryDatabase, retrieveDatabase } from '@notion-x/db'
+import { defaultBlurData, getJoinedRichText, makeSlugText } from '@notion-x/helpers'
 import { Author, Category, ImageType, NotionSorts, Post, Tag } from '@notion-x/interface'
-import {
-  ListBlockChildrenResponse,
-  QueryDatabaseParameters
-} from '@notionhq/client/build/src/api-endpoints'
+import { QueryDatabaseParameters } from '@notionhq/client/build/src/api-endpoints'
 import { ImgurUrlType, NotionPost, NotionTagData } from '@src/interface'
 import { get } from 'lodash'
 import { StaticImageData } from 'next/image'
 import { cache } from 'react'
 
 import {
-  SINGLE_PAGE_SLUGS,
   defaultFeaturedImage,
   defaultPostDate,
   defaultPostTitle,
   getSlugPrefix,
-  notionDateName,
-  notionMaxRequest,
   predefinedCategories
 } from './config'
 import {
@@ -34,130 +23,56 @@ import {
   transformNotionAuthorsData
 } from './helpers'
 
-/**
- * Get posts from Notion. If the requested `pageSize` is >= `notionMaxRequest`, it will
- * automatically request the next page.
- *
- * categories, tags, authors aren't required but they're required if you want to use
- * transformNotionPostsData(). They're required in case we just want to get sine basic information
- * of the posts.
- *
- * Below are some notable parameters:
- *
- * @param options.filter - (optional) beside the main filter, you can add more filters
- * @param options.startCursor - (optional) if you want to get more posts, you can pass the
- * next_cursor from the previous request.
- * @param options.pageSize - (optional) the number of posts you want to get. If you want to
- * get all available posts, you can pass `notionMaxRequest`.
- * @param options.getFull - (optional) if you want to get all posts without the filter of the last modified date
- */
-export async function getPosts(options: {
-  dbId: string
-  categories?: Category[]
-  authors?: Author[]
-  filter?: unknown
-  startCursor?: string
-  pageSize?: number
-  sorts?: NotionSorts[]
-  getFull?: boolean
-}): Promise<Post[]> {
-  const { dbId, filter, categories, authors, startCursor, pageSize, sorts, getFull } = options
-
-  const defaultSort = {
-    property: notionDateName,
-    direction: 'descending'
-  } as NotionSorts
-  const sortsToUse: any = sorts?.length ? sorts.push(defaultSort) : [defaultSort]
-  const filterToUse = getFilter(filter, getFull)
-
-  let data = await getNotionDatabase(dbId, filterToUse, startCursor, pageSize, sortsToUse)
-  let postsList = get(data, 'results', []) as NotionPost[]
-
-  if (data && pageSize && pageSize >= notionMaxRequest && data['has_more']) {
-    let newStartCursor = startCursor
-    while (data!['has_more']) {
-      newStartCursor = data!['next_cursor'] as string
-      data = await getNotionDatabase(dbId, filterToUse, newStartCursor, pageSize, sortsToUse)
-      if (get(data, 'results')) {
-        const lst = data!['results'] as any[]
-        postsList = [...postsList, ...lst]
-      }
-    }
+export const getPosts = cache(
+  async (opts: {
+    filter?: QueryDatabaseParameters['filter']
+    startCursor?: string
+    pageSize?: number
+    sorts?: NotionSorts[]
+    categories?: Category[]
+    authors?: Author[]
+  }) => {
+    if (!process.env.NOTION_DB_POSTS)
+      throw new Error('getTagsWithCache(): NOTION_DB_POSTS is not defined')
+    const { filter, startCursor, pageSize, sorts, categories, authors } = opts
+    const defaultSort = {
+      property: 'finalCreatedDate',
+      direction: 'descending'
+    } as NotionSorts
+    const sortsToUse: any = sorts?.length ? sorts.push(defaultSort) : [defaultSort]
+    const filterToUse = getFilter(filter)
+    const postList = await getPostsWithoutCache({
+      dbId: process.env.NOTION_DB_POSTS as string,
+      filter: filterToUse,
+      startCursor,
+      pageSize,
+      sorts: sortsToUse
+    })
+    return await transformNotionPostsData({
+      data: postList,
+      categories,
+      authors
+    })
   }
+)
 
-  const posts = await transformNotionPostsData({
-    data: postsList,
-    categories,
-    authors
-  })
-  return posts
-}
-
-/**
- * Depending on the filter, we can use this function to get posts by categories, tags, authors
- *
- * The categories, tags and authors are otional because sometimes, we don't need them in the return.
- */
-export async function getPostsBy(options: {
-  filter: unknown
-  pageSize: number
-  startCursor?: string
-  categories?: Category[]
-  authors?: Author[]
-  getFull?: boolean
-}) {
-  const { categories, authors, filter, pageSize, startCursor, getFull } = options
-  const posts = await getPosts({
-    dbId: process.env.NOTION_DB_POSTS as string,
-    categories,
-    authors,
-    filter,
-    startCursor,
-    pageSize,
-    getFull
-  })
-  return posts
-}
-
-/**
- * Get all predefined categories (not from Notion database)
- */
 export const getCategories = () => predefinedCategories
 
-/**
- * Get all tags from Notion database (process.env.NOTION_DB_TAGS)
- */
-export const getTags = async () => {
-  if (!process.env.NOTION_DB_POSTS) throw new Error('process.env.NOTION_DB_POSTS is not defined')
-  const data = await retrieveNotionDatabase(process.env.NOTION_DB_POSTS)
-  return (
-    data?.properties?.tag?.multi_select?.options?.map((opt: NotionTagData) => mapTag(opt)) || []
+export const getTags = cache(async () => {
+  if (!process.env.NOTION_DB_POSTS)
+    throw new Error('getTagsWithCache(): NOTION_DB_POSTS is not defined')
+  const data = await retrieveDatabase(process.env.NOTION_DB_POSTS as string)
+  return get(data, 'properties.tag.multi_select.options', [])?.map((opt: NotionTagData) =>
+    mapTag(opt)
   )
-}
+})
 
-function mapTag(tag: NotionTagData): Tag {
-  return {
-    id: makeSlugText(tag.name),
-    name: tag.name,
-    slug: makeSlugText(tag.name),
-    uri: `/${getSlugPrefix('tag')}/${makeSlugText(tag.name)}/`
-  }
-}
-
-/**
- * Get all authors from Notion database (process.env.NOTION_DB_AUTHORS)
- */
-export const getAuthors = async () => {
+export const getAuthors = cache(async () => {
   if (!process.env.NOTION_DB_AUTHORS)
-    throw new Error('process.env.NOTION_DB_AUTHORS is not defined')
-  const data = await getNotionDatabase(
-    process.env.NOTION_DB_AUTHORS,
-    undefined,
-    undefined,
-    notionMaxRequest
-  )
+    throw new Error('getAuthorsWithCache(): NOTION_DB_AUTHORS is not defined')
+  const data = await queryDatabase({ dbId: process.env.NOTION_DB_AUTHORS as string })
   return transformNotionAuthorsData(data?.['results'] as any[])
-}
+})
 
 /**
  * Make sure that the return of this method is always an image (from Notion or from the default image)
@@ -189,26 +104,14 @@ async function parseImage(options: {
     image.sourceUrl = urlToUse
     const imgUrl = parseNotionImageUrl(urlToUse, pageIdwithDash)
     if (imgUrl) {
-      // const { base64, width, height } = await getPlaceholderImage(imgUrl)
-      image.blurDataURL =
-        'https://res.cloudinary.com/texmathcom/image/upload/v1695330010/TEXMATH/404-game-over.jpg'
-      // image.width = width
-      // image.height = height
+      image.blurDataURL = defaultBlurData.url
+      image.width = defaultBlurData.width
+      image.height = defaultBlurData.height
     }
   }
   return image
 }
 
-/**
- * Transform data fetched from Notion to format Post[].
- *
- * Note that:
- *
- * 1. In some cases, we don't need all the properties of Post, so we ignore the fields
- * categories, tags and authors.
- * 2. This method MUST be placed in this file (not in helpers.ts) because it uses
- * some methods that require the "cache()" from react.
- */
 async function transformNotionPostsData(options: {
   data: NotionPost[]
   categories?: Category[]
@@ -317,84 +220,11 @@ async function transformNotionPostsData(options: {
   )
 }
 
-export async function getBlocks(blockId: string): Promise<ListBlockChildrenResponse['results']> {
-  return await getNotionBlocks(
-    blockId,
-    process.env.NOTION_TOKEN as string,
-    process.env.NOTION_VERSION as string,
-    undefined,
-    getPageUri,
-    parseImgurUrlForGettingBlocks
-  )
+function mapTag(tag: NotionTagData): Tag {
+  return {
+    id: makeSlugText(tag.name),
+    name: tag.name,
+    slug: makeSlugText(tag.name),
+    uri: `/${getSlugPrefix('tag')}/${makeSlugText(tag.name)}/`
+  }
 }
-
-function parseImgurUrlForGettingBlocks(url: string) {
-  return parseImgurUrl({ url, type: 'h', ignoreImgType: 'png' })
-}
-
-/**
- * Get uri (not slug) of a Notion page
- */
-async function getPageUri(pageId: string): Promise<string | undefined> {
-  const pageData = await getNotionPage(pageId)
-  const isAuthor =
-    get(pageData, 'parent.database_id', '').replaceAll('-', '') === process.env.NOTION_DB_AUTHORS
-  const slug =
-    get(pageData, 'properties.slug.rich_text[0].plain_text', '') ||
-    makeSlugText(get(pageData, 'properties.name.title[0].plain_text', ''))
-  if (!slug) return undefined
-  return !isAuthor
-    ? !SINGLE_PAGE_SLUGS.includes(slug)
-      ? `/${getSlugPrefix('singlePost')}/${slug}/`
-      : `/${slug}/`
-    : `/${getSlugPrefix('author')}/${slug}/`
-}
-
-/**
- * Get data from Notion using the official Notion APIs. We use React cache() to cache the data.
- *
- * @see {@link https://developers.notion.com/reference/post-database-query Query a database - Notion API}
- * @see {@link https://nextjs.org/docs/app/building-your-application/data-fetching/caching#react-cache React cache()}
- * @see {@link https://developers.notion.com/reference/request-limits Notion API request limits}
- */
-const getNotionDatabase = cache(
-  async (
-    dataId: string,
-    filter?: QueryDatabaseParameters['filter'],
-    startCursor?: string,
-    pageSize?: number,
-    sorts?: NotionSorts[]
-  ) =>
-    getNotionDatabaseWithoutCache(
-      dataId,
-      process.env.NOTION_TOKEN as string,
-      process.env.NOTION_VERSION as string,
-      filter,
-      startCursor,
-      pageSize,
-      sorts
-    )
-)
-
-/**
- * Get Notion Page by pageId
- *
- * It's "notion.pages.retrieve()" if we use Notion API directly.
- *
- * @see {@link https://developers.notion.com/reference/retrieve-a-page Retrieve a page - Notion API}
- */
-const getNotionPage = cache(async (pageId: string) =>
-  getNotionPageWithoutCache(
-    pageId,
-    process.env.NOTION_TOKEN as string,
-    process.env.NOTION_VERSION as string
-  )
-)
-
-const retrieveNotionDatabase = cache(async (dataId: string) =>
-  retrieveNotionDatabaseWithoutCache(
-    dataId,
-    process.env.NOTION_TOKEN as string,
-    process.env.NOTION_VERSION as string
-  )
-)

@@ -1,5 +1,5 @@
-import { getSlugPrefix, notionMaxRequest } from '@app/lib/config'
-import { getAuthors, getCategories, getPostsBy } from '@app/lib/fetcher'
+import { getSlugPrefix } from '@app/lib/config'
+import { getAuthors, getCategories, getPosts } from '@app/lib/fetcher'
 import { generateMetaTitle, getFilterOf } from '@app/lib/helpers'
 import PageOfPostsListTemplate from '@app/templates/PageOfPostsListTemplate'
 import { getStartCursorForCurrentPage } from '@notion-x/helpers'
@@ -38,10 +38,8 @@ export async function generateStaticParams() {
 
   const params = [] as OptionalCatchAllParams[]
   for (const category of categories) {
-    const allPosts = await getPostsBy({
-      filter: getFilterOf('category', category),
-      pageSize: notionMaxRequest,
-      getFull: true
+    const allPosts = await getPosts({
+      filter: getFilterOf('category', category)
     })
     const numPosts = allPosts?.length || 0
     const totalPages = Math.ceil(numPosts / +process.env.POSTS_PER_PAGE!)
@@ -84,12 +82,10 @@ export default async function CategoryPage({ params }: OptionalCatchAllProps) {
   const iconComponent = category.fontello ? <i className={category.fontello}></i> : null
 
   // All posts in that category, we need these to find the number of pages
-  const allPosts = await getPostsBy({
+  const allPosts = await getPosts({
     categories,
     authors,
-    filter: getFilterOf('category', category),
-    pageSize: notionMaxRequest,
-    getFull: true
+    filter: getFilterOf('category', category)
   })
   const totalPages = Math.ceil(allPosts.length / +process.env.POSTS_PER_PAGE!)
 
@@ -108,13 +104,12 @@ export default async function CategoryPage({ params }: OptionalCatchAllProps) {
   )
   const postsOnThisPage = !allPosts.length
     ? []
-    : await getPostsBy({
+    : await getPosts({
         categories,
         authors,
         filter: getFilterOf('category', category),
         startCursor,
-        pageSize: +process.env.POSTS_PER_PAGE!,
-        getFull: true
+        pageSize: +process.env.POSTS_PER_PAGE!
       })
 
   return (

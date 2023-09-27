@@ -30,10 +30,8 @@ export async function generateMetadata({ params }: OptionalCatchAllProps): Promi
 export async function generateStaticParams() {
   const params = [] as OptionalCatchAllParams[]
   const allPosts = await getPosts({
-    dbId: process.env.NOTION_DB_POSTS as string,
     pageSize: notionMaxRequest,
-    filter: getFilterOf('selected'),
-    getFull: true
+    filter: getFilterOf('selected')
   })
   const numPosts = allPosts?.length || 0
   const totalPages = Math.ceil(numPosts / +process.env.POSTS_PER_PAGE!)
@@ -57,7 +55,7 @@ export default async function SelectedPostsPage({ params }: OptionalCatchAllProp
     notFound()
   }
 
-  console.log(`\n👉 uri: /${getSlugPrefix('selected')}${getSlugPrefix('page')}/${currentPage}/`)
+  console.log(`\n👉 uri: /${getSlugPrefix('selected')}/${getSlugPrefix('page')}/${currentPage}/`)
 
   const notRootPage = !!params.slug
 
@@ -65,12 +63,10 @@ export default async function SelectedPostsPage({ params }: OptionalCatchAllProp
   const authors = await getAuthors()
 
   const allPosts = await getPosts({
-    dbId: process.env.NOTION_DB_POSTS as string,
     categories,
     authors,
     pageSize: notionMaxRequest,
-    filter: getFilterOf('selected'),
-    getFull: true
+    filter: getFilterOf('selected')
   })
   const totalPages = Math.ceil(allPosts.length / +process.env.POSTS_PER_PAGE!)
 
@@ -90,13 +86,11 @@ export default async function SelectedPostsPage({ params }: OptionalCatchAllProp
   const postsOnThisPage = !allPosts.length
     ? []
     : await getPosts({
-        dbId: process.env.NOTION_DB_POSTS as string,
         filter: getFilterOf('selected'),
         categories,
         authors,
         startCursor,
-        pageSize: +process.env.POSTS_PER_PAGE!,
-        getFull: true
+        pageSize: +process.env.POSTS_PER_PAGE!
       })
 
   return (

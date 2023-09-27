@@ -53,7 +53,8 @@ export default function PageOfPostsListTemplate(props: PageOfPostsListTemplatePr
               alt={`Hình ảnh đại diện cho trang ${props.title}`}
               className={cn('object-cover group-hover:scale-105 duration-500 w-full')}
               imageProps={{
-                fill: true
+                fill: true,
+                priority: true
               }}
             />
           </div>
