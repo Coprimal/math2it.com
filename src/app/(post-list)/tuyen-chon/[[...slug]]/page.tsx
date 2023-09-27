@@ -1,5 +1,5 @@
 import selectedCover from '@/public/featured-images/selected.png'
-import { getSlugPrefix, notionMaxRequest } from '@app/lib/config'
+import { getSlugPrefix } from '@app/lib/config'
 import { getAuthors, getCategories, getPosts } from '@app/lib/fetcher'
 import { generateMetaTitle, getFilterOf } from '@app/lib/helpers'
 import PageOfPostsListTemplate from '@app/templates/PageOfPostsListTemplate'
@@ -30,7 +30,6 @@ export async function generateMetadata({ params }: OptionalCatchAllProps): Promi
 export async function generateStaticParams() {
   const params = [] as OptionalCatchAllParams[]
   const allPosts = await getPosts({
-    pageSize: notionMaxRequest,
     filter: getFilterOf('selected')
   })
   const numPosts = allPosts?.length || 0
@@ -65,7 +64,6 @@ export default async function SelectedPostsPage({ params }: OptionalCatchAllProp
   const allPosts = await getPosts({
     categories,
     authors,
-    pageSize: notionMaxRequest,
     filter: getFilterOf('selected')
   })
   const totalPages = Math.ceil(allPosts.length / +process.env.POSTS_PER_PAGE!)

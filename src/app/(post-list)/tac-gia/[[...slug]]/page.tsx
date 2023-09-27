@@ -1,5 +1,5 @@
 import authorCover from '@/public/featured-images/author.png'
-import { getSlugPrefix, notionMaxRequest } from '@app/lib/config'
+import { getSlugPrefix } from '@app/lib/config'
 import { getAuthors, getCategories, getPosts } from '@app/lib/fetcher'
 import { generateMetaTitle, getFilterOf } from '@app/lib/helpers'
 import PageOfPostsListTemplate from '@app/templates/PageOfPostsListTemplate'
@@ -39,8 +39,7 @@ export async function generateStaticParams() {
   const params = [] as OptionalCatchAllParams[]
   for (const author of authors) {
     const allPosts = await getPosts({
-      filter: getFilterOf('author', author),
-      pageSize: notionMaxRequest
+      filter: getFilterOf('author', author)
     })
     const numPosts = allPosts?.length || 0
     const totalPages = Math.ceil(numPosts / +process.env.POSTS_PER_PAGE!)

@@ -1,5 +1,5 @@
 import allPostsCover from '@/public/featured-images/all.png'
-import { getSlugPrefix, notionMaxRequest } from '@app/lib/config'
+import { getSlugPrefix } from '@app/lib/config'
 import { getAuthors, getCategories, getPosts } from '@app/lib/fetcher'
 import { generateMetaTitle } from '@app/lib/helpers'
 import PageOfPostsListTemplate from '@app/templates/PageOfPostsListTemplate'
@@ -29,9 +29,7 @@ export async function generateMetadata({ params }: OptionalCatchAllProps): Promi
 
 export async function generateStaticParams() {
   const params = [] as OptionalCatchAllParams[]
-  const allPosts = await getPosts({
-    pageSize: notionMaxRequest
-  })
+  const allPosts = await getPosts()
   const numPosts = allPosts?.length || 0
   const totalPages = Math.ceil(numPosts / +process.env.POSTS_PER_PAGE!)
   for (let i = 1; i <= totalPages; i++) {
@@ -63,8 +61,7 @@ export default async function AllPostsPage({ params }: OptionalCatchAllProps) {
 
   const allPosts = await getPosts({
     categories,
-    authors,
-    pageSize: notionMaxRequest
+    authors
   })
   const totalPages = Math.ceil(allPosts.length / +process.env.POSTS_PER_PAGE!)
 

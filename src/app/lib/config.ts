@@ -29,8 +29,6 @@ export const minNumHeadingsToShowToc = 4 // from this number of headings, show t
 export const mathFontSize = 'text-base'
 export const defaultFeaturedImage = _dImg
 
-export const notionMaxRequest = 100
-
 // Notion Posts defautl
 export const defaultPostTitle = 'Không tựa đề'
 export const defaultPostDate = new Date().toISOString().split('T')[0]

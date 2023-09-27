@@ -24,7 +24,7 @@ import {
 } from './helpers'
 
 export const getPosts = cache(
-  async (opts: {
+  async (opts?: {
     filter?: QueryDatabaseParameters['filter']
     startCursor?: string
     pageSize?: number
@@ -34,7 +34,7 @@ export const getPosts = cache(
   }) => {
     if (!process.env.NOTION_DB_POSTS)
       throw new Error('getTagsWithCache(): NOTION_DB_POSTS is not defined')
-    const { filter, startCursor, pageSize, sorts, categories, authors } = opts
+    const { filter, startCursor, pageSize, sorts, categories, authors } = opts || {}
     const defaultSort = {
       property: 'finalCreatedDate',
       direction: 'descending'
