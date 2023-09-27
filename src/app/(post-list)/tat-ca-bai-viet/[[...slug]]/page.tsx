@@ -1,5 +1,5 @@
 import allPostsCover from '@/public/featured-images/all.png'
-import { getSlugPrefix, notionMaxRequest, numPostsPerPage } from '@app/lib/config'
+import { getSlugPrefix, notionMaxRequest } from '@app/lib/config'
 import { getAuthors, getCategories, getPosts } from '@app/lib/fetcher'
 import { generateMetaTitle } from '@app/lib/helpers'
 import PageOfPostsListTemplate from '@app/templates/PageOfPostsListTemplate'
@@ -35,7 +35,7 @@ export async function generateStaticParams() {
     getFull: true
   })
   const numPosts = allPosts?.length || 0
-  const totalPages = Math.ceil(numPosts / numPostsPerPage)
+  const totalPages = Math.ceil(numPosts / +process.env.POSTS_PER_PAGE!)
   for (let i = 1; i <= totalPages; i++) {
     const path = i === 1 ? { slug: [] } : { slug: [getSlugPrefix('page'), i.toString()] }
     params.push(path)
@@ -70,7 +70,7 @@ export default async function AllPostsPage({ params }: OptionalCatchAllProps) {
     pageSize: notionMaxRequest,
     getFull: true
   })
-  const totalPages = Math.ceil(allPosts.length / numPostsPerPage)
+  const totalPages = Math.ceil(allPosts.length / +process.env.POSTS_PER_PAGE!)
 
   if (notRootPage && currentPage === 1) {
     redirect(`/${getSlugPrefix('all')}/`)
@@ -80,7 +80,11 @@ export default async function AllPostsPage({ params }: OptionalCatchAllProps) {
     notFound()
   }
 
-  const startCursor = getStartCursorForCurrentPage(currentPage, allPosts, numPostsPerPage)
+  const startCursor = getStartCursorForCurrentPage(
+    currentPage,
+    allPosts,
+    +process.env.POSTS_PER_PAGE!
+  )
   const postsOnThisPage = !allPosts.length
     ? []
     : await getPosts({
@@ -88,7 +92,7 @@ export default async function AllPostsPage({ params }: OptionalCatchAllProps) {
         categories,
         authors,
         startCursor,
-        pageSize: numPostsPerPage,
+        pageSize: +process.env.POSTS_PER_PAGE!,
         getFull: true
       })
 
