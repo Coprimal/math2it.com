@@ -35,6 +35,7 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "src/interface.d.ts",
+    "src/img.d.ts",
     "tailwind.config.ts",
     "dist/types/**/*.ts"
   ],

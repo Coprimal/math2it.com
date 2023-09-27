@@ -74,6 +74,8 @@ export default async function CategoryPage({ params }: OptionalCatchAllProps) {
   const notRootPage = params.slug.length > 1
   const slug = params.slug[0] || ''
 
+  console.log(`\n👉 uri: /chuyen-muc/${slug}/${getSlugPrefix('page')}/${currentPage}/`)
+
   const categories = getCategories()
   const authors = await getAuthors()
   const category = categories.find(c => c.slug === slug)

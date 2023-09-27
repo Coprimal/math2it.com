@@ -9,7 +9,7 @@ import { BlockOptionsContextType } from '@notion-x/context'
 import { Category } from '@notion-x/interface'
 import { SlugTypeLabels } from '@src/interface'
 
-export const numPostsPerPage = 20
+export const numPostsPerPage = 50
 
 export const defaultBlockOptions: BlockOptionsContextType = {
   siteDomain: 'math2it.com',

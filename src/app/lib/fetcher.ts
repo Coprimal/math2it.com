@@ -3,7 +3,6 @@ import {
   getBlocks as getNotionBlocks,
   getNotionDatabaseWithoutCache,
   getNotionPageWithoutCache,
-  getPlaceholderImage,
   retrieveNotionDatabaseWithoutCache
 } from '@notion-x/db'
 import { getJoinedRichText, makeSlugText } from '@notion-x/helpers'
@@ -161,90 +160,6 @@ export const getAuthors = async () => {
 }
 
 /**
- * ARCHIVED: We use the information in the recordMap instead of this method
- * Get header of a single post from Notion
- *
- */
-// export async function getPostHeader(pageId: string): Promise<PostHeaderType> {
-//   const pageData = await getNotionPage(pageId)
-//   return await transformPostHeader(pageData, pageId)
-// }
-
-/**
- * Transform Notion data to PostHeaderType
- *
- * REMARK: This method MUST be placed in this file (not in helpers.ts) because it uses
- * some methods that require the "cache()" from react.
- */
-// async function transformPostHeader(
-//   notionHeader: NotionHeader,
-//   pageIdwithDash: string
-// ): Promise<PostHeaderType> {
-//   const properties = notionHeader?.properties
-
-//   // title
-//   const title = getJoinedRichText(properties?.name?.title as any) || defaultPostTitle
-
-//   // date
-//   // Because we migrate from WP to Notion, a lot of posts need to use the old created date
-//   const finalCreatedDate =
-//     properties?.finalCreatedDate?.formula?.date?.start || new Date().toISOString()
-//   const date = new Date(finalCreatedDate).toISOString()
-
-//   // categories
-//   const categories = getPredefinedCategories(properties?.categories?.multi_select)
-
-//   // tags
-//   const tags = properties?.tag?.multi_select?.map(item => mapTag(item))
-
-//   // authors
-//   const authorIdsList = properties?.authors?.relation?.map(item => item.id) || []
-//   const authorsList = await getAuthors()
-//   const authors = parseAuthorsForPost(authorIdsList, authorsList)
-
-//   // featured image
-//   const sourceUrl = notionHeader?.cover?.external?.url || notionHeader?.cover?.file?.url
-//   const featuredImage = await parseImage({
-//     sourceUrl,
-//     altText: `Ảnh đại diện cho bài viết "${title}"`,
-//     category: categories[0],
-//     pageIdwithDash,
-//     staticImageData: defaultFeaturedImage,
-//     typeImgur: 'h'
-//   })
-
-//   // selected
-//   const selected = properties?.selected?.checkbox || false
-
-//   // bookCover
-//   const bookCoverUrl =
-//     properties?.bookCover?.files?.[0]?.external?.url || properties?.bookCover?.files?.[0]?.file?.url
-//   const bookCover = await parseImage({
-//     sourceUrl: bookCoverUrl,
-//     altText: `Ảnh bìa sách "${title}"`,
-//     pageIdwithDash,
-//     staticImageData: defaultBookCover,
-//     canBeNull: true,
-//     typeImgur: 'm'
-//   })
-
-//   // contentCheck
-//   const contentCheck = properties?.contentCheck?.checkbox || false
-
-//   return {
-//     title,
-//     date,
-//     categories,
-//     tags,
-//     authors,
-//     featuredImage,
-//     selected,
-//     bookCover,
-//     contentCheck
-//   }
-// }
-
-/**
  * Make sure that the return of this method is always an image (from Notion or from the default image)
  */
 async function parseImage(options: {
@@ -274,10 +189,11 @@ async function parseImage(options: {
     image.sourceUrl = urlToUse
     const imgUrl = parseNotionImageUrl(urlToUse, pageIdwithDash)
     if (imgUrl) {
-      const { base64, width, height } = await getPlaceholderImage(imgUrl)
-      image.blurDataURL = base64
-      image.width = width
-      image.height = height
+      // const { base64, width, height } = await getPlaceholderImage(imgUrl)
+      image.blurDataURL =
+        'https://res.cloudinary.com/texmathcom/image/upload/v1695330010/TEXMATH/404-game-over.jpg'
+      // image.width = width
+      // image.height = height
     }
   }
   return image

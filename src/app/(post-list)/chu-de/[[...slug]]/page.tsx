@@ -59,6 +59,8 @@ export default async function TagPage({ params }: OptionalCatchAllProps) {
   const notRootPage = params.slug.length > 1
   const slug = params.slug[0] || ''
 
+  console.log(`\n👉 uri: /chu-de/${slug}/${getSlugPrefix('page')}/${currentPage}/`)
+
   const categories = getCategories()
   const tagsData = getTags()
   const authorsData = getAuthors()

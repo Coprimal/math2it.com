@@ -52,7 +52,7 @@ export default function PostHeader(props: PostHeaderProps) {
   const tags = tagNames?.map((tagName: string) => mapTag(tagName, getSlugPrefix('tag')))
   const categogyNames =
     block.properties?.[`${process.env.NEXT_PUBLIC_ID_CATEGORIES}`]?.[0]?.[0].split(',')
-  const categories = getPredefinedCategories(categogyNames.map((cat: string) => ({ name: cat })))
+  const categories = getPredefinedCategories(categogyNames?.map((cat: string) => ({ name: cat })))
 
   const coverPosition = (1 - (block?.format?.page_cover_position || 0.5)) * 100
   const pageCoverObjectPosition = `center ${coverPosition}%`

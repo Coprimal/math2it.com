@@ -57,6 +57,8 @@ export default async function SelectedPostsPage({ params }: OptionalCatchAllProp
     notFound()
   }
 
+  console.log(`\n👉 uri: /${getSlugPrefix('selected')}${getSlugPrefix('page')}/${currentPage}/`)
+
   const notRootPage = !!params.slug
 
   const categories = getCategories()

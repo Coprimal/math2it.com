@@ -15,6 +15,7 @@ export async function generateMetadata({ params }: DynamicSegmentParamsProps): P
   const slug = params.slug || ''
   const untitled = 'Bài viết không xác định | Math2IT'
   if (!slug) return { title: untitled }
+  console.log(`\n👉 slug: ${slug}`)
   const allPosts = await getPosts({
     dbId: process.env.NOTION_DB_POSTS as string,
     pageSize: notionMaxRequest
@@ -73,7 +74,7 @@ export default async function SinglePostPage({ params }: DynamicSegmentParamsPro
       />
     )
   } catch (error) {
-    console.log('🚨Error when loading a single post page', error)
+    console.log('🚨 Error when loading a single post page', error)
     notFound()
   }
 }

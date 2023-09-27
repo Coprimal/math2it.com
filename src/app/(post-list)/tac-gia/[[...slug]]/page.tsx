@@ -71,6 +71,8 @@ export default async function AuthorPage({ params }: OptionalCatchAllProps) {
   const notRootPage = params.slug.length > 1
   const slug = params.slug[0] || ''
 
+  console.log(`\n👉 uri: /tac-gia/${slug}/${getSlugPrefix('page')}/${currentPage}/`)
+
   const categories = getCategories()
   const authors = await getAuthors()
   const author = authors.find(c => c.slug === slug)
