@@ -118,8 +118,9 @@ export default function PostHeader(props: PostHeaderProps) {
               gapHeaderItems,
               'pt-1 text-left font-nunito text-4xl font-bold leading-tight tracking-tight'
             )}
-            dangerouslySetInnerHTML={{ __html: title }}
-          />
+          >
+            {getTextContent(title)}
+          </h1>
 
           {/* Authors & Date */}
           <div
@@ -202,7 +203,7 @@ export default function PostHeader(props: PostHeaderProps) {
                     'bg-amber-200 text-amber-900'
                   )}
                 >
-                  mới đăng
+                  bài mới
                 </div>
               )}
             </div>
