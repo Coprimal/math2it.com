@@ -23,38 +23,37 @@ import {
   transformNotionAuthorsData
 } from './helpers'
 
-export const getPosts = cache(
-  async (opts?: {
-    filter?: QueryDatabaseParameters['filter']
-    startCursor?: string
-    pageSize?: number
-    sorts?: NotionSorts[]
-    categories?: Category[]
-    authors?: Author[]
-  }) => {
-    if (!process.env.NOTION_DB_POSTS)
-      throw new Error('getTagsWithCache(): NOTION_DB_POSTS is not defined')
-    const { filter, startCursor, pageSize, sorts, categories, authors } = opts || {}
-    const defaultSort = {
-      property: 'finalCreatedDate',
-      direction: 'descending'
-    } as NotionSorts
-    const sortsToUse: any = sorts?.length ? sorts.push(defaultSort) : [defaultSort]
-    const filterToUse = getFilter(filter)
-    const data = await queryDatabase({
-      dbId: process.env.NOTION_DB_POSTS as string,
-      filter: filterToUse,
-      startCursor,
-      pageSize,
-      sorts: sortsToUse
-    })
-    return await transformNotionPostsData({
-      data: data?.results as any[],
-      categories,
-      authors
-    })
-  }
-)
+export const getPosts = async (opts?: {
+  filter?: QueryDatabaseParameters['filter']
+  startCursor?: string
+  pageSize?: number
+  sorts?: NotionSorts[]
+  categories?: Category[]
+  authors?: Author[]
+}) => {
+  // console.log('getPosts()')
+  if (!process.env.NOTION_DB_POSTS)
+    throw new Error('getTagsWithCache(): NOTION_DB_POSTS is not defined')
+  const { filter, startCursor, pageSize, sorts, categories, authors } = opts || {}
+  const defaultSort = {
+    property: 'finalCreatedDate',
+    direction: 'descending'
+  } as NotionSorts
+  const sortsToUse: any = sorts?.length ? sorts.push(defaultSort) : [defaultSort]
+  const filterToUse = getFilter(filter)
+  const data = await queryDatabase({
+    dbId: process.env.NOTION_DB_POSTS as string,
+    filter: filterToUse,
+    startCursor,
+    pageSize,
+    sorts: sortsToUse
+  })
+  return await transformNotionPostsData({
+    data: data?.results as any[],
+    categories,
+    authors
+  })
+}
 
 export const getCategories = () => predefinedCategories
 
@@ -67,12 +66,13 @@ export const getTags = cache(async () => {
   )
 })
 
-export const getAuthors = cache(async () => {
+export const getAuthors = async () => {
+  console.log('getAuthors()')
   if (!process.env.NOTION_DB_AUTHORS)
     throw new Error('getAuthorsWithCache(): NOTION_DB_AUTHORS is not defined')
   const data = await queryDatabase({ dbId: process.env.NOTION_DB_AUTHORS as string })
   return transformNotionAuthorsData(data?.['results'] as any[])
-})
+}
 
 /**
  * Make sure that the return of this method is always an image (from Notion or from the default image)
