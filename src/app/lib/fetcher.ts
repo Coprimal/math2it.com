@@ -32,7 +32,7 @@ export const getPosts = async (opts?: {
   categories?: Category[]
   authors?: Author[]
 }) => {
-  console.log('getPosts()')
+  // console.log('getPosts()')
   if (!process.env.NOTION_DB_POSTS)
     throw new Error('getTagsWithCache(): NOTION_DB_POSTS is not defined')
   const { filter, startCursor, pageSize, sorts, categories, authors } = opts || {}
