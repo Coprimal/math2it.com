@@ -6,6 +6,7 @@ import { QueryDatabaseParameters } from '@notionhq/client/build/src/api-endpoint
 import { ImgurUrlType, NotionPost, NotionTagData } from '@src/interface'
 import { get } from 'lodash'
 import { StaticImageData } from 'next/image'
+import pMemoize from 'p-memoize'
 import { cache } from 'react'
 
 import {
@@ -31,7 +32,7 @@ export const getPosts = async (opts?: {
   categories?: Category[]
   authors?: Author[]
 }) => {
-  // console.log('getPosts()')
+  console.log('getPosts()')
   if (!process.env.NOTION_DB_POSTS)
     throw new Error('getTagsWithCache(): NOTION_DB_POSTS is not defined')
   const { filter, startCursor, pageSize, sorts, categories, authors } = opts || {}
@@ -66,13 +67,68 @@ export const getTags = cache(async () => {
   )
 })
 
-export const getAuthors = async () => {
-  console.log('getAuthors()')
-  if (!process.env.NOTION_DB_AUTHORS)
-    throw new Error('getAuthorsWithCache(): NOTION_DB_AUTHORS is not defined')
-  const data = await queryDatabase({ dbId: process.env.NOTION_DB_AUTHORS as string })
-  return transformNotionAuthorsData(data?.['results'] as any[])
+export const getAuthorsImpl = async () => {
+  if (
+    !process.env.NOTION_API_WEB ||
+    !process.env.SPACE_ID ||
+    !process.env.AUTHOR_COLLECTION_ID ||
+    !process.env.AUTHOR_VIEW_ID
+  ) {
+    throw new Error('getAuthorsImpl(): one of the environment variables is not defined')
+  }
+  const url = `${process.env.NOTION_API_WEB}/queryCollection`
+  const body = {
+    source: {
+      type: 'collection',
+      id: process.env.AUTHOR_COLLECTION_ID,
+      spaceId: process.env.SPACE_ID
+    },
+    collectionView: {
+      id: process.env.AUTHOR_VIEW_ID,
+      spaceId: process.env.SPACE_ID
+    },
+    loader: {
+      type: 'reducer',
+      reducers: {
+        collection_group_results: {
+          type: 'results',
+          limit: 50
+        },
+        'table:uncategorized:title:count': {
+          type: 'aggregation',
+          aggregation: {
+            property: 'title',
+            aggregator: 'count'
+          }
+        }
+      },
+      sort: [
+        {
+          property: 'title',
+          direction: 'ascending'
+        }
+      ]
+    }
+  }
+
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      cookie: `token_v2=${process.env.NOTION_TOKEN_V2}`,
+      'x-notion-active-user-header': process.env.NOTION_ACTIVE_USER as string
+    },
+    body: JSON.stringify(body)
+  })
+
+  const data = await res.json()
+
+  return transformNotionAuthorsData(data)
 }
+
+export const getAuthors = pMemoize(getAuthorsImpl, {
+  cacheKey: (...args) => JSON.stringify(args)
+})
 
 /**
  * Make sure that the return of this method is always an image (from Notion or from the default image)

@@ -6,6 +6,7 @@ import PostBody from '@notion-x/components/PostBody'
 import PostToc from '@notion-x/components/PostToc'
 import PostList from '@notion-x/components/PostsList'
 import { BlockOptionsContextType } from '@notion-x/context'
+import { idToUuid } from '@notion-x/helpers'
 import AiOutlineAlert from '@notion-x/icons/AiOutlineAlert'
 import { Author, Post } from '@notion-x/interface'
 import cn from 'classnames'
@@ -39,8 +40,8 @@ export default function SinglePostTemplate(props: SinglePostTemplateProps) {
   const checkedText = contentChecked ? 'hoàn tất rà soát 🎉' : 'chưa hoàn tất rà soát'
   const authorIds = block?.properties?.[`${process.env.NEXT_PUBLIC_ID_AUTHORS}`]
     ?.filter((aBlock: any) => aBlock?.length > 1)
-    ?.map((aBlock: any) => aBlock?.[1]?.[0]?.[1])
-  const authorsOfPost = props.authors.filter(author => authorIds?.includes(author.id))
+    ?.map((aBlock: any) => idToUuid(aBlock?.[1]?.[0]?.[1]))
+  const authorsOfPost = props.authors.filter(author => authorIds?.includes(idToUuid(author.id)))
   const tocs = getPageTableOfContents(block as PageBlock, props.recordMap)
 
   return (
