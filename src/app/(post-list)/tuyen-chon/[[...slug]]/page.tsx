@@ -1,5 +1,5 @@
 import selectedCover from '@/public/featured-images/selected.png'
-import { getSlugPrefix, notionMaxRequest, numPostsPerPage } from '@app/lib/config'
+import { getSlugPrefix } from '@app/lib/config'
 import { getAuthors, getCategories, getPosts } from '@app/lib/fetcher'
 import { generateMetaTitle, getFilterOf } from '@app/lib/helpers'
 import PageOfPostsListTemplate from '@app/templates/PageOfPostsListTemplate'
@@ -30,13 +30,10 @@ export async function generateMetadata({ params }: OptionalCatchAllProps): Promi
 export async function generateStaticParams() {
   const params = [] as OptionalCatchAllParams[]
   const allPosts = await getPosts({
-    dbId: process.env.NOTION_DB_POSTS as string,
-    pageSize: notionMaxRequest,
-    filter: getFilterOf('selected'),
-    getFull: true
+    filter: getFilterOf('selected')
   })
   const numPosts = allPosts?.length || 0
-  const totalPages = Math.ceil(numPosts / numPostsPerPage)
+  const totalPages = Math.ceil(numPosts / +process.env.POSTS_PER_PAGE!)
   for (let i = 1; i <= totalPages; i++) {
     const path = i === 1 ? { slug: [] } : { slug: [getSlugPrefix('page'), i.toString()] }
     params.push(path)
@@ -57,20 +54,19 @@ export default async function SelectedPostsPage({ params }: OptionalCatchAllProp
     notFound()
   }
 
+  console.log(`\n👉 uri: /${getSlugPrefix('selected')}/${getSlugPrefix('page')}/${currentPage}/`)
+
   const notRootPage = !!params.slug
 
   const categories = getCategories()
   const authors = await getAuthors()
 
   const allPosts = await getPosts({
-    dbId: process.env.NOTION_DB_POSTS as string,
     categories,
     authors,
-    pageSize: notionMaxRequest,
-    filter: getFilterOf('selected'),
-    getFull: true
+    filter: getFilterOf('selected')
   })
-  const totalPages = Math.ceil(allPosts.length / numPostsPerPage)
+  const totalPages = Math.ceil(allPosts.length / +process.env.POSTS_PER_PAGE!)
 
   if (notRootPage && currentPage === 1) {
     redirect(`/${getSlugPrefix('selected')}/`)
@@ -80,17 +76,19 @@ export default async function SelectedPostsPage({ params }: OptionalCatchAllProp
     notFound()
   }
 
-  const startCursor = getStartCursorForCurrentPage(currentPage, allPosts, numPostsPerPage)
+  const startCursor = getStartCursorForCurrentPage(
+    currentPage,
+    allPosts,
+    +process.env.POSTS_PER_PAGE!
+  )
   const postsOnThisPage = !allPosts.length
     ? []
     : await getPosts({
-        dbId: process.env.NOTION_DB_POSTS as string,
         filter: getFilterOf('selected'),
         categories,
         authors,
         startCursor,
-        pageSize: numPostsPerPage,
-        getFull: true
+        pageSize: +process.env.POSTS_PER_PAGE!
       })
 
   return (

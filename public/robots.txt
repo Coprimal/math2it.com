@@ -4,3 +4,6 @@ Allow: /
 
 # Host
 Host: https://www.math2it.com
+
+# Sitemaps
+Sitemap: https://www.math2it.com/sitemap.xml

@@ -1,4 +1,4 @@
-import { getAuthors, getCategories, getPosts, getPostsBy } from '@app/lib/fetcher'
+import { getAuthors, getCategories, getPosts } from '@app/lib/fetcher'
 import PostList, { PostType, PostTypeOpts } from '@notion-x/components/PostsList'
 import { Post } from '@notion-x/interface'
 
@@ -26,22 +26,18 @@ export default async function PostListForHome(props: PostListForHomeProps) {
   switch (props.type) {
     case 'latest':
       posts = await getPosts({
-        dbId: process.env.NOTION_DB_POSTS as string,
         categories,
         authors,
-        pageSize: postListHomeCount,
-        getFull: true
+        pageSize: postListHomeCount
       })
       break
 
     case 'selected':
       posts = await getPosts({
-        dbId: process.env.NOTION_DB_POSTS as string,
         categories,
         authors,
         pageSize: postListHomeCount,
-        filter: getFilterOf('selected'),
-        getFull: true
+        filter: getFilterOf('selected')
       })
       break
 
@@ -49,12 +45,11 @@ export default async function PostListForHome(props: PostListForHomeProps) {
       if (!props.categorySlug) throw new Error('categorySlug is required if type === "byCategory"')
       const category = categories.find(c => c.slug === props.categorySlug)
       if (!category) return null
-      posts = await getPostsBy({
+      posts = await getPosts({
         categories,
         authors,
         filter: getFilterOf('category', category),
-        pageSize: postListHomeCount,
-        getFull: true
+        pageSize: postListHomeCount
       })
       break
     }

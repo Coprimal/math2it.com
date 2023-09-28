@@ -5,49 +5,36 @@ import {
   getSlugPrefix,
   predefinedCategories
 } from '@app/lib/config'
-import { makeSlugText } from '@notion-x/helpers'
+import { idToUuid, makeSlugText } from '@notion-x/helpers'
 import { Author, Category, Post, Tag } from '@notion-x/interface'
 import { QueryDatabaseParameters } from '@notionhq/client/build/src/api-endpoints'
-import { ImgurUrlType, NotionAuthor, SlugTypeLabels } from '@src/interface'
-import { intersectionWith } from 'lodash'
+import { ImgurUrlType, SlugTypeLabels } from '@src/interface'
+import { get, intersectionWith } from 'lodash'
 
 /**
  * We use "null" to avoid the "undefined" error when parsing to a JSON format!
  */
-export function transformNotionAuthorsData(data: NotionAuthor[]): Author[] {
-  if (!data || !Array.isArray(data) || !data.length) return []
-  return (
-    data?.map(author => {
-      const properties = author?.properties || null
-      const name = properties?.name?.title[0]?.plain_text || null
-      const slug = properties?.slug?.rich_text[0]?.plain_text || makeSlugText(name) || null
-      const uri = slug
-        ? `/${getSlugPrefix('author')}/${slug}/`
-        : `/${getSlugPrefix('author')}/${makeSlugText(name)}/`
-      const avatarUrl =
-        properties?.avatar?.files[0]?.file?.url ||
-        properties?.avatar?.files[0]?.external?.url ||
-        null
-      const description = properties?.description?.rich_text[0]?.plain_text || null
-      const icon = author?.icon?.emoji || null
-      const role = properties?.role?.select.name || null
-      const email = properties?.email?.email || null
-      const website = properties?.website?.url || null
-      const id = author.id
-      return {
-        id,
-        name,
-        uri,
-        slug,
-        description,
-        avatarUrl,
-        icon,
-        role,
-        email,
-        website
-      }
-    }) || []
-  )
+export function transformNotionAuthorsData(data: any): Author[] {
+  if (!data) return []
+  const authors = []
+  const authorIds = get(data, 'result.reducerResults.collection_group_results.blockIds', [])
+  for (const id of authorIds) {
+    const value = get(data, `recordMap.block.[${id}].value`)
+    authors.push({
+      id: idToUuid(value?.[`${process.env.AUTHOR_ID_KEY}`]),
+      name: value?.properties?.[`${process.env.AUTHOR_NAME_KEY}`]?.[0]?.[0],
+      role: value?.properties?.[`${process.env.AUTHOR_ROLE_KEY}`]?.[0]?.[0],
+      slug: value?.properties?.[`${process.env.AUTHOR_SLUG_KEY}`]?.[0]?.[0],
+      uri: `/${getSlugPrefix('author')}/${
+        value?.properties?.[`${process.env.AUTHOR_SLUG_KEY}`]?.[0]?.[0]
+      }/`,
+      description: value?.properties?.[`${process.env.AUTHOR_DESC_KEY}`]?.[0]?.[0],
+      avatarUrl: value?.properties?.[`${process.env.AUTHOR_AVATAR_KEY}`]?.[0]?.[0],
+      email: value?.properties?.[`${process.env.AUTHOR_EMAIL_KEY}`]?.[0]?.[0],
+      website: value?.properties?.[`${process.env.AUTHOR_WEB_KEY}`]?.[0]?.[0]
+    } as Author)
+  }
+  return authors
 }
 
 export function parseAuthorsForPost(authorIdsList: string[], authorsList: Author[]): Author[] {
@@ -169,7 +156,7 @@ export const parseImgurUrl = (opts: {
   return opts.url.replace(/(\.\w+$)/, `${opts.type}$1`)
 }
 
-export function getFilterOf(type: SlugTypeLabels, data?: Category | Tag | Author): unknown {
+export function getFilterOf(type: SlugTypeLabels, data?: Category | Tag | Author): any {
   switch (type) {
     case 'author':
       return {
@@ -214,38 +201,8 @@ export function getFilterOf(type: SlugTypeLabels, data?: Category | Tag | Author
   }
 }
 
-/**
- * Filter to be used in getPosts(). Remark, we ignore single page (where isPage = true on Notion)
- *
- * getFull: true -> force to get all posts, otherwise, depending on ENV_MODE, we will get only
- * the posts that are updated after the last update (fact: that's why we name it "getFull" instead of
- * "getNewest").
- *
- * Update 25/9/23: getFull=true always because we use notion-x and build auto on vercel
- */
 export function getFilter(filter?: any, getFull = true): QueryDatabaseParameters['filter'] {
   const defaultFilter = [] as any[]
-
-  // ARCHIVED: We don't use this anymore because we use notion-x and build auto on vercel
-  // Only consider the posts that are updated after the last update
-  // if (!getFull) {
-  //   try {
-  //     const filePath = path.join(process.cwd(), '..', 'math2it-v-nextjs-html', 'lastUpdate.txt')
-  //     const dateFromFile = fs.readFileSync(filePath, 'utf8')
-  //     if (dateFromFile && process.env.ENV_MODE === 'prod') {
-  //       const lastUpdate = new Date(dateFromFile).toISOString()
-  //       defaultFilter.push({
-  //         timestamp: 'last_edited_time',
-  //         last_edited_time: {
-  //           after: lastUpdate
-  //         }
-  //       })
-  //     }
-  //   } catch (error) {
-  //     console.log('🚧 There is no lastUpdate.txt file!')
-  //   }
-  // }
-
   // Ignore single page
   defaultFilter.push({
     property: 'isPage',

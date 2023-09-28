@@ -1,4 +1,4 @@
-import { defaultBlockOptions, notionMaxRequest } from '@app/lib/config'
+import { defaultBlockOptions } from '@app/lib/config'
 import { getAuthors, getCategories, getPosts } from '@app/lib/fetcher'
 import SinglePostTemplate from '@app/templates/SinglePostTemplate'
 import { getJoinedRichText } from '@notion-x/helpers'
@@ -15,10 +15,8 @@ export async function generateMetadata({ params }: DynamicSegmentParamsProps): P
   const slug = params.slug || ''
   const untitled = 'Bài viết không xác định | Math2IT'
   if (!slug) return { title: untitled }
-  const allPosts = await getPosts({
-    dbId: process.env.NOTION_DB_POSTS as string,
-    pageSize: notionMaxRequest
-  })
+  console.log(`\n👉 slug: ${slug}`)
+  const allPosts = await getPosts()
   const post = allPosts.find(post => post.slug === slug)
   if (!post) return { title: untitled, description: undefined }
   return {
@@ -35,10 +33,7 @@ export async function generateMetadata({ params }: DynamicSegmentParamsProps): P
 }
 
 export async function generateStaticParams() {
-  const allPosts = await getPosts({
-    dbId: process.env.NOTION_DB_POSTS as string,
-    pageSize: notionMaxRequest
-  })
+  const allPosts = await getPosts()
   const params = allPosts.filter(post => post.slug).map(post => ({ slug: post.slug }))
   return params
 }
@@ -52,10 +47,8 @@ export default async function SinglePostPage({ params }: DynamicSegmentParamsPro
     const authors = await getAuthors()
 
     const allPosts = await getPosts({
-      dbId: process.env.NOTION_DB_POSTS as string,
       categories,
-      authors,
-      pageSize: notionMaxRequest
+      authors
     })
     const post = allPosts.find(post => post.slug === slug)
     const pageIdwithDash = post?.id
@@ -73,7 +66,7 @@ export default async function SinglePostPage({ params }: DynamicSegmentParamsPro
       />
     )
   } catch (error) {
-    console.log('🚨Error when loading a single post page', error)
+    console.log('🚨 Error when loading a single post page', error)
     notFound()
   }
 }

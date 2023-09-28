@@ -9,8 +9,6 @@ import { BlockOptionsContextType } from '@notion-x/context'
 import { Category } from '@notion-x/interface'
 import { SlugTypeLabels } from '@src/interface'
 
-export const numPostsPerPage = 20
-
 export const defaultBlockOptions: BlockOptionsContextType = {
   siteDomain: 'math2it.com',
   blockCodeCopiedText: 'Đã sao chép',
@@ -30,11 +28,6 @@ export const defaultCodeLanguage = 'typescript'
 export const minNumHeadingsToShowToc = 4 // from this number of headings, show toc
 export const mathFontSize = 'text-base'
 export const defaultFeaturedImage = _dImg
-
-export const notionMaxRequest = 100
-
-// 👇 It's used to sort posts by date
-export const notionDateName = 'finalCreatedDate'
 
 // Notion Posts defautl
 export const defaultPostTitle = 'Không tựa đề'
