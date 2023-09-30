@@ -10,7 +10,7 @@ const nextConfig = {
     // esmExternals: 'loose'
   },
   images: {
-    unoptimized: true,
+    // unoptimized: true,
     domains: [
       '0.gravatar.com',
       '1.gravatar.com',
