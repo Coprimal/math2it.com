@@ -103,7 +103,6 @@ export type NotionHeader = {
     selected: { checkbox: boolean }
     bookCover: BookCoverProperty
     slug: { rich_text: { plain_text: string }[] }
-    contentCheck?: { checkbox: boolean }
   }
 }
 

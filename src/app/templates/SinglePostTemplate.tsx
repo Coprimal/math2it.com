@@ -5,7 +5,6 @@ import PostHeader from '@c/PostHeader'
 import PostBody from '@notion-x/src/components/PostBody'
 import PostToc from '@notion-x/src/components/PostToc'
 import PostList from '@notion-x/src/components/PostsList'
-import AiOutlineAlert from '@notion-x/src/icons/AiOutlineAlert'
 import { Author, Post } from '@notion-x/src/interface'
 import { BlockOptionsContextType } from '@notion-x/src/lib/context'
 import { idToUuid } from '@notion-x/src/lib/helpers'
@@ -33,11 +32,6 @@ export default function SinglePostTemplate(props: SinglePostTemplateProps) {
   const id = Object.keys(props.recordMap.block)[0]
   const block = props.recordMap.block[id]?.value
 
-  const contentChecked =
-    props.recordMap.block[id]?.value?.properties?.[
-      `${process.env.NEXT_PUBLIC_CONTENT_CHECKED}`
-    ]?.[0]?.[0] === 'Yes'
-  const checkedText = contentChecked ? 'hoàn tất rà soát 🎉' : 'chưa hoàn tất rà soát'
   const authorIds = block?.properties?.[`${process.env.NEXT_PUBLIC_ID_AUTHORS}`]
     ?.filter((aBlock: any) => aBlock?.length > 1)
     ?.map((aBlock: any) => idToUuid(aBlock?.[1]?.[0]?.[1]))
@@ -60,40 +54,6 @@ export default function SinglePostTemplate(props: SinglePostTemplateProps) {
           </aside>
 
           <article className={cn('container max-w-3xl')}>
-            {!props.isPage && !contentChecked && (
-              <div
-                className={cn(
-                  'mx-auto container p-6 mt-10',
-                  'flex flex-col sm:flex-row items-center sm:items-start gap-4',
-                  'bg-amber-100 rounded-xl shadow-md text-slate-800'
-                )}
-              >
-                <div>
-                  <AiOutlineAlert className="text-6xl sm:text-5xl" />
-                </div>
-                <div className="flex flex-col gap-3">
-                  <div>
-                    Math2IT đang trong giai đoạn rà soát nội dung tất cả các bài viết để cập nhật
-                    lại chất lượng và độ chính xác.{' '}
-                    <span className="text-emerald-600">
-                      Tình trạng của bài viết hiện tại là{' '}
-                      <span className="font-semibold">{checkedText}</span>.
-                    </span>
-                  </div>
-                  <div>
-                    🤝 Nếu bạn phát hiện điểm nào chưa chính xác, vui lòng{' '}
-                    <a
-                      className="m2it-link hover:m2it-link-hover"
-                      href="mailto:contact@math2it.com"
-                    >
-                      email cho chúng tôi.
-                    </a>{' '}
-                    Chân thành cảm ơn bạn. 😊
-                  </div>
-                </div>
-              </div>
-            )}
-
             <PostBody
               className="w-full"
               recordMap={props.recordMap}

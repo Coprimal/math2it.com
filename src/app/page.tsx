@@ -5,7 +5,6 @@ import ImageComponent from '@notion-x/src/components/ImageComponent'
 import cn from 'classnames'
 import Link from 'next/link'
 
-import AlertHomePage from './components/AlertHomePage'
 import PostListForHomeSection from './components/PostListForHomeSection'
 import { defaultFeaturedImage, defaultPostTypeOpts, getSlugPrefix } from './lib/config'
 import { getCategories } from './lib/fetcher'
@@ -134,7 +133,7 @@ export default function Home() {
       <div className="bg-wave-top-white"></div>
 
       <div className="flex flex-col gap-12 py-12">
-        <AlertHomePage />
+        {/* <AlertHomePage /> */}
 
         <PostListForHomeSection
           listStyle="carousel"
