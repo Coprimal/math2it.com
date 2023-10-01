@@ -201,7 +201,7 @@ export function getFilterOf(type: SlugTypeLabels, data?: Category | Tag | Author
   }
 }
 
-export function getFilter(filter?: any, getFull = true): QueryDatabaseParameters['filter'] {
+export function getFilter(filter?: any): QueryDatabaseParameters['filter'] {
   const defaultFilter = [] as any[]
   // Ignore single page
   defaultFilter.push({
@@ -211,7 +211,7 @@ export function getFilter(filter?: any, getFull = true): QueryDatabaseParameters
     }
   })
   // Ignore sandbox posts in production
-  if (process.env.ENV_MODE === 'prod' || process.env.ENV_MODE === 'prodFull') {
+  if (process.env.ENV_MODE === 'prod') {
     defaultFilter.push({
       property: 'published',
       checkbox: {

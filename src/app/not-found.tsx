@@ -24,7 +24,7 @@ export default function NotFoundPage() {
       <div className={cn('flex flex-col gap-6 items-center justify-center w-full h-full')}>
         <h1 className="text-4xl text-slate-800">Không tìm thấy trang bạn cần</h1>
         <p className="text-xl text-slate-800">
-          Bạn vui lòng dùng chức năng tìm kiếm hoặc{' '}
+          Bạn vui lòng reload trang lần nữa trong vòng vài giây, dùng chức năng tìm kiếm hay{' '}
           <a className="m2it-link hover:m2it-link-hover" href="mailto:math2itblog@gmail.com">
             liên hệ với chúng tôi
           </a>

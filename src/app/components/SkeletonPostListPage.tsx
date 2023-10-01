@@ -10,7 +10,7 @@ export default function SkeletonPostListPage() {
         <div className={cn('w-full bg-slate-200', heightCoverPostList)}></div>
       </div>
       <Container className={spacingCoverPostList}>
-        <SkeletonPostList count={8} />
+        <SkeletonPostList count={12} />
       </Container>
     </div>
   )

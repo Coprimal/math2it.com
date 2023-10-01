@@ -33,8 +33,7 @@ export const getPosts = async (opts?: {
   authors?: Author[]
 }) => {
   // console.log('getPosts()')
-  if (!process.env.NOTION_DB_POSTS)
-    throw new Error('getTagsWithCache(): NOTION_DB_POSTS is not defined')
+  if (!process.env.NOTION_DB_POSTS) throw new Error('getPosts(): NOTION_DB_POSTS is not defined')
   const { filter, startCursor, pageSize, sorts, categories, authors } = opts || {}
   const defaultSort = {
     property: 'finalCreatedDate',
@@ -59,8 +58,7 @@ export const getPosts = async (opts?: {
 export const getCategories = () => predefinedCategories
 
 export const getTags = cache(async () => {
-  if (!process.env.NOTION_DB_POSTS)
-    throw new Error('getTagsWithCache(): NOTION_DB_POSTS is not defined')
+  if (!process.env.NOTION_DB_POSTS) throw new Error('getTags(): NOTION_DB_POSTS is not defined')
   const data = await retrieveDatabase(process.env.NOTION_DB_POSTS as string)
   return get(data, 'properties.tag.multi_select.options', [])?.map((opt: NotionTagData) =>
     mapTag(opt)

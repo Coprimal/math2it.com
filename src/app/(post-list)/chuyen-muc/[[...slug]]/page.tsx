@@ -122,6 +122,9 @@ export default async function CategoryPage({ params }: OptionalCatchAllProps) {
       currentPage={currentPage}
       iconComponent={iconComponent}
       cover={category.featuredImage?.staticImageData}
+      postTypeOpts={{
+        hideCategory: true
+      }}
     />
   )
 }
