@@ -35,7 +35,6 @@ export const defaultPostDate = new Date().toISOString().split('T')[0]
 
 // Custom sizes for featured images
 export const defaultCustomSizeFM = '(max-width: 400px) 100vw, 400px'
-export const postListCustomSizeFM = '(max-width: 500px) 100vw, 300px'
 export const postCoverCustomSizeFM = `
   (min-width: 1400px) 1400px,
   (min-width: 1300px) 1300px,
@@ -229,23 +228,6 @@ export const predefinedCategories: Category[] = [
     backgroundClassName: 'bg-gradient-to-b from-[#dcfcfe75] to-white'
   }
 ]
-
-/**
- * Below keys are used for the unofficial notion API. We first use it to get the search results
- * from /api/search-notion.
- */
-export const UNOFFICIAL_NOTION_KEYS = {
-  slug: 'uGT[',
-  categories: '@_E]',
-  published: 'dJ\\g',
-  selected: '~CxS',
-  title: 'title',
-  excerpt: 'VsZM',
-  finalCreatedDate: 't:V?',
-  boldSearchKey: '<gzkNfoUU>',
-  boldSearchKeyClose: '</gzkNfoUU>',
-  bookCover: 'yw|N'
-}
 
 export function getSlugPrefix(type: SlugTypeLabels): string {
   if (type === 'category') return 'chuyen-muc'
