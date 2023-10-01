@@ -181,8 +181,12 @@ async function transformNotionPostsData(options: {
       // title
       const title = getJoinedRichText(get(post, 'properties.name.title') as any) || defaultPostTitle
 
-      // date
-      // Because we migrate from WP to Notion, a lot of posts need to use the old created date
+      // created date
+      const createdDate = new Date(
+        get(post, 'properties.createdDate.date.start', get(post, 'created_time', defaultPostDate))
+      ).toISOString()
+
+      // last modified date
       const gotDate = get(
         post,
         'properties.finalModified.formula.date.start',
@@ -263,6 +267,7 @@ async function transformNotionPostsData(options: {
         slug,
         uri: `/${getSlugPrefix('singlePost')}/${slug}/`,
         date,
+        createdDate,
         tags,
         excerpt,
         categories,

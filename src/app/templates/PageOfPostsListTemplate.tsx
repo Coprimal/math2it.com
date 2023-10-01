@@ -7,8 +7,7 @@ import cn from 'classnames'
 import { StaticImageData } from 'next/image'
 import { useGeoPattern } from 'react-geopattern'
 
-import { defaultFeaturedImage } from '../lib/config'
-import { comfortaa } from '../lib/fonts'
+import { defaultFeaturedImage, defaultPostTypeOpts } from '../lib/config'
 
 type PageOfPostsListTemplateProps = {
   title: string
@@ -101,9 +100,12 @@ export default function PageOfPostsListTemplate(props: PageOfPostsListTemplatePr
                   posts={props.posts}
                   postType="PostTitleCateDate"
                   postTypeOpts={
-                    { ...props.postTypeOpts, fontClassName: comfortaa.className } ?? {
+                    {
+                      ...props.postTypeOpts,
+                      ...defaultPostTypeOpts
+                    } ?? {
                       hideCategory: true,
-                      fontClassName: comfortaa.className
+                      ...defaultPostTypeOpts
                     }
                   }
                 />

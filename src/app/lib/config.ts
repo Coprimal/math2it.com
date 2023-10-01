@@ -5,9 +5,12 @@ import defaultMath from '@/public/featured-images/math.png'
 import defaultTech from '@/public/featured-images/tech.png'
 import defaultTool from '@/public/featured-images/tool.png'
 import defaultTranslate from '@/public/featured-images/translate.png'
+import { PostTypeOpts } from '@notion-x/src/components/PostsList'
 import { Category } from '@notion-x/src/interface'
 import { BlockOptionsContextType } from '@notion-x/src/lib/context'
 import { SlugTypeLabels } from '@src/interface'
+
+import { comfortaa } from './fonts'
 
 export const defaultBlockOptions: BlockOptionsContextType = {
   siteDomain: 'math2it.com',
@@ -16,6 +19,13 @@ export const defaultBlockOptions: BlockOptionsContextType = {
   headingScrollMarginTopClass: 'scroll-mt-[70px]',
   labelTocTitle: 'Trong bài này',
   minNumHeadingsToShowToc: 4
+}
+
+export const defaultPostTypeOpts: PostTypeOpts = {
+  fontClassName: comfortaa.className,
+  newLabel: 'bài mới',
+  updatedLabel: 'mới cập nhật',
+  maxDaysWinthin: 10
 }
 
 /**

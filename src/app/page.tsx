@@ -7,7 +7,7 @@ import Link from 'next/link'
 
 import AlertHomePage from './components/AlertHomePage'
 import PostListForHomeSection from './components/PostListForHomeSection'
-import { defaultFeaturedImage, getSlugPrefix } from './lib/config'
+import { defaultFeaturedImage, defaultPostTypeOpts, getSlugPrefix } from './lib/config'
 import { getCategories } from './lib/fetcher'
 
 export const revalidate = 20
@@ -143,7 +143,7 @@ export default function Home() {
           backgroundClassName="bg-none"
           moreHref={`/${getSlugPrefix('all')}/`}
           postType="PostCardWhiteBgBig"
-          postTypeOpts={{ hideAuthor: true, hideDate: true }}
+          postTypeOpts={{ hideAuthor: true, hideDate: true, ...defaultPostTypeOpts }}
         />
         <PostListForHomeSection
           title="Tuyển chọn"
@@ -159,7 +159,7 @@ export default function Home() {
             title={category.name}
             type="byCategory"
             categorySlug={category.slug as string}
-            postTypeOpts={{ hideDate: true, hideCategory: true }}
+            postTypeOpts={{ hideDate: true, hideCategory: true, ...defaultPostTypeOpts }}
             backgroundClassName={category.backgroundClassName}
             moreHref={category.uri}
             iconComponent={<i className={category.fontello}></i>}
