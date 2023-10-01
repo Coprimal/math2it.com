@@ -36,7 +36,7 @@ export const getPosts = async (opts?: {
   if (!process.env.NOTION_DB_POSTS) throw new Error('getPosts(): NOTION_DB_POSTS is not defined')
   const { filter, startCursor, pageSize, sorts, categories, authors } = opts || {}
   const defaultSort = {
-    property: 'finalCreatedDate',
+    property: 'finalModified',
     direction: 'descending'
   } as NotionSorts
   const sortsToUse: any = sorts?.length ? sorts.push(defaultSort) : [defaultSort]
@@ -185,7 +185,7 @@ async function transformNotionPostsData(options: {
       // Because we migrate from WP to Notion, a lot of posts need to use the old created date
       const gotDate = get(
         post,
-        'properties.finalCreatedDate.formula.date.start',
+        'properties.finalModified.formula.date.start',
         get(post, 'last_edited_time', defaultPostDate)
       )
       const date = new Date(gotDate).toISOString()

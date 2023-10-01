@@ -399,7 +399,7 @@ async function getNotionDatabase(dbId: string, startCursor?: string): Promise<an
     const requestBody = {
       sorts: [
         {
-          property: 'finalCreatedDate',
+          property: 'finalModified',
           direction: 'descending'
         }
       ],
@@ -535,7 +535,7 @@ type NotionHeader = {
   cover?: { external: { url: string }; file: { url: string } }
   properties: {
     name: { title: { plain_text: string }[] }
-    finalCreatedDate: { formula: { date: { start: any } } }
+    finalModified: { formula: { date: { start: any } } }
     categories: { multi_select: { name: string }[] }
     authors: { relation: { id: string }[] }
     selected: { checkbox: boolean }
