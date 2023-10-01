@@ -1,4 +1,4 @@
-import { getJoinedRichText, makeSlugText } from '@notion-x/helpers'
+import { getJoinedRichText, makeSlugText } from '@notion-x/src/lib/helpers'
 import { Client } from '@notionhq/client'
 import chalk from 'chalk'
 import got from 'got'

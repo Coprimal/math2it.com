@@ -1,6 +1,6 @@
 import { heightCoverPostList, spacingCoverPostList } from '@app/templates/PageOfPostsListTemplate'
 import Container from '@c/Container'
-import SkeletonPostList from '@notion-x/SkeletonPostList'
+import SkeletonPostList from '@notion-x/src/components/SkeletonPostList'
 import cn from 'classnames'
 
 export default function SkeletonPostListPage() {

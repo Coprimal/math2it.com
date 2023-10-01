@@ -5,8 +5,8 @@ import defaultMath from '@/public/featured-images/math.png'
 import defaultTech from '@/public/featured-images/tech.png'
 import defaultTool from '@/public/featured-images/tool.png'
 import defaultTranslate from '@/public/featured-images/translate.png'
-import { BlockOptionsContextType } from '@notion-x/context'
-import { Category } from '@notion-x/interface'
+import { Category } from '@notion-x/src/interface'
+import { BlockOptionsContextType } from '@notion-x/src/lib/context'
 import { SlugTypeLabels } from '@src/interface'
 
 export const defaultBlockOptions: BlockOptionsContextType = {

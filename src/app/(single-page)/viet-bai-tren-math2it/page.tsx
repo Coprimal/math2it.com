@@ -1,4 +1,4 @@
-import { notionX } from '@notion-x/notionx'
+import { notionX } from '@notion-x/src/lib/notionx'
 import { notFound } from 'next/navigation'
 
 import { defaultBlockOptions } from '../../lib/config'
