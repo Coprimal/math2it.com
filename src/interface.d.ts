@@ -101,7 +101,6 @@ export type NotionHeader = {
     tag: { multi_select: NotionTagData[] }
     authors: { relation: { id: string }[] }
     selected: { checkbox: boolean }
-    showToc: { checkbox: boolean }
     bookCover: BookCoverProperty
     slug: { rich_text: { plain_text: string }[] }
     contentCheck?: { checkbox: boolean }

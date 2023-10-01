@@ -14,7 +14,8 @@ export const defaultBlockOptions: BlockOptionsContextType = {
   blockCodeCopiedText: 'Đã sao chép',
   blockCodeCopyText: 'Sao chép',
   headingScrollMarginTopClass: 'scroll-mt-[70px]',
-  labelTocTitle: 'Trong bài này'
+  labelTocTitle: 'Trong bài này',
+  minNumHeadingsToShowToc: 4
 }
 
 /**

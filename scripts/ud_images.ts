@@ -539,7 +539,6 @@ type NotionHeader = {
     categories: { multi_select: { name: string }[] }
     authors: { relation: { id: string }[] }
     selected: { checkbox: boolean }
-    showToc: { checkbox: boolean }
     bookCover: { files: { external: { url: string }; file: { url: string } }[] }
     slug: { rich_text: { plain_text: string }[] }
   }

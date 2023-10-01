@@ -124,7 +124,7 @@ export default function SinglePostTemplate(props: SinglePostTemplateProps) {
 
           <aside className={cn(asideClass)}>
             <PostAside position="right">
-              <PostToc showToc={true} tocs={tocs} labelTocTitle="Trong bài này" />
+              <PostToc tocs={tocs} labelTocTitle="Trong bài này" />
             </PostAside>
           </aside>
         </div>
