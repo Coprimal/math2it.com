@@ -94,6 +94,15 @@ export default function PageOfPostsListTemplate(props: PageOfPostsListTemplatePr
         )}
         {props.posts.length > 0 && (
           <>
+            {props.totalPages > 1 && props.uri && (
+              <Pagination
+                className="my-8"
+                path={props.uri}
+                total={props.totalPages}
+                current={props.currentPage}
+                pageAlias="trang"
+              />
+            )}
             <div>
               {props.posts.length > 0 && (
                 <PostList

@@ -53,7 +53,7 @@ export default function SinglePostTemplate(props: SinglePostTemplateProps) {
             </PostAside>
           </aside>
 
-          <article className={cn('container max-w-3xl')}>
+          <article className={cn('container max-w-3xl flex flex-col gap-8 py-8')}>
             <PostBody
               className="w-full"
               recordMap={props.recordMap}
@@ -84,7 +84,7 @@ export default function SinglePostTemplate(props: SinglePostTemplateProps) {
 
           <aside className={cn(asideClass)}>
             <PostAside position="right">
-              <PostToc tocs={tocs} labelTocTitle="Trong bài này" />
+              <PostToc recordMap={props.recordMap} tocs={tocs} labelTocTitle="Trong bài này" />
             </PostAside>
           </aside>
         </div>
