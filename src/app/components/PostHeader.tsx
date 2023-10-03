@@ -1,18 +1,24 @@
 'use client'
 
-import { anonymAuthor, getSlugPrefix, postWidthContainer } from '@app/lib/config'
-import DateComponent from '@notion-x/components/DateComponent'
-import PostHeaderTopics from '@notion-x/components/PostHeaderTopics'
-import { LazyImage } from '@notion-x/components/lazy-image'
-import { useNotionContext } from '@notion-x/context'
-import { getCreatedDate, getModifedDate, isDateAfter, mapTag } from '@notion-x/helpers'
-import AiOutlineClockCircle from '@notion-x/icons/AiOutlineClockCircle'
-import { Author } from '@notion-x/interface'
+import {
+  anonymAuthor,
+  defaultPostTypeOpts,
+  getSlugPrefix,
+  postWidthContainer
+} from '@app/lib/config'
+import DateComponent from '@notion-x/src/components/DateComponent'
+import PostHeaderTopics from '@notion-x/src/components/PostHeaderTopics'
+import { LazyImage } from '@notion-x/src/components/lazy-image'
+import AiOutlineClockCircle from '@notion-x/src/icons/AiOutlineClockCircle'
+import { Author } from '@notion-x/src/interface'
+import { useNotionContext } from '@notion-x/src/lib/context'
+import { getCreatedDate, getModifedDate, mapTag } from '@notion-x/src/lib/helpers'
+import { usePostDateStatus } from '@notion-x/src/lib/hooks'
 import cn from 'classnames'
+import { get } from 'lodash'
 import Link from 'next/link'
 import { ExtendedRecordMap } from 'notion-types'
 import { getTextContent } from 'notion-utils'
-import { useEffect, useState } from 'react'
 
 import { getPredefinedCategories } from '../lib/helpers'
 import Container from './Container'
@@ -33,9 +39,6 @@ const pageCoverStyleCache: Record<string, object> = {}
 export default function PostHeader(props: PostHeaderProps) {
   const { authors, recordMap, hideWriteWithUs } = props
 
-  const [isIn7Days, setIsIn7Days] = useState(false)
-  const [isNew, setIsNew] = useState(false)
-
   const ctx = useNotionContext()
   const { mapImageUrl } = ctx
 
@@ -47,6 +50,12 @@ export default function PostHeader(props: PostHeaderProps) {
 
   const createdDate = getCreatedDate(block, process.env.NEXT_PUBLIC_ID_CREATED_DATE as string)
   const modifiedDate = getModifedDate(block, process.env.NEXT_PUBLIC_ID_LAST_MODIFIED as string)
+
+  const status = usePostDateStatus(
+    createdDate,
+    modifiedDate,
+    get(defaultPostTypeOpts, 'maxDaysWinthin', 7)
+  )
 
   const tagNames = block.properties?.[`${process.env.NEXT_PUBLIC_ID_TAGS}`]?.[0]?.[0].split(',')
   const tags = tagNames?.map((tagName: string) => mapTag(tagName, getSlugPrefix('tag')))
@@ -62,24 +71,6 @@ export default function PostHeader(props: PostHeaderProps) {
       objectPosition: pageCoverObjectPosition
     }
   }
-
-  useEffect(() => {
-    const lastModifiedDate = new Date(modifiedDate)
-    const today = new Date()
-    const diffTime = Math.abs(today.getTime() - lastModifiedDate.getTime())
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-    if (diffDays <= 7) {
-      setIsIn7Days(true)
-    }
-
-    const cDate = new Date(createdDate!)
-    const diffTime2 = Math.abs(today.getTime() - cDate.getTime())
-    const diffDays2 = Math.ceil(diffTime2 / (1000 * 60 * 60 * 24))
-    if (diffDays2 <= 7) {
-      setIsNew(true)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   return (
     <>
@@ -155,7 +146,7 @@ export default function PostHeader(props: PostHeaderProps) {
               </div>
             )}
 
-            <div className="flex items-center gap-1 text-base opacity-80">
+            <div className="flex items-center gap-1 text-[0.95rem] opacity-80">
               <AiOutlineClockCircle />
               <DateComponent
                 humanize={true}
@@ -173,11 +164,11 @@ export default function PostHeader(props: PostHeaderProps) {
             </div>
 
             <div className="flex items-center gap-3 flex-wrap justify-center md:justify-start">
-              {createdDate && !isNew && isDateAfter(modifiedDate, createdDate) && (
+              {['updated', 'updatedWithin'].includes(status) && (
                 <div
                   className={cn('px-3 py-0.5 text-sm items-start rounded-xl whitespace-nowrap', {
-                    'text-slate-700 bg-slate-100': !isIn7Days,
-                    'text-green-900 bg-green-200': isIn7Days
+                    'text-slate-700 bg-gray-200': status === 'updated',
+                    'text-green-900 bg-green-200': status === 'updatedWithin'
                   })}
                 >
                   <DateComponent
@@ -196,7 +187,7 @@ export default function PostHeader(props: PostHeaderProps) {
                 </div>
               )}
 
-              {isNew && (
+              {status === 'new' && (
                 <div
                   className={cn(
                     'px-3 py-0.5 text-[0.8rem] rounded-xl whitespace-nowrap',

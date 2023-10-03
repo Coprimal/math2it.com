@@ -2,8 +2,8 @@ import { getSlugPrefix } from '@app/lib/config'
 import { getAuthors, getCategories, getPosts } from '@app/lib/fetcher'
 import { generateMetaTitle, getFilterOf } from '@app/lib/helpers'
 import PageOfPostsListTemplate from '@app/templates/PageOfPostsListTemplate'
-import { getStartCursorForCurrentPage } from '@notion-x/helpers'
-import { OptionalCatchAllParams, OptionalCatchAllProps } from '@notion-x/interface'
+import { OptionalCatchAllParams, OptionalCatchAllProps } from '@notion-x/src/interface'
+import { getStartCursorForCurrentPage } from '@notion-x/src/lib/helpers'
 import { Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
 
@@ -122,6 +122,9 @@ export default async function CategoryPage({ params }: OptionalCatchAllProps) {
       currentPage={currentPage}
       iconComponent={iconComponent}
       cover={category.featuredImage?.staticImageData}
+      postTypeOpts={{
+        hideCategory: true
+      }}
     />
   )
 }

@@ -1,9 +1,9 @@
 import { defaultBlockOptions } from '@app/lib/config'
 import { getAuthors, getCategories, getPosts } from '@app/lib/fetcher'
 import SinglePostTemplate from '@app/templates/SinglePostTemplate'
-import { getJoinedRichText } from '@notion-x/helpers'
-import { DynamicSegmentParamsProps } from '@notion-x/interface'
-import { notionX } from '@notion-x/notionx'
+import { DynamicSegmentParamsProps } from '@notion-x/src/interface'
+import { getJoinedRichText } from '@notion-x/src/lib/helpers'
+import { notionX } from '@notion-x/src/lib/notionx'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 

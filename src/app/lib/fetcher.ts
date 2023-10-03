@@ -1,7 +1,7 @@
 import defaultBookCover from '@/public/featured-images/untitledBook.jpg'
-import { queryDatabase, retrieveDatabase } from '@notion-x/db'
-import { defaultBlurData, getJoinedRichText, makeSlugText } from '@notion-x/helpers'
-import { Author, Category, ImageType, NotionSorts, Post, Tag } from '@notion-x/interface'
+import { Author, Category, ImageType, NotionSorts, Post, Tag } from '@notion-x/src/interface'
+import { queryDatabase, retrieveDatabase } from '@notion-x/src/lib/db'
+import { defaultBlurData, getJoinedRichText, makeSlugText } from '@notion-x/src/lib/helpers'
 import { QueryDatabaseParameters } from '@notionhq/client/build/src/api-endpoints'
 import { ImgurUrlType, NotionPost, NotionTagData } from '@src/interface'
 import { get } from 'lodash'
@@ -33,11 +33,10 @@ export const getPosts = async (opts?: {
   authors?: Author[]
 }) => {
   // console.log('getPosts()')
-  if (!process.env.NOTION_DB_POSTS)
-    throw new Error('getTagsWithCache(): NOTION_DB_POSTS is not defined')
+  if (!process.env.NOTION_DB_POSTS) throw new Error('getPosts(): NOTION_DB_POSTS is not defined')
   const { filter, startCursor, pageSize, sorts, categories, authors } = opts || {}
   const defaultSort = {
-    property: 'finalCreatedDate',
+    property: 'finalModified',
     direction: 'descending'
   } as NotionSorts
   const sortsToUse: any = sorts?.length ? sorts.push(defaultSort) : [defaultSort]
@@ -59,8 +58,7 @@ export const getPosts = async (opts?: {
 export const getCategories = () => predefinedCategories
 
 export const getTags = cache(async () => {
-  if (!process.env.NOTION_DB_POSTS)
-    throw new Error('getTagsWithCache(): NOTION_DB_POSTS is not defined')
+  if (!process.env.NOTION_DB_POSTS) throw new Error('getTags(): NOTION_DB_POSTS is not defined')
   const data = await retrieveDatabase(process.env.NOTION_DB_POSTS as string)
   return get(data, 'properties.tag.multi_select.options', [])?.map((opt: NotionTagData) =>
     mapTag(opt)
@@ -183,11 +181,15 @@ async function transformNotionPostsData(options: {
       // title
       const title = getJoinedRichText(get(post, 'properties.name.title') as any) || defaultPostTitle
 
-      // date
-      // Because we migrate from WP to Notion, a lot of posts need to use the old created date
+      // created date
+      const createdDate = new Date(
+        get(post, 'properties.createdDate.date.start', get(post, 'created_time', defaultPostDate))
+      ).toISOString()
+
+      // last modified date
       const gotDate = get(
         post,
-        'properties.finalCreatedDate.formula.date.start',
+        'properties.finalModified.formula.date.start',
         get(post, 'last_edited_time', defaultPostDate)
       )
       const date = new Date(gotDate).toISOString()
@@ -265,6 +267,7 @@ async function transformNotionPostsData(options: {
         slug,
         uri: `/${getSlugPrefix('singlePost')}/${slug}/`,
         date,
+        createdDate,
         tags,
         excerpt,
         categories,

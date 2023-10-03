@@ -5,16 +5,27 @@ import defaultMath from '@/public/featured-images/math.png'
 import defaultTech from '@/public/featured-images/tech.png'
 import defaultTool from '@/public/featured-images/tool.png'
 import defaultTranslate from '@/public/featured-images/translate.png'
-import { BlockOptionsContextType } from '@notion-x/context'
-import { Category } from '@notion-x/interface'
+import { PostTypeOpts } from '@notion-x/src/components/PostsList'
+import { Category } from '@notion-x/src/interface'
+import { BlockOptionsContextType } from '@notion-x/src/lib/context'
 import { SlugTypeLabels } from '@src/interface'
+
+import { comfortaa } from './fonts'
 
 export const defaultBlockOptions: BlockOptionsContextType = {
   siteDomain: 'math2it.com',
   blockCodeCopiedText: 'Đã sao chép',
   blockCodeCopyText: 'Sao chép',
   headingScrollMarginTopClass: 'scroll-mt-[70px]',
-  labelTocTitle: 'Trong bài này'
+  labelTocTitle: 'Trong bài này',
+  minNumHeadingsToShowToc: 4
+}
+
+export const defaultPostTypeOpts: PostTypeOpts = {
+  fontClassName: comfortaa.className,
+  newLabel: 'bài mới',
+  updatedLabel: 'mới cập nhật',
+  maxDaysWinthin: 10
 }
 
 /**
@@ -35,7 +46,6 @@ export const defaultPostDate = new Date().toISOString().split('T')[0]
 
 // Custom sizes for featured images
 export const defaultCustomSizeFM = '(max-width: 400px) 100vw, 400px'
-export const postListCustomSizeFM = '(max-width: 500px) 100vw, 300px'
 export const postCoverCustomSizeFM = `
   (min-width: 1400px) 1400px,
   (min-width: 1300px) 1300px,
@@ -229,23 +239,6 @@ export const predefinedCategories: Category[] = [
     backgroundClassName: 'bg-gradient-to-b from-[#dcfcfe75] to-white'
   }
 ]
-
-/**
- * Below keys are used for the unofficial notion API. We first use it to get the search results
- * from /api/search-notion.
- */
-export const UNOFFICIAL_NOTION_KEYS = {
-  slug: 'uGT[',
-  categories: '@_E]',
-  published: 'dJ\\g',
-  selected: '~CxS',
-  title: 'title',
-  excerpt: 'VsZM',
-  finalCreatedDate: 't:V?',
-  boldSearchKey: '<gzkNfoUU>',
-  boldSearchKeyClose: '</gzkNfoUU>',
-  bookCover: 'yw|N'
-}
 
 export function getSlugPrefix(type: SlugTypeLabels): string {
   if (type === 'category') return 'chuyen-muc'

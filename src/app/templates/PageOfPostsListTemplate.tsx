@@ -1,14 +1,13 @@
 import Container from '@c/Container'
-import ImageComponent from '@notion-x/components/ImageComponent'
-import Pagination from '@notion-x/components/Pagination'
-import PostList, { PostTypeOpts } from '@notion-x/components/PostsList'
-import { Post } from '@notion-x/interface'
+import ImageComponent from '@notion-x/src/components/ImageComponent'
+import Pagination from '@notion-x/src/components/Pagination'
+import PostList, { PostTypeOpts } from '@notion-x/src/components/PostsList'
+import { Post } from '@notion-x/src/interface'
 import cn from 'classnames'
 import { StaticImageData } from 'next/image'
 import { useGeoPattern } from 'react-geopattern'
 
-import { defaultFeaturedImage } from '../lib/config'
-import { comfortaa } from '../lib/fonts'
+import { defaultFeaturedImage, defaultPostTypeOpts } from '../lib/config'
 
 type PageOfPostsListTemplateProps = {
   title: string
@@ -95,15 +94,27 @@ export default function PageOfPostsListTemplate(props: PageOfPostsListTemplatePr
         )}
         {props.posts.length > 0 && (
           <>
+            {props.totalPages > 1 && props.uri && (
+              <Pagination
+                className="my-8"
+                path={props.uri}
+                total={props.totalPages}
+                current={props.currentPage}
+                pageAlias="trang"
+              />
+            )}
             <div>
               {props.posts.length > 0 && (
                 <PostList
                   posts={props.posts}
                   postType="PostTitleCateDate"
                   postTypeOpts={
-                    { ...props.postTypeOpts, fontClassName: comfortaa.className } ?? {
+                    {
+                      ...props.postTypeOpts,
+                      ...defaultPostTypeOpts
+                    } ?? {
                       hideCategory: true,
-                      fontClassName: comfortaa.className
+                      ...defaultPostTypeOpts
                     }
                   }
                 />

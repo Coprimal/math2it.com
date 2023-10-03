@@ -1,8 +1,8 @@
 import toTopImg from '@/public/to-top.webp'
 import Footer from '@c/Footer'
 import Nav from '@c/nav/Nav'
-import ScrollToTop from '@notion-x/components/ScrollToTop'
-import '@notion-x/notion-x.scss'
+import ScrollToTop from '@notion-x/src/components/ScrollToTop'
+import '@notion-x/src/style/notion-x.scss'
 import '@src/fontello/css/fontello.css'
 import Script from 'next/script'
 

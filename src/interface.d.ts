@@ -96,15 +96,13 @@ export type NotionHeader = {
   cover?: { external: { url: string }; file: { url: string } }
   properties: {
     name: { title: { plain_text: string }[] }
-    finalCreatedDate: { formula: { date: { start } } }
+    finalModified: { formula: { date: { start } } }
     categories: { multi_select: { name: string }[] }
     tag: { multi_select: NotionTagData[] }
     authors: { relation: { id: string }[] }
     selected: { checkbox: boolean }
-    showToc: { checkbox: boolean }
     bookCover: BookCoverProperty
     slug: { rich_text: { plain_text: string }[] }
-    contentCheck?: { checkbox: boolean }
   }
 }
 

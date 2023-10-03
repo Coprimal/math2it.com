@@ -1,13 +1,12 @@
 import WavingHand from '@/public/waving_hand.webp'
 import { comfortaa, lobster, righteous } from '@app/lib/fonts'
 import Container from '@c/Container'
-import ImageComponent from '@notion-x/components/ImageComponent'
+import ImageComponent from '@notion-x/src/components/ImageComponent'
 import cn from 'classnames'
 import Link from 'next/link'
 
-import AlertHomePage from './components/AlertHomePage'
 import PostListForHomeSection from './components/PostListForHomeSection'
-import { defaultFeaturedImage, getSlugPrefix } from './lib/config'
+import { defaultFeaturedImage, defaultPostTypeOpts, getSlugPrefix } from './lib/config'
 import { getCategories } from './lib/fetcher'
 
 export const revalidate = 20
@@ -134,7 +133,7 @@ export default function Home() {
       <div className="bg-wave-top-white"></div>
 
       <div className="flex flex-col gap-12 py-12">
-        <AlertHomePage />
+        {/* <AlertHomePage /> */}
 
         <PostListForHomeSection
           listStyle="carousel"
@@ -143,7 +142,7 @@ export default function Home() {
           backgroundClassName="bg-none"
           moreHref={`/${getSlugPrefix('all')}/`}
           postType="PostCardWhiteBgBig"
-          postTypeOpts={{ hideAuthor: true, hideDate: true }}
+          postTypeOpts={{ hideAuthor: true, hideDate: true, ...defaultPostTypeOpts }}
         />
         <PostListForHomeSection
           title="Tuyển chọn"
@@ -159,7 +158,7 @@ export default function Home() {
             title={category.name}
             type="byCategory"
             categorySlug={category.slug as string}
-            postTypeOpts={{ hideDate: true, hideCategory: true }}
+            postTypeOpts={{ hideDate: true, hideCategory: true, ...defaultPostTypeOpts }}
             backgroundClassName={category.backgroundClassName}
             moreHref={category.uri}
             iconComponent={<i className={category.fontello}></i>}

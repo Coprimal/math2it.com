@@ -1,5 +1,5 @@
 import { MenuAbout, MenuHome, predefinedCategories } from '@app/lib/config'
-import { Category } from '@notion-x/interface'
+import { Category } from '@notion-x/src/interface'
 
 import NavAvatar from './NavAvatar'
 import NavSearch from './NavSearch'

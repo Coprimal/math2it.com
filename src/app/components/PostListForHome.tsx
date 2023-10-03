@@ -1,6 +1,6 @@
 import { getAuthors, getCategories, getPosts } from '@app/lib/fetcher'
-import PostList, { PostType, PostTypeOpts } from '@notion-x/components/PostsList'
-import { Post } from '@notion-x/interface'
+import PostList, { PostType, PostTypeOpts } from '@notion-x/src/components/PostsList'
+import { Post } from '@notion-x/src/interface'
 
 import { getFilterOf } from '../lib/helpers'
 import { PostListStyle } from './PostListForHomeSection'

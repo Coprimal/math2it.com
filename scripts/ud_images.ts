@@ -1,4 +1,4 @@
-import { getJoinedRichText, makeSlugText } from '@notion-x/helpers'
+import { getJoinedRichText, makeSlugText } from '@notion-x/src/lib/helpers'
 import { Client } from '@notionhq/client'
 import chalk from 'chalk'
 import got from 'got'
@@ -399,7 +399,7 @@ async function getNotionDatabase(dbId: string, startCursor?: string): Promise<an
     const requestBody = {
       sorts: [
         {
-          property: 'finalCreatedDate',
+          property: 'finalModified',
           direction: 'descending'
         }
       ],
@@ -535,11 +535,10 @@ type NotionHeader = {
   cover?: { external: { url: string }; file: { url: string } }
   properties: {
     name: { title: { plain_text: string }[] }
-    finalCreatedDate: { formula: { date: { start: any } } }
+    finalModified: { formula: { date: { start: any } } }
     categories: { multi_select: { name: string }[] }
     authors: { relation: { id: string }[] }
     selected: { checkbox: boolean }
-    showToc: { checkbox: boolean }
     bookCover: { files: { external: { url: string }; file: { url: string } }[] }
     slug: { rich_text: { plain_text: string }[] }
   }
