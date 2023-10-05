@@ -1,5 +1,8 @@
 # Math2IT with Next.js
 
+- Domain: https://math2it.com/
+- Dev domain: https://test.math2it.com/
+
 ## ‼️ Rules & Notes
 
 1. **BEFORE PUSHING**: run `yarn run check` to check if there are errors!
