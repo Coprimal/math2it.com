@@ -212,7 +212,7 @@ export function getFilter(filter?: any): QueryDatabaseParameters['filter'] {
     }
   })
   // Ignore sandbox posts in production
-  if (process.env.NODE_ENV === 'production') {
+  if (process.env.ENV_MODE === 'prod') {
     defaultFilter.push({
       property: 'published',
       checkbox: {
