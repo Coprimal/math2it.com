@@ -1,11 +1,12 @@
 import defaultBookCover from '@/public/featured-images/untitledBook.jpg'
 import { Author, Category, ImageType, NotionSorts, Post, Tag } from '@notion-x/src/interface'
-import { queryDatabase, retrieveDatabase } from '@notion-x/src/lib/db'
+import { getUnofficialDatabase, queryDatabase, retrieveDatabase } from '@notion-x/src/lib/db'
 import { defaultBlurData, getJoinedRichText, makeSlugText } from '@notion-x/src/lib/helpers'
 import { QueryDatabaseParameters } from '@notionhq/client/build/src/api-endpoints'
 import { ImgurUrlType, NotionPost, NotionTagData } from '@src/interface'
 import { get } from 'lodash'
 import { StaticImageData } from 'next/image'
+import { CollectionInstance } from 'notion-types'
 import pMemoize from 'p-memoize'
 import { cache } from 'react'
 
@@ -18,11 +19,38 @@ import {
 } from './config'
 import {
   getFilter,
+  getPostProperties,
   parseAuthorsForPost,
   parseImgurUrl,
   parseNotionImageUrl,
   transformNotionAuthorsData
 } from './helpers'
+
+export async function getUnofficialPosts() {
+  try {
+    const data = await getUnofficialDatabase()
+    return transformUnofficialPosts(data)
+  } catch (error) {
+    console.error('🚨 Error in getUnofficialPosts()', error)
+    return []
+  }
+}
+
+function transformUnofficialPosts(data: CollectionInstance): Post[] {
+  const block = data?.recordMap?.block
+  const postIds = Object.keys(block)
+  const posts = []
+  for (const id of postIds) {
+    const post = block[id]
+    const properties = post?.value?.properties
+    const slug = properties?.[`${process.env.NEXT_PUBLIC_ID_SLUG}`]?.[0]?.[0]
+    if (!slug) continue
+
+    posts.push(getPostProperties(post?.value))
+  }
+
+  return posts
+}
 
 export const getPosts = async (opts?: {
   filter?: QueryDatabaseParameters['filter']

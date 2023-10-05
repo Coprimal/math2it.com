@@ -1,5 +1,5 @@
 import { defaultBlockOptions } from '@app/lib/config'
-import { getAuthors, getCategories, getPosts } from '@app/lib/fetcher'
+import { getAuthors, getUnofficialPosts } from '@app/lib/fetcher'
 import SinglePostTemplate from '@app/templates/SinglePostTemplate'
 import { DynamicSegmentParamsProps } from '@notion-x/src/interface'
 import { getJoinedRichText } from '@notion-x/src/lib/helpers'
@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: DynamicSegmentParamsProps): P
   const untitled = 'Bài viết không xác định | Math2IT'
   if (!slug) return { title: untitled }
   console.log(`\n👉 slug: ${slug}`)
-  const allPosts = await getPosts()
+  const allPosts = await getUnofficialPosts()
   const post = allPosts.find(post => post.slug === slug)
   if (!post) return { title: untitled, description: undefined }
   return {
@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: DynamicSegmentParamsProps): P
 }
 
 export async function generateStaticParams() {
-  const allPosts = await getPosts()
+  const allPosts = await getUnofficialPosts()
   const params = allPosts.filter(post => post.slug).map(post => ({ slug: post.slug }))
   return params
 }
@@ -43,13 +43,9 @@ export default async function SinglePostPage({ params }: DynamicSegmentParamsPro
   if (!slug) notFound()
 
   try {
-    const categories = getCategories()
     const authors = await getAuthors()
+    const allPosts = await getUnofficialPosts()
 
-    const allPosts = await getPosts({
-      categories,
-      authors
-    })
     const post = allPosts.find(post => post.slug === slug)
     const pageIdwithDash = post?.id
     if (!pageIdwithDash) notFound()
