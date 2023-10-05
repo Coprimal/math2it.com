@@ -46,6 +46,10 @@ export default async function SinglePostPage({ params }: DynamicSegmentParamsPro
     const categories = getCategories()
     const authors = await getAuthors()
 
+    /**
+     * Still use getPosts() instead of getUnofficialPosts() because there are no advantages + if we
+     * use, we need to integrate "block" inside posts (too heavy) to get covers for related posts.
+     */
     const allPosts = await getPosts({
       categories,
       authors

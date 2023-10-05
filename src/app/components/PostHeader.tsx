@@ -12,7 +12,6 @@ import { LazyImage } from '@notion-x/src/components/lazy-image'
 import AiOutlineClockCircle from '@notion-x/src/icons/AiOutlineClockCircle'
 import { Author } from '@notion-x/src/interface'
 import { useNotionContext } from '@notion-x/src/lib/context'
-import { getCreatedDate, getModifedDate, mapTag } from '@notion-x/src/lib/helpers'
 import { usePostDateStatus } from '@notion-x/src/lib/hooks'
 import cn from 'classnames'
 import { get } from 'lodash'
@@ -20,7 +19,7 @@ import Link from 'next/link'
 import { ExtendedRecordMap } from 'notion-types'
 import { getTextContent } from 'notion-utils'
 
-import { getPredefinedCategories } from '../lib/helpers'
+import { getPostProperties } from '../lib/helpers'
 import Container from './Container'
 
 export const fullWidthPostCoverHeight = 'h-[25vh] max-h-[25vh] min-h-[25vh]'
@@ -45,25 +44,17 @@ export default function PostHeader(props: PostHeaderProps) {
   const id = Object.keys(recordMap.block)[0]
   const block = recordMap.block[id]?.value
 
-  const title = block.properties?.title
-  const selected = block.properties?.[`${process.env.NEXT_PUBLIC_ID_SELECTED}`]?.[0]?.[0] === 'Yes'
-
-  const createdDate = getCreatedDate(block, process.env.NEXT_PUBLIC_ID_CREATED_DATE as string)
-  const modifiedDate = getModifedDate(block, process.env.NEXT_PUBLIC_ID_LAST_MODIFIED as string)
-
-  const status = usePostDateStatus(
+  const {
+    drawTitle: title,
+    selected,
     createdDate,
-    modifiedDate,
-    get(defaultPostTypeOpts, 'maxDaysWinthin', 7)
-  )
+    date: modifiedDate,
+    tags,
+    categories,
+    coverPosition,
+    pageCover
+  } = getPostProperties(block)
 
-  const tagNames = block.properties?.[`${process.env.NEXT_PUBLIC_ID_TAGS}`]?.[0]?.[0].split(',')
-  const tags = tagNames?.map((tagName: string) => mapTag(tagName, getSlugPrefix('tag')))
-  const categogyNames =
-    block.properties?.[`${process.env.NEXT_PUBLIC_ID_CATEGORIES}`]?.[0]?.[0].split(',')
-  const categories = getPredefinedCategories(categogyNames?.map((cat: string) => ({ name: cat })))
-
-  const coverPosition = (1 - (block?.format?.page_cover_position || 0.5)) * 100
   const pageCoverObjectPosition = `center ${coverPosition}%`
   let pageCoverStyle = pageCoverStyleCache[pageCoverObjectPosition]
   if (!pageCoverStyle) {
@@ -72,13 +63,19 @@ export default function PostHeader(props: PostHeaderProps) {
     }
   }
 
+  const status = usePostDateStatus(
+    createdDate!,
+    modifiedDate!,
+    get(defaultPostTypeOpts, 'maxDaysWinthin', 7)
+  )
+
   return (
     <>
       {block?.format?.page_cover && (
         <div className="flex w-full items-center justify-center h-[25vh] max-h-[25vh] min-h-[25vh]">
           <div className="relative flex h-full w-full items-center overflow-hidden">
             <LazyImage
-              src={mapImageUrl(block.format.page_cover as any, block)}
+              src={mapImageUrl(pageCover as any, block)}
               alt={getTextContent(title)}
               priority={true}
               className="notion-page-cover absolute"
@@ -150,7 +147,7 @@ export default function PostHeader(props: PostHeaderProps) {
               <AiOutlineClockCircle />
               <DateComponent
                 humanize={true}
-                dateString={createdDate}
+                dateString={createdDate!}
                 dateLabel="đăng"
                 format="DD/MM/YYYY"
                 humanizeOpts={{
@@ -174,7 +171,7 @@ export default function PostHeader(props: PostHeaderProps) {
                   <DateComponent
                     dateLabel="cập nhật"
                     humanize={true}
-                    dateString={modifiedDate}
+                    dateString={modifiedDate!}
                     format="DD/MM/YYYY"
                     humanizeOpts={{
                       today: 'hôm nay',

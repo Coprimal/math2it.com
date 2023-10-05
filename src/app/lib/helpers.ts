@@ -6,10 +6,11 @@ import {
   predefinedCategories
 } from '@app/lib/config'
 import { Author, Category, Post, Tag } from '@notion-x/src/interface'
-import { idToUuid, makeSlugText } from '@notion-x/src/lib/helpers'
+import { idToUuid, makeSlugText, mapTag } from '@notion-x/src/lib/helpers'
 import { QueryDatabaseParameters } from '@notionhq/client/build/src/api-endpoints'
 import { ImgurUrlType, SlugTypeLabels } from '@src/interface'
 import { get, intersectionWith } from 'lodash'
+import { Block } from 'notion-types'
 
 /**
  * We use "null" to avoid the "undefined" error when parsing to a JSON format!
@@ -211,7 +212,7 @@ export function getFilter(filter?: any): QueryDatabaseParameters['filter'] {
     }
   })
   // Ignore sandbox posts in production
-  if (process.env.ENV_MODE === 'prod') {
+  if (process.env.NODE_ENV === 'production') {
     defaultFilter.push({
       property: 'published',
       checkbox: {
@@ -255,4 +256,49 @@ export function getRelatedPosts(allPosts: Post[], post: Post, numPost: number): 
   }
 
   return []
+}
+
+export function getPostProperties(post: Block): Post {
+  const block = post
+  const id = post.id
+  const properties = post?.properties
+  const slug = properties?.[`${process.env.NEXT_PUBLIC_ID_SLUG}`]?.[0]?.[0] ?? ''
+  const title = properties?.title?.[0]?.[0]
+  const drawTitle = properties?.title
+  const date =
+    properties?.[`${process.env.NEXT_PUBLIC_ID_LAST_MODIFIED}`]?.[0]?.[1]?.[0]?.[1]?.start_date ??
+    new Date(post?.last_edited_time).toISOString()
+  const createdDate =
+    properties?.[`${process.env.NEXT_PUBLIC_ID_CREATED_DATE}`]?.[0]?.[1]?.[0]?.[1]?.start_date ??
+    new Date(post?.created_time).toISOString()
+  const tags = properties?.[`${process.env.NEXT_PUBLIC_ID_TAGS}`]?.[0]?.[0]
+    .split(',')
+    ?.map((tagName: string) => mapTag(tagName, 'tag'))
+  const _cats = properties?.[`${process.env.NEXT_PUBLIC_ID_CATEGORIES}`]?.[0]?.[0].split(',')
+  const categories = getPredefinedCategories(_cats?.map((cat: string) => ({ name: cat })))
+  const isPublished = properties?.[`${process.env.NEXT_PUBLIC_ID_PUBLISHED}`]?.[0]?.[0] === 'Yes'
+  const isPage = properties?.[`${process.env.NEXT_PUBLIC_ID_IS_PAGE}`]?.[0]?.[0] === 'Yes'
+  const selected = properties?.[`${process.env.NEXT_PUBLIC_ID_SELECTED}`]?.[0]?.[0] === 'Yes'
+  const icon = post.format?.page_icon
+  const pageCover = post.format?.page_cover
+  const coverPosition = (1 - (post?.format?.page_cover_position || 0.5)) * 100
+
+  return {
+    block,
+    id,
+    slug,
+    uri: `/${getSlugPrefix('singlePost')}/${slug}/`,
+    title,
+    drawTitle,
+    date,
+    createdDate,
+    tags,
+    categories,
+    isPublished,
+    isPage,
+    selected,
+    icon,
+    pageCover,
+    coverPosition
+  }
 }
