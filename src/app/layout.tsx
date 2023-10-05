@@ -11,7 +11,17 @@ import './globals.scss'
 export const revalidate = 20
 
 export const metadata = {
-  metadataBase: new URL('https://math2it.com')
+  metadataBase: new URL('https://math2it.com'),
+  robots: {
+    index: process.env.ENV_MODE !== 'prod' ? false : true,
+    follow: process.env.ENV_MODE !== 'prod' ? false : true,
+    nocache: process.env.ENV_MODE !== 'prod' ? true : false,
+    googleBot: {
+      index: process.env.ENV_MODE !== 'prod' ? false : true,
+      follow: process.env.ENV_MODE !== 'prod' ? false : true,
+      noimageindex: process.env.ENV_MODE !== 'prod' ? true : false
+    }
+  }
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
