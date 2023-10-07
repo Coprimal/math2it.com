@@ -63,7 +63,7 @@ export default function SinglePostTemplate(props: SinglePostTemplateProps) {
             {props.relatedPosts && props.relatedPosts.length > 0 && (
               <div
                 className={cn(
-                  'flex flex-col gap-6 mb-8 bg-gray-100 rounded-xl m2it-box-shadow border-[0.5px] p-6'
+                  'flex flex-col gap-6 mb-8 bg-gray-100 rounded-md m2it-box-shadow border-[0.5px] p-6'
                 )}
               >
                 <h2 className={cn(lobster.className, 'text-2xl sm:text-[1.65rem] text-slate-700')}>
