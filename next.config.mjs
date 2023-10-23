@@ -9,6 +9,21 @@ const nextConfig = {
     // 👇 https://nextjs.org/docs/messages/import-esm-externals (error: react-medium-image-zoom)
     // esmExternals: 'loose'
   },
+  headers: async () => {
+    const headers = []
+    if (process.env.NEXT_PUBLIC_VERCEL_ENV === 'preview') {
+      headers.push({
+        headers: [
+          {
+            key: 'X-Robots-Tag',
+            value: 'noindex'
+          }
+        ],
+        source: '/:path*'
+      })
+    }
+    return headers
+  },
   images: {
     // unoptimized: true,
     domains: [
