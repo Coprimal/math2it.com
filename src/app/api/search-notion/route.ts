@@ -77,6 +77,8 @@ function parseSearchResults(data: any): SearchResult[] {
           ?.replaceAll(UNOFFICIAL_NOTION_KEYS.boldSearchKeyClose, '</span>') || null
       const isBookPost = !!_properties?.[UNOFFICIAL_NOTION_KEYS.bookCover]
 
+      if (process.env.ENV_MODE === 'prod' && !isPostPublished) continue
+
       results.push({
         id: postId,
         title: postTitle,
