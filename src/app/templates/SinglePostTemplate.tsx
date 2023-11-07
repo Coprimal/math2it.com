@@ -58,6 +58,7 @@ export default function SinglePostTemplate(props: SinglePostTemplateProps) {
               className="w-full"
               recordMap={props.recordMap}
               blockOptions={defaultBlockOptions}
+              useSimpleImage={true}
             />
 
             {props.relatedPosts && props.relatedPosts.length > 0 && (
