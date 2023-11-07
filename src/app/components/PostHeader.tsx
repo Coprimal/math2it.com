@@ -9,8 +9,8 @@ import {
 import DateComponent from '@notion-x/src/components/DateComponent'
 import PostHeaderTopics from '@notion-x/src/components/PostHeaderTopics'
 import SimpleImage from '@notion-x/src/components/SimpleImage'
+import { ImagePlaceholderPostHeader } from '@notion-x/src/components/image-placeholders'
 import AiOutlineClockCircle from '@notion-x/src/icons/AiOutlineClockCircle'
-import PiImageSquareDuotone from '@notion-x/src/icons/PiImageSquareDuotone'
 import { Author } from '@notion-x/src/interface'
 import { useNotionContext } from '@notion-x/src/lib/context'
 import { usePostDateStatus } from '@notion-x/src/lib/hooks'
@@ -70,20 +70,6 @@ export default function PostHeader(props: PostHeaderProps) {
     get(defaultPostTypeOpts, 'maxDaysWinthin', 7)
   )
 
-  function ImagePlaceholder() {
-    return (
-      <div
-        className={cn(
-          'bg-gray-100 flex items-center justify-center animate-pulse w-full h-full',
-          'flex flex-col'
-        )}
-      >
-        <PiImageSquareDuotone className="text-[80px] text-slate-400" />
-        <div className="text-slate-500 text-lg">Loading...</div>
-      </div>
-    )
-  }
-
   return (
     <>
       {block?.format?.page_cover && (
@@ -93,7 +79,7 @@ export default function PostHeader(props: PostHeaderProps) {
               src={mapImageUrl(pageCover as any, block)}
               alt={getTextContent(title)}
               className="notion-page-cover absolute"
-              imagePlaceholder={ImagePlaceholder()}
+              imagePlaceholder={ImagePlaceholderPostHeader()}
             />
           </div>
         </div>
