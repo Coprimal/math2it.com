@@ -18,7 +18,8 @@ export const defaultBlockOptions: BlockOptionsContextType = {
   blockCodeCopyText: 'Sao chép',
   headingScrollMarginTopClass: 'scroll-mt-[70px]',
   labelTocTitle: 'Trong bài này',
-  minNumHeadingsToShowToc: 4
+  minNumHeadingsToShowToc: 4,
+  notelabel: 'bai-viet'
 }
 
 export const defaultPostTypeOpts: PostTypeOpts = {

@@ -31,5 +31,8 @@
   "typescript.tsdk": "node_modules/typescript/lib",
   "search.useIgnoreFiles": false,
   "explorer.excludeGitIgnore": false,
-  "editor.stablePeek": false
+  "editor.stablePeek": false,
+  "[dotenv]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
+  }
 }
