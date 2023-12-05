@@ -3,10 +3,10 @@ import { getAuthors, getCategories, getPosts } from '@app/lib/fetcher'
 import SinglePostTemplate from '@app/templates/SinglePostTemplate'
 import { DynamicSegmentParamsProps } from '@notion-x/src/interface'
 import { getJoinedRichText } from '@notion-x/src/lib/helpers'
-import { notionX } from '@notion-x/src/lib/notionx'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
+import { getPage } from '@notion-x/src/lib/notionx'
 import { generateMetaTitle, getRelatedPosts } from '../../lib/helpers'
 
 export const revalidate = 20
@@ -58,7 +58,7 @@ export default async function SinglePostPage({ params }: DynamicSegmentParamsPro
     const pageIdwithDash = post?.id
     if (!pageIdwithDash) notFound()
 
-    const recordMap = await notionX.getPage(pageIdwithDash)
+    const recordMap = await getPage(pageIdwithDash)
     const relatedPosts = getRelatedPosts(allPosts, post, 8)
 
     return (
