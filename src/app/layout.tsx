@@ -1,7 +1,5 @@
-import toTopImg from '@/public/to-top.webp'
 import Footer from '@c/Footer'
 import Nav from '@c/nav/Nav'
-import ScrollToTop from '@notion-x/src/components/ScrollToTop'
 import '@notion-x/src/style/notion-x.scss'
 import '@src/fontello/css/fontello.css'
 import Script from 'next/script'
@@ -43,7 +41,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div className="mb-auto">
             <main>{children}</main>
           </div>
-          <ScrollToTop image={toTopImg} />
           <Footer />
         </div>
       </body>
