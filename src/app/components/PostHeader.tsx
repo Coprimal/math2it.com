@@ -46,7 +46,7 @@ export default function PostHeader(props: PostHeaderProps) {
   const block = recordMap.block[id]?.value
 
   const {
-    drawTitle: title,
+    rawTitle: title,
     selected,
     createdDate,
     date: modifiedDate,
