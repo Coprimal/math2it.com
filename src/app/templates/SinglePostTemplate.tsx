@@ -59,6 +59,7 @@ export default function SinglePostTemplate(props: SinglePostTemplateProps) {
               recordMap={props.recordMap}
               blockOptions={defaultBlockOptions}
               useSimpleImage={true}
+              showBackToTopButton={true}
             />
 
             {props.relatedPosts && props.relatedPosts.length > 0 && (
