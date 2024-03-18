@@ -273,7 +273,7 @@ export function getPostProperties(post: Block): Post {
     new Date(post?.created_time).toISOString()
   const tags = properties?.[`${process.env.NEXT_PUBLIC_ID_TAGS}`]?.[0]?.[0]
     .split(',')
-    ?.map((tagName: string) => mapTag(tagName, 'tag'))
+    ?.map((tagName: string) => mapTag(tagName, getSlugPrefix('tag')))
   const _cats = properties?.[`${process.env.NEXT_PUBLIC_ID_CATEGORIES}`]?.[0]?.[0].split(',')
   const categories = getPredefinedCategories(_cats?.map((cat: string) => ({ name: cat })))
   const isPublished = properties?.[`${process.env.NEXT_PUBLIC_ID_PUBLISHED}`]?.[0]?.[0] === 'Yes'
