@@ -24,7 +24,7 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="vi">
       <Script src="https://www.googletagmanager.com/gtag/js?id=G-1MR87DQ1KG" />
       <Script id="google-analytics">
         {`
