@@ -72,7 +72,10 @@ export default function PostListForHomeSection(props: SkeletonPostListForHomePro
             listStyle={props.listStyle}
             type={props.type}
             categorySlug={props.categorySlug}
-            postTypeOpts={{ ...props.postTypeOpts, fontClassName: comfortaa.className }}
+            postTypeOpts={{
+              ...props.postTypeOpts,
+              fontClassName: props.postTypeOpts?.fontClassName ?? comfortaa.className
+            }}
             postType={props.postType}
           />
         </Suspense>

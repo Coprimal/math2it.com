@@ -151,6 +151,9 @@ export default function Home() {
           backgroundClassName="saphire-blue"
           moreHref={`/${getSlugPrefix('selected')}/`}
           postType="PostCardWave"
+          postTypeOpts={{
+            fontClassName: `${comfortaa.className} !font-semibold !text-[0.87rem]`
+          }}
         />
         {categories.map(category => (
           <PostListForHomeSection
