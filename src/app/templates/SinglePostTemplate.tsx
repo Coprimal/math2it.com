@@ -12,6 +12,7 @@ import cn from 'classnames'
 import { ExtendedRecordMap, PageBlock } from 'notion-types'
 import { getPageTableOfContents } from 'notion-utils'
 
+import Comments from '../components/Comments'
 import { defaultBlockOptions } from '../lib/config'
 import { comfortaa, lobster } from '../lib/fonts'
 
@@ -82,6 +83,8 @@ export default function SinglePostTemplate(props: SinglePostTemplateProps) {
                 />
               </div>
             )}
+
+            <Comments />
           </article>
 
           <aside className={cn(asideClass)}>
