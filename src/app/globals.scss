@@ -15,6 +15,10 @@
   .bg-wave-bottom-stone {
     @apply before:bg-wave-footer-stone before:block before:h-8 before:w-full;
   }
+
+  .thi-text-rainbow {
+    @apply bg-gradient-to-r from-[#ff88c3] to-violet-400 bg-clip-text text-transparent;
+  }
 }
 
 .saphire-blue {

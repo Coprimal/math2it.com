@@ -1,4 +1,3 @@
-import allPostsCover from '@/public/featured-images/all.png'
 import { getSlugPrefix } from '@app/lib/config'
 import { getAuthors, getCategories, getPosts } from '@app/lib/fetcher'
 import { generateMetaTitle } from '@app/lib/helpers'
@@ -94,7 +93,7 @@ export default async function AllPostsPage({ params }: OptionalCatchAllProps) {
       posts={postsOnThisPage}
       totalPages={totalPages}
       currentPage={currentPage}
-      cover={allPostsCover}
+      // cover={allPostsCover}
       postTypeOpts={{ hideCategory: false }}
     />
   )

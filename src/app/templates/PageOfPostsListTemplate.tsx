@@ -5,7 +5,7 @@ import PostList, { PostTypeOpts } from '@notion-x/src/components/PostsList'
 import { Post } from '@notion-x/src/interface'
 import cn from 'classnames'
 import { StaticImageData } from 'next/image'
-import { useGeoPattern } from 'react-geopattern'
+// import { useGeoPattern } from 'react-geopattern'
 
 import { defaultFeaturedImage, defaultPostTypeOpts } from '../lib/config'
 
@@ -27,15 +27,15 @@ export const heightCoverPostList = 'min-h-[25vh]'
 export const spacingCoverPostList = 'py-12'
 
 export default function PageOfPostsListTemplate(props: PageOfPostsListTemplateProps) {
-  const pattern = useGeoPattern(props.title, {
-    color: props.patternColor
-  })
+  // const pattern = useGeoPattern(props.title, {
+  //   color: props.patternColor
+  // })
 
   return (
     <>
       <div
         className={cn('mx-auto flex w-full items-center justify-between', 'relative')}
-        style={props.cover ? undefined : { backgroundImage: pattern.toDataUrl() }}
+        // style={props.cover ? undefined : { backgroundImage: pattern.toDataUrl() }}
       >
         {props.cover && (
           <div
@@ -60,20 +60,20 @@ export default function PageOfPostsListTemplate(props: PageOfPostsListTemplatePr
         )}
         <div
           className={cn(
-            'flex items-center justify-center',
-            'bg-[#0000005e] w-full z-10 py-10',
-            heightCoverPostList
+            'flex items-center justify-center bg-[#0000005e] w-full z-10 py-16',
+            heightCoverPostList,
+            'bg-[linear-gradient(rgb(40,_42,_54),_rgb(50,_53,_65))]'
           )}
         >
           <Container maxWidthClass="max-w-5xl">
             <h2
               className="w-fit text-2xl md:text-3xl font-bold drop-shadow-sm"
-              style={{ color: props.titleColor ? props.titleColor : props.cover ? '#fff' : '#fff' }}
+              // style={{ color: props.titleColor ? props.titleColor : props.cover ? '#fff' : '#fff' }}
             >
               {props.iconComponent && (
-                <span className="mr-1 opacity-90">{props.iconComponent}</span>
+                <span className="mr-1 opacity-90 text-[#ff88c3]">{props.iconComponent}</span>
               )}
-              {props.title}
+              <span className="thi-text-rainbow">{props.title}</span>
             </h2>
             {props.subtitle && (
               <div
