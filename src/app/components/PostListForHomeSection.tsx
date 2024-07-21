@@ -31,7 +31,7 @@ export default function PostListForHomeSection(props: SkeletonPostListForHomePro
         props.backgroundClassName ?? 'bg-gradient-to-b from-gray-100 to-white'
       )}
     >
-      <div className={cn('flex items-center justify-between px-4 sm:px-6')}>
+      <div className={cn('flex items-center justify-between px-4 pt-4 pb-2 sm:px-6')}>
         <h1
           className={cn(
             'text-2xl sm:text-[1.65rem] font-semibold text-slate-700 py-4',
@@ -72,7 +72,10 @@ export default function PostListForHomeSection(props: SkeletonPostListForHomePro
             listStyle={props.listStyle}
             type={props.type}
             categorySlug={props.categorySlug}
-            postTypeOpts={{ ...props.postTypeOpts, fontClassName: comfortaa.className }}
+            postTypeOpts={{
+              ...props.postTypeOpts,
+              fontClassName: props.postTypeOpts?.fontClassName ?? comfortaa.className
+            }}
             postType={props.postType}
           />
         </Suspense>

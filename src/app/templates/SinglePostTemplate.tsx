@@ -4,7 +4,6 @@ import PostAside from '@c/PostAside'
 import PostHeader from '@c/PostHeader'
 import PostBody from '@notion-x/src/components/PostBody'
 import PostToc from '@notion-x/src/components/PostToc'
-import PostList from '@notion-x/src/components/PostsList'
 import { Author, Post } from '@notion-x/src/interface'
 import { BlockOptionsContextType } from '@notion-x/src/lib/context'
 import { idToUuid } from '@notion-x/src/lib/helpers'
@@ -12,8 +11,10 @@ import cn from 'classnames'
 import { ExtendedRecordMap, PageBlock } from 'notion-types'
 import { getPageTableOfContents } from 'notion-utils'
 
-import { defaultBlockOptions } from '../lib/config'
-import { comfortaa, lobster } from '../lib/fonts'
+import PostList from '../../../notion-x/src/components/PostsList'
+import Comments from '../components/Comments'
+import { defaultBlockOptions, defaultPostTypeOpts } from '../lib/config'
+import { lobster } from '../lib/fonts'
 
 type SinglePostTemplateProps = {
   recordMap: ExtendedRecordMap
@@ -63,25 +64,34 @@ export default function SinglePostTemplate(props: SinglePostTemplateProps) {
             />
 
             {props.relatedPosts && props.relatedPosts.length > 0 && (
-              <div
-                className={cn(
-                  'flex flex-col gap-6 mb-8 bg-gray-100 rounded-md m2it-box-shadow border-[0.5px] p-6'
-                )}
-              >
+              <div className={cn('flex flex-col gap-6 mb-8 bg-transparent')}>
                 <h2 className={cn(lobster.className, 'text-2xl sm:text-[1.65rem] text-slate-700')}>
                   Có thể bạn quan tâm?
                 </h2>
                 <PostList
+                  listStyle="carousel"
                   posts={props.relatedPosts}
-                  postType="PostTitleCateDate"
-                  postTypeOpts={{
-                    hideCategory: true,
-                    hideDate: true,
-                    fontClassName: comfortaa.className
-                  }}
+                  postType="PostCardWhiteBgBig"
+                  // postTypeOpts={{
+                  //   hideCategory: true,
+                  //   hideDate: true,
+                  //   fontClassName: comfortaa.className
+                  // }}
+                  postTypeOpts={{ hideAuthor: true, hideDate: true, ...defaultPostTypeOpts }}
                 />
               </div>
+              // <PostListForHomeSection
+              //   listStyle="carousel"
+              //   title="Mới nhất"
+              //   type="latest"
+              //   backgroundClassName="bg-none"
+              //   moreHref={`/${getSlugPrefix('all')}/`}
+              //   postType="PostCardWhiteBgBig"
+              //   postTypeOpts={{ hideAuthor: true, hideDate: true, ...defaultPostTypeOpts }}
+              // />
             )}
+
+            <Comments />
           </article>
 
           <aside className={cn(asideClass)}>

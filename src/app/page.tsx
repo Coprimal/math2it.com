@@ -99,13 +99,6 @@ export default function Home() {
                 </Link>
                 <a
                   className={cn('bg-[#1985ff]', badgeClassName)}
-                  href="https://www.texmath.com/"
-                  target="_blank"
-                >
-                  TeXMath
-                </a>
-                <a
-                  className={cn('bg-[#eeeeee30]', badgeClassName)}
                   href="https://www.facebook.com/Math2IT/"
                   target="_blank"
                 >
@@ -151,6 +144,9 @@ export default function Home() {
           backgroundClassName="saphire-blue"
           moreHref={`/${getSlugPrefix('selected')}/`}
           postType="PostCardWave"
+          postTypeOpts={{
+            fontClassName: `${comfortaa.className} !font-semibold !text-[0.87rem]`
+          }}
         />
         {categories.map(category => (
           <PostListForHomeSection

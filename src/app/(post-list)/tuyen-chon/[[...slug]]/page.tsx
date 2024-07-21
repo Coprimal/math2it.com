@@ -1,4 +1,3 @@
-import selectedCover from '@/public/featured-images/selected.png'
 import { getSlugPrefix } from '@app/lib/config'
 import { getAuthors, getCategories, getPosts } from '@app/lib/fetcher'
 import { generateMetaTitle, getFilterOf } from '@app/lib/helpers'
@@ -99,7 +98,7 @@ export default async function SelectedPostsPage({ params }: OptionalCatchAllProp
       posts={postsOnThisPage}
       totalPages={totalPages}
       currentPage={currentPage}
-      cover={selectedCover}
+      // cover={selectedCover}
       postTypeOpts={{ hideCategory: false }}
     />
   )

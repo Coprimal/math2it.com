@@ -121,7 +121,7 @@ export default async function CategoryPage({ params }: OptionalCatchAllProps) {
       totalPages={totalPages}
       currentPage={currentPage}
       iconComponent={iconComponent}
-      cover={category.featuredImage?.staticImageData}
+      // cover={category.featuredImage?.staticImageData}
       postTypeOpts={{
         hideCategory: true
       }}
