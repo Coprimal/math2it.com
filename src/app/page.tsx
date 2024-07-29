@@ -135,7 +135,7 @@ export default function Home() {
           backgroundClassName="bg-none"
           moreHref={`/${getSlugPrefix('all')}/`}
           postType="PostCardWhiteBgBig"
-          postTypeOpts={{ hideAuthor: true, hideDate: true, ...defaultPostTypeOpts }}
+          postTypeOpts={{ hideAuthor: false, hideDate: true, ...defaultPostTypeOpts }}
         />
         <PostListForHomeSection
           title="Tuyển chọn"
