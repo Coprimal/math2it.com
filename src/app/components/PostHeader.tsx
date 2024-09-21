@@ -104,7 +104,7 @@ export default function PostHeader(props: PostHeaderProps) {
           <h1
             className={cn(
               gapHeaderItems,
-              'pt-1 text-left font-nunito text-4xl font-bold leading-tight tracking-tight'
+              'pt-1 text-left font-nunito text-4xl font-semibold leading-tight tracking-tight'
             )}
           >
             {getTextContent(title)}

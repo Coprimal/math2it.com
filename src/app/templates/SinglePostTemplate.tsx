@@ -72,23 +72,9 @@ export default function SinglePostTemplate(props: SinglePostTemplateProps) {
                   listStyle="carousel"
                   posts={props.relatedPosts}
                   postType="PostCardWhiteBgBig"
-                  // postTypeOpts={{
-                  //   hideCategory: true,
-                  //   hideDate: true,
-                  //   fontClassName: comfortaa.className
-                  // }}
                   postTypeOpts={{ hideAuthor: true, hideDate: true, ...defaultPostTypeOpts }}
                 />
               </div>
-              // <PostListForHomeSection
-              //   listStyle="carousel"
-              //   title="Mới nhất"
-              //   type="latest"
-              //   backgroundClassName="bg-none"
-              //   moreHref={`/${getSlugPrefix('all')}/`}
-              //   postType="PostCardWhiteBgBig"
-              //   postTypeOpts={{ hideAuthor: true, hideDate: true, ...defaultPostTypeOpts }}
-              // />
             )}
 
             <Comments />
