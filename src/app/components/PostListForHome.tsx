@@ -20,6 +20,7 @@ export const postListHomeCount = 8
 export default async function PostListForHome(props: PostListForHomeProps) {
   const categories = getCategories()
   const authors = await getAuthors()
+  /* ###Thi */ console.log(`👉👉👉 authors: `, JSON.stringify(authors));
 
   let posts: Post[] = []
 
