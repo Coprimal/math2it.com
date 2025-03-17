@@ -1,7 +1,7 @@
 # Math2IT with Next.js
 
 - Domain: https://math2it.com/
-- Dev domain: https://test.math2it.com/
+- Dev domain: [https://test.math2it.com/](https://math2it-site-git-dev-math2its-projects.vercel.app/)
 
 ## ‼️ Rules & Notes
 
