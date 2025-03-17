@@ -4,6 +4,10 @@
   "version": "1.0.0",
   "author": "Math2IT Team",
   "packageManager": "yarn@4.1.1",
+  "engines": {
+    "npm": "^10.0.8",
+    "node": "^20.10.0"
+  },
   "private": true,
   "scripts": {
     "dev": "next dev --port 3003",
