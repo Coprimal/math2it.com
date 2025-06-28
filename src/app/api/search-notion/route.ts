@@ -1,5 +1,5 @@
 import { SearchResult } from '@notion-x/src/interface'
-import { searchNotion } from '@notion-x/src/lib/db'
+import { searchNotionPersonal } from '@notion-x/src/lib/db'
 import { makeSlugText } from '@notion-x/src/lib/helpers'
 
 const UNOFFICIAL_NOTION_KEYS = {
@@ -27,11 +27,9 @@ export async function OPTIONS(_request: Request) {
 export async function POST(request: Request) {
   const searchParams = await request.json()
 
-  const results = await searchNotion(
+  const results = await searchNotionPersonal(
     searchParams,
-    process.env.NOTION_API_WEB as string,
-    process.env.NOTION_TOKEN_V2 as string,
-    process.env.NOTION_ACTIVE_USER as string,
+    process.env.NOTION_API_PERSONAL as string,
     process.env.NOTION_DB_POSTS as string
   )
 
