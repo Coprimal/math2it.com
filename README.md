@@ -20,8 +20,12 @@
 **First time only**,
 
 ```bash
+# install yarn
+npm install -g corepack
+yarn init -2
+yarn set version stable
+
 # Global tools
-npm install -g yarn
 npm install -g fontello-cli
 
 # install
