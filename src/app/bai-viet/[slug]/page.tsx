@@ -1,7 +1,7 @@
 import { defaultBlockOptions } from '@app/lib/config'
 import { getAuthors, getCategories, getPosts } from '@app/lib/fetcher'
 import SinglePostTemplate from '@app/templates/SinglePostTemplate'
-import { DynamicSegmentParamsProps } from '@notion-x/src/interface'
+import { DynamicSegmentParamsProps } from '@/src/types/notion'
 import { getJoinedRichText } from '@notion-x/src/lib/helpers'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
@@ -11,7 +11,8 @@ import { generateMetaTitle, getRelatedPosts } from '../../lib/helpers'
 
 export const revalidate = 20
 
-export async function generateMetadata({ params }: DynamicSegmentParamsProps): Promise<Metadata> {
+export async function generateMetadata(props: DynamicSegmentParamsProps): Promise<Metadata> {
+  const params = await props.params;
   const slug = params.slug || ''
   const untitled = 'Bài viết không xác định | Math2IT'
   if (!slug) return { title: untitled }
@@ -38,7 +39,8 @@ export async function generateStaticParams() {
   return params
 }
 
-export default async function SinglePostPage({ params }: DynamicSegmentParamsProps) {
+export default async function SinglePostPage(props: DynamicSegmentParamsProps) {
+  const params = await props.params;
   const slug = params.slug || ''
   if (!slug) notFound()
 

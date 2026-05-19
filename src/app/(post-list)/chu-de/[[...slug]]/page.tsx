@@ -3,15 +3,17 @@ import { getSlugPrefix } from '@app/lib/config'
 import { getAuthors, getCategories, getPosts, getTags } from '@app/lib/fetcher'
 import { generateMetaTitle, getFilterOf } from '@app/lib/helpers'
 import PageOfPostsListTemplate from '@app/templates/PageOfPostsListTemplate'
-import { OptionalCatchAllParams, OptionalCatchAllProps, Tag } from '@notion-x/src/interface'
+import { OptionalCatchAllParams, Tag } from '@notion-x/src/interface'
+import { OptionalCatchAllProps } from '@/src/types/notion'
 import { getStartCursorForCurrentPage } from '@notion-x/src/lib/helpers'
 import { Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
 
 export const revalidate = 20
 
-export async function generateMetadata({ params }: OptionalCatchAllProps): Promise<Metadata> {
-  const slug = params.slug[0] || ''
+export async function generateMetadata(props: OptionalCatchAllProps): Promise<Metadata> {
+  const params = await props.params;
+  const slug = params.slug?.[0] || ''
   const currentPage = +(params?.slug?.[2] || 1)
   const tags = await getTags()
   const tag = getTag(slug, tags)
@@ -42,7 +44,8 @@ export async function generateStaticParams() {
   return params
 }
 
-export default async function TagPage({ params }: OptionalCatchAllProps) {
+export default async function TagPage(props: OptionalCatchAllProps) {
+  const params = await props.params;
   const currentPage = +(params?.slug?.[2] || 1)
 
   if (
@@ -112,5 +115,5 @@ export default async function TagPage({ params }: OptionalCatchAllProps) {
 }
 
 function getTag(slug: string, tags: Tag[]) {
-  return tags.find(t => t.slug === slug || t.slug === slug.replace(/%26/g, '&'))
+  return tags.find(t => t.slug === slug || t.slug === slug.replace(/%26/g, '&'));
 }

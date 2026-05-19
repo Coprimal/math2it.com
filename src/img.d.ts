@@ -22,3 +22,8 @@ declare module '*.gif' {
   const content: StaticImageData
   export default content
 }
+
+declare module '*.webp' {
+  const content: StaticImageData
+  export default content
+}

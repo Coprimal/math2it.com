@@ -2,14 +2,16 @@ import { getSlugPrefix } from '@app/lib/config'
 import { getAuthors, getCategories, getPosts } from '@app/lib/fetcher'
 import { generateMetaTitle } from '@app/lib/helpers'
 import PageOfPostsListTemplate from '@app/templates/PageOfPostsListTemplate'
-import { OptionalCatchAllParams, OptionalCatchAllProps } from '@notion-x/src/interface'
+import { OptionalCatchAllParams } from '@notion-x/src/interface'
+import { OptionalCatchAllProps } from '@/src/types/notion'
 import { getStartCursorForCurrentPage } from '@notion-x/src/lib/helpers'
 import { Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
 
 export const revalidate = 20
 
-export async function generateMetadata({ params }: OptionalCatchAllProps): Promise<Metadata> {
+export async function generateMetadata(props: OptionalCatchAllProps): Promise<Metadata> {
+  const params = await props.params;
   const currentPage = +(params?.slug?.[1] || 1)
   return {
     title: generateMetaTitle(`Tất cả bài viết - trang ${currentPage}`),
@@ -38,15 +40,16 @@ export async function generateStaticParams() {
   return params
 }
 
-export default async function AllPostsPage({ params }: OptionalCatchAllProps) {
+export default async function AllPostsPage(props: OptionalCatchAllProps) {
+  const params = await props.params;
   // Different from category page (/chuyen-muc/slug/trang/1)
   // the all posts page has no slug (/tat-ca-bai-viet/trang/1)
   const currentPage = +(params?.slug?.[1] || 1)
 
   if (
     !params ||
-    (params.slug?.length > 0 && params.slug?.[0] !== getSlugPrefix('page')) ||
-    params.slug?.length > 2
+    ((params.slug?.length ?? 0) > 0 && params.slug?.[0] !== getSlugPrefix('page')) ||
+    (params.slug?.length ?? 0) > 2
   ) {
     notFound()
   }
