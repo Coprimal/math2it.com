@@ -28,7 +28,8 @@
     "ud-book-cover-all": "npx tsx -r dotenv/config ./scripts/ud_images.ts dotenv_config_path=.env.local --a book-cover-all",
     "ud-header": "npx tsx -r dotenv/config ./scripts/ud_images.ts dotenv_config_path=.env.local --a header --pid",
     "ud-header-all": "npx tsx -r dotenv/config ./scripts/ud_images.ts dotenv_config_path=.env.local --a header-all",
-    "ud-images-post": "npx tsx -r dotenv/config ./scripts/ud_images.ts dotenv_config_path=.env.local --a images-in-post --pid"
+    "ud-images-post": "npx tsx -r dotenv/config ./scripts/ud_images.ts dotenv_config_path=.env.local --a images-in-post --pid",
+    "audit-blocks": "npx tsx -r dotenv/config scripts/audit-block-types.ts dotenv_config_path=.env.local"
   },
   "dependencies": {
     "@fisch0920/medium-zoom": "^1.0.7",
