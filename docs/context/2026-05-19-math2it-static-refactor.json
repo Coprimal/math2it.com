@@ -1,0 +1,865 @@
+{
+  "schema_version": 1,
+  "task_id": "2026-05-19-math2it-static-refactor",
+  "task_summary": "Map complete project structure for refactoring to remove notion-x submodule and switch from SSR/ISR to fully static GitHub Actions build + Vercel deploy",
+  "exploration_date": "2026-05-19",
+  "relevant_files": [
+    "src/app/page.tsx",
+    "src/app/bai-viet/[slug]/page.tsx",
+    "src/app/(post-list)/tat-ca-bai-viet/[[...slug]]/page.tsx",
+    "src/app/(post-list)/chu-de/[[...slug]]/page.tsx",
+    "src/app/(post-list)/chuyen-muc/[[...slug]]/page.tsx",
+    "src/app/(post-list)/tac-gia/[[...slug]]/page.tsx",
+    "src/app/(post-list)/tuyen-chon/[[...slug]]/page.tsx",
+    "src/app/(single-page)/gioi-thieu/page.tsx",
+    "src/app/(single-page)/huong-dan-viet-bai/page.tsx",
+    "src/app/(single-page)/viet-bai-tren-math2it/page.tsx",
+    "src/app/api/search-notion/route.ts",
+    "src/app/templates/SinglePostTemplate.tsx",
+    "src/app/templates/PageOfPostsListTemplate.tsx",
+    "src/app/lib/fetcher.ts",
+    "src/app/lib/config.ts",
+    "src/app/lib/helpers.ts",
+    "src/app/lib/fonts.ts",
+    "src/app/globals.scss",
+    "src/app/components/Comments.tsx",
+    "src/app/components/nav/NavSearch.tsx",
+    "src/app/layout.tsx",
+    "notion-x/src/lib/notionx.ts",
+    "notion-x/src/lib/context.tsx",
+    "notion-x/src/lib/renderer.tsx",
+    "notion-x/src/lib/db.ts",
+    "notion-x/src/lib/helpers.ts",
+    "notion-x/src/components/PostBody.tsx",
+    "notion-x/src/components/BlockEquation.tsx",
+    "notion-x/src/components/BlockInlineEquation.tsx",
+    "notion-x/src/components/Mermaid.tsx",
+    "notion-x/src/components/SearchModal.tsx",
+    "next.config.mjs",
+    "tailwind.config.ts",
+    "postcss.config.js",
+    "package.json",
+    ".gitmodules",
+    "scripts/ud_images.ts"
+  ],
+  "key_findings": [
+    "All main routes (page.tsx, dynamic posts, category/tag/author pages) use 'export const revalidate = 20' indicating ISR at 20 second intervals, NOT fully static",
+    "Single post route [slug]/page.tsx has generateStaticParams() but still respects revalidate=20, meaning on-demand ISR",
+    "Category, tag, author, and selected posts pages all have generateStaticParams() to pre-generate all page combinations during build",
+    "All routes use server-side data fetching via getPosts(), getAuthors(), getTags(), getCategories() - no client-side fetch patterns",
+    "notion-x is a submodule at ./notion-x with 50+ custom components, core lib files for Notion data fetching and rendering",
+    "notion-client (v7.4.3) is used in notion-x/src/lib/notionx.ts via NotionAPI for page rendering",
+    "@notionhq/client (v2.2.11) is used in notion-x/src/lib/db.ts and scripts/ud_images.ts for database queries and official API",
+    "Data fetching layer uses two approaches: getUnofficialDatabase() (notion-client) for authors and getAllPosts via queryDatabase() (official Notion API)",
+    "Single API route: /api/search-notion/route.ts - POST endpoint that calls searchNotionPersonal() and returns SearchResult[] - this CANNOT exist in static export",
+    "Client-side widgets: Giscus for comments (lazy-loaded), Mermaid for diagrams, KaTeX via @matejmazur/react-katex for math rendering, medium-zoom for image zoom",
+    "Search is client-side modal (SearchModal from notion-x) that POSTs to /api/search-notion - requires runtime API to function",
+    "Style system: globals.scss uses Tailwind directives, tailwind.config.ts extends with custom colors/animations/keyframes, notion-x has its own notion-x.scss",
+    "Image handling: sharp (0.32.5) for optimization, Notion image proxy via map-image-url.ts, imgur URLs parsed in fetcher.ts, scripts/ud_images.ts syncs covers to Notion",
+    "next.config.mjs has 'output: export' commented out (line 2), images.unoptimized NOT enabled, remote image patterns configured for gravatar/imgur/notion/unsplash/amazonaws",
+    "No GitHub Actions workflows exist yet (.github/ directory does not exist)",
+    "notion-x submodule points to https://github.com/dinhanhthi/notion-x.git (no branch specified in .gitmodules)"
+  ],
+  "app_router_structure": {
+    "root_layout": {
+      "file": "src/app/layout.tsx",
+      "revalidate": 20,
+      "imports_notion_x": true,
+      "dynamic": false,
+      "notes": "Root layout sets revalidate=20 globally, imports Nav/Footer and globals.scss"
+    },
+    "home_page": {
+      "file": "src/app/page.tsx",
+      "route": "/",
+      "revalidate": 20,
+      "dynamic": false,
+      "caching_strategy": "ISR - revalidates every 20 seconds",
+      "functions": [
+        "getCategories() - synchronous, returns predefined categories",
+        "getSlugPrefix() - config helper"
+      ],
+      "notes": "Home page with carousel sections for latest/selected posts by category. Uses PostListForHomeSection component."
+    },
+    "single_post_page": {
+      "file": "src/app/bai-viet/[slug]/page.tsx",
+      "route": "/bai-viet/[slug]/",
+      "revalidate": 20,
+      "dynamic": true,
+      "has_dynamic_segment": "[slug]",
+      "caching_strategy": "ISR with generateStaticParams() - on-demand ISR for new slugs",
+      "functions": [
+        "generateStaticParams() - queries all posts, returns {slug} for each",
+        "generateMetadata() - fetches post and generates metadata",
+        "default export - fetches page content via getPage(pageIdwithDash) from notion-x"
+      ],
+      "data_sources": [
+        "getPosts() - sync post metadata list",
+        "getAuthors() - async fetch authors",
+        "getPage(pageId) - async fetch Notion page content from notion-client"
+      ],
+      "notes": "Uses SinglePostTemplate, renders Notion page via NotionRenderer. Calls notion-client NotionAPI.getPage()."
+    },
+    "post_list_all": {
+      "file": "src/app/(post-list)/tat-ca-bai-viet/[[...slug]]/page.tsx",
+      "route": "/(post-list)/tat-ca-bai-viet/[[...slug]]/",
+      "route_aliases": [
+        "/tat-ca-bai-viet/",
+        "/tat-ca-bai-viet/trang/2/",
+        "/tat-ca-bai-viet/trang/N/"
+      ],
+      "revalidate": 20,
+      "dynamic": true,
+      "optional_catch_all": "[[...slug]]",
+      "caching_strategy": "ISR with generateStaticParams() - generates all page number combinations",
+      "functions": [
+        "generateStaticParams() - calculates total pages, returns [{slug: []}, {slug: ['trang', '2']}, ...]",
+        "generateMetadata() - metadata per page",
+        "default export - paginates posts"
+      ],
+      "pagination": "POSTS_PER_PAGE from env",
+      "data_sources": [
+        "getPosts()",
+        "getAuthors()"
+      ],
+      "uses_template": "PageOfPostsListTemplate"
+    },
+    "post_list_by_tag": {
+      "file": "src/app/(post-list)/chu-de/[[...slug]]/page.tsx",
+      "route": "/(post-list)/chu-de/[[...slug]]/",
+      "route_pattern": "/chu-de/[tag-slug]/",
+      "route_pattern_page": "/chu-de/[tag-slug]/trang/[page]/",
+      "revalidate": 20,
+      "dynamic": true,
+      "caching_strategy": "generateStaticParams() - iterates all tags, generates [tagSlug] and [tagSlug, 'trang', pageNum] for each",
+      "functions": [
+        "generateStaticParams() - getTags(), iterate, calculate pages per tag",
+        "generateMetadata()",
+        "default export"
+      ],
+      "data_sources": [
+        "getTags() - cached with React cache()",
+        "getPosts({filter})",
+        "getAuthors()"
+      ],
+      "notes": "Optional catch-all for tag slug and pagination"
+    },
+    "post_list_by_category": {
+      "file": "src/app/(post-list)/chuyen-muc/[[...slug]]/page.tsx",
+      "route": "/(post-list)/chuyen-muc/[[...slug]]/",
+      "route_pattern": "/chuyen-muc/[category-slug]/",
+      "route_pattern_page": "/chuyen-muc/[category-slug]/trang/[page]/",
+      "revalidate": 20,
+      "dynamic": true,
+      "caching_strategy": "generateStaticParams() - iterates predefined categories, generates pages",
+      "functions": [
+        "generateStaticParams() - getCategories(), iterate, calculate pages per category",
+        "generateMetadata()",
+        "default export"
+      ],
+      "data_sources": [
+        "getCategories() - synchronous, predefined list",
+        "getPosts({filter})",
+        "getAuthors()"
+      ]
+    },
+    "post_list_by_author": {
+      "file": "src/app/(post-list)/tac-gia/[[...slug]]/page.tsx",
+      "route": "/(post-list)/tac-gia/[[...slug]]/",
+      "route_pattern": "/tac-gia/[author-slug]/",
+      "route_pattern_page": "/tac-gia/[author-slug]/trang/[page]/",
+      "revalidate": 20,
+      "dynamic": true,
+      "caching_strategy": "generateStaticParams() - iterates all authors from Notion, generates pages",
+      "functions": [
+        "generateStaticParams() - getAuthors(), iterate, calculate pages per author",
+        "generateMetadata()",
+        "default export"
+      ],
+      "data_sources": [
+        "getAuthors() - async unofficial Notion API call",
+        "getPosts({filter})",
+        "getCategories()"
+      ]
+    },
+    "post_list_selected": {
+      "file": "src/app/(post-list)/tuyen-chon/[[...slug]]/page.tsx",
+      "route": "/(post-list)/tuyen-chon/[[...slug]]/",
+      "route_pattern": "/tuyen-chon/",
+      "route_pattern_page": "/tuyen-chon/trang/[page]/",
+      "revalidate": 20,
+      "dynamic": true,
+      "caching_strategy": "generateStaticParams() - filters posts by 'selected' flag, generates pages",
+      "functions": [
+        "generateStaticParams()",
+        "generateMetadata()",
+        "default export"
+      ],
+      "data_sources": [
+        "getPosts({filter: getFilterOf('selected')})",
+        "getAuthors()"
+      ]
+    },
+    "single_page_about": {
+      "file": "src/app/(single-page)/gioi-thieu/page.tsx",
+      "route": "/(single-page)/gioi-thieu/",
+      "revalidate": 20,
+      "dynamic": false,
+      "caching_strategy": "ISR - rerenders every 20 seconds",
+      "data_sources": [
+        "notionX.getPage(ABOUT_PAGE env var)",
+        "getAuthors()"
+      ],
+      "notes": "Uses SinglePostTemplate, no generateStaticParams"
+    },
+    "single_page_writing_guidelines": {
+      "file": "src/app/(single-page)/huong-dan-viet-bai/page.tsx",
+      "route": "/(single-page)/huong-dan-viet-bai/",
+      "revalidate": 20,
+      "dynamic": false,
+      "data_sources": [
+        "notionX.getPage(WRITING_GUIDELINES_PAGE env var)",
+        "getAuthors()"
+      ]
+    },
+    "single_page_write_with_us": {
+      "file": "src/app/(single-page)/viet-bai-tren-math2it/page.tsx",
+      "route": "/(single-page)/viet-bai-tren-math2it/",
+      "revalidate": null,
+      "caching_strategy": "No revalidate export - uses default (ISR disabled, static generation only)",
+      "data_sources": [
+        "notionX.getPage(WRITE_WITH_US_PAGE env var)",
+        "getAuthors()"
+      ]
+    },
+    "route_groups": {
+      "post_list_group": "(post-list)",
+      "single_page_group": "(single-page)",
+      "notes": "Route groups used for layout/styling separation but do not affect URL structure"
+    }
+  },
+  "api_routes": {
+    "search_notion": {
+      "file": "src/app/api/search-notion/route.ts",
+      "endpoint": "POST /api/search-notion",
+      "methods": [
+        "OPTIONS - CORS preflight",
+        "POST - search request"
+      ],
+      "purpose": "Client-side search via SearchModal component",
+      "implementation": "Calls searchNotionPersonal() from notion-x/src/lib/db, parses results, returns SearchResult[]",
+      "dependencies": [
+        "notion-x/src/lib/db.ts - searchNotionPersonal(searchParams, notionApiPersonal, dbId)",
+        "Environment: NOTION_API_PERSONAL, NOTION_DB_POSTS"
+      ],
+      "client_consumers": [
+        "src/app/components/nav/NavSearch.tsx - SearchModal component"
+      ],
+      "critical_blocker_for_static_export": true,
+      "notes": "CORS enabled for cross-origin requests. Uses unofficial Notion API. Cannot exist in static export - must be replaced with pre-built search index."
+    }
+  },
+  "notion_x_submodule": {
+    "location": "./notion-x",
+    "git_url": "https://github.com/dinhanhthi/notion-x.git",
+    "branch": "not specified (defaults to default branch)",
+    "src_directories": {
+      "components": "54 files - UI components for rendering Notion blocks and custom widgets",
+      "icons": "49 files - icon components (Feather/Ant Design/Tabler icons)",
+      "lib": "db.ts, helpers.ts, context.tsx, renderer.tsx, hooks.ts, notionx.ts, next.tsx, utils.ts, map-image-url.ts, map-page-url.ts",
+      "post-types": "Custom post card component variations",
+      "style": "notion-x.scss - Notion-specific styles"
+    },
+    "core_lib_files": {
+      "notionx.ts": "NotionAPI instance, getPage() wrapper with fixMissingBlocks()",
+      "context.tsx": "NotionContext provider + BlockOptionsContextType, useNotionContext hook",
+      "renderer.tsx": "NotionRenderer - main rendering component",
+      "db.ts": "getUnofficialDatabase(), queryDatabase(), retrieveDatabase(), searchNotionPersonal() - all Notion API interactions",
+      "helpers.ts": "getJoinedRichText(), makeSlugText(), idToUuid(), getStartCursorForCurrentPage(), defaultBlurData, defaultMapImageUrl",
+      "hooks.ts": "usePostDateStatus() - client-side hook for post date UI"
+    }
+  },
+  "top_20_notion_x_imports_in_math2it_src": [
+    {
+      "import": "getStartCursorForCurrentPage",
+      "from": "notion-x/src/lib/helpers",
+      "usage_count": 5,
+      "purpose": "Pagination cursor calculation for getPosts()"
+    },
+    {
+      "import": "OptionalCatchAllParams, OptionalCatchAllProps",
+      "from": "notion-x/src/interface",
+      "usage_count": 4,
+      "purpose": "Type definitions for dynamic routes with optional catch-all segments"
+    },
+    {
+      "import": "notionX",
+      "from": "notion-x/src/lib/notionx",
+      "usage_count": 3,
+      "purpose": "NotionAPI instance for fetching page content"
+    },
+    {
+      "import": "Post, Category, Author, Tag",
+      "from": "notion-x/src/interface",
+      "usage_count": "multiple",
+      "purpose": "Data type definitions"
+    },
+    {
+      "import": "BlockOptionsContextType, useNotionContext",
+      "from": "notion-x/src/lib/context",
+      "usage_count": 2,
+      "purpose": "Notion rendering context and options"
+    },
+    {
+      "import": "SkeletonPostList, ImageComponent, SimpleImage",
+      "from": "notion-x/src/components/",
+      "usage_count": "multiple",
+      "purpose": "UI components for rendering"
+    },
+    {
+      "import": "SearchModal",
+      "from": "notion-x/src/components/SearchModal",
+      "usage_count": 1,
+      "purpose": "Client-side search modal widget"
+    },
+    {
+      "import": "searchNotionPersonal",
+      "from": "notion-x/src/lib/db",
+      "usage_count": 1,
+      "purpose": "Unofficial API search for /api/search-notion endpoint"
+    },
+    {
+      "import": "getUnofficialDatabase, queryDatabase, retrieveDatabase",
+      "from": "notion-x/src/lib/db",
+      "usage_count": 1,
+      "purpose": "Notion database query functions (mix of official and unofficial APIs)"
+    },
+    {
+      "import": "getJoinedRichText, makeSlugText, idToUuid, defaultBlurData",
+      "from": "notion-x/src/lib/helpers",
+      "usage_count": "multiple",
+      "purpose": "Text parsing, slug generation, ID conversion, image blur placeholders"
+    },
+    {
+      "import": "PostBody, PostToc, PostsList, PostHeaderTopics",
+      "from": "notion-x/src/components/",
+      "usage_count": "multiple",
+      "purpose": "Main post rendering components"
+    },
+    {
+      "import": "getPage",
+      "from": "notion-x/src/lib/notionx",
+      "usage_count": 1,
+      "purpose": "Wrapper around NotionAPI.getPage() with block fixing"
+    },
+    {
+      "import": "DynamicSegmentParamsProps",
+      "from": "notion-x/src/interface",
+      "usage_count": 1,
+      "purpose": "Type definition for [slug] route params"
+    },
+    {
+      "import": "icons (FiSearch, TbExternalLink, etc)",
+      "from": "notion-x/src/icons/",
+      "usage_count": "multiple",
+      "purpose": "Icon components"
+    },
+    {
+      "import": "usePostDateStatus",
+      "from": "notion-x/src/lib/hooks",
+      "usage_count": 1,
+      "purpose": "Client-side hook for post date status display"
+    },
+    {
+      "import": "PostType, PostTypeOpts",
+      "from": "notion-x/src/components/PostsList",
+      "usage_count": 1,
+      "purpose": "Post card type and options configuration"
+    },
+    {
+      "import": "ImagePlaceholderPostHeader",
+      "from": "notion-x/src/components/image-placeholders",
+      "usage_count": 1,
+      "purpose": "Skeleton loader for header images"
+    },
+    {
+      "import": "Pagination",
+      "from": "notion-x/src/components/Pagination",
+      "usage_count": 0,
+      "purpose": "Pagination component (imported but may not be actively used)"
+    }
+  ],
+  "notion_client_and_react_notion_x_usage": {
+    "notion_client": {
+      "imported_in": [
+        "notion-x/src/lib/notionx.ts - NotionAPI class",
+        "notion-x/src/lib/db.ts - (indirect via types from notion-types)"
+      ],
+      "version_installed": "7.4.3",
+      "usage": "NotionAPI instance created with authToken and activeUser for fetching page content via getPage()"
+    },
+    "react_notion_x": {
+      "usage": "Not directly imported. notion-x is a custom fork/wrapper providing similar functionality."
+    },
+    "notion_types": {
+      "version": "7.4.3",
+      "usage": "ExtendedRecordMap, PreviewImage, CollectionInstance, SearchParams, BlockObjectResponse, etc. - type definitions throughout notion-x/src/"
+    },
+    "notionhq_client": {
+      "version": "2.2.11",
+      "imported_in": [
+        "notion-x/src/lib/db.ts - for official Notion API queries (queryDatabase, retrieveDatabase)",
+        "notion-x/src/components/BlockInlineEquation.tsx - for EquationRichTextItemResponse type",
+        "scripts/ud_images.ts - for Client class to sync images"
+      ],
+      "usage": "Official Notion API client for database queries and image updates"
+    },
+    "files_using_both_apis": [
+      {
+        "file": "notion-x/src/lib/db.ts",
+        "notion_client": "NotionAPI for unofficial API (getUnofficialDatabase)",
+        "notionhq_client": "Client for official API (queryDatabase, retrieveDatabase)",
+        "details": "Line ~1: imports from notion-types (ExtendedRecordMap). Line ~86-88: uses pMemoize for caching. Both APIs can be called depending on context."
+      }
+    ]
+  },
+  "notion_data_fetching_layer": {
+    "central_fetcher_file": "src/app/lib/fetcher.ts",
+    "central_db_functions_file": "notion-x/src/lib/db.ts",
+    "functions_in_fetcher": [
+      {
+        "name": "getUnofficialPosts()",
+        "returns": "Post[]",
+        "implementation": "Calls getUnofficialDatabase() from notion-x/lib/db, transforms CollectionInstance to Post[]",
+        "called_from": ["Home page considers using it but currently uses getPosts() instead"]
+      },
+      {
+        "name": "getPosts(opts?)",
+        "returns": "Promise<Post[]>",
+        "params": {
+          "filter": "QueryDatabaseParameters['filter']",
+          "startCursor": "string",
+          "pageSize": "number",
+          "sorts": "NotionSorts[]",
+          "categories": "Category[]",
+          "authors": "Author[]"
+        },
+        "implementation": "Calls queryDatabase() from notion-x/src/lib/db (official Notion API), then transformNotionPostsData()",
+        "called_from": [
+          "src/app/page.tsx - home",
+          "src/app/bai-viet/[slug]/page.tsx - generateStaticParams, page export",
+          "All paginated post list pages",
+          "Post detail pages for related posts"
+        ]
+      },
+      {
+        "name": "getCategories()",
+        "returns": "Category[]",
+        "implementation": "Returns predefined array from config, not fetched from Notion",
+        "called_from": "All pages"
+      },
+      {
+        "name": "getTags()",
+        "returns": "Promise<Tag[]>",
+        "implementation": "Calls retrieveDatabase() from notion-x/src/lib/db, extracts tag.multi_select.options",
+        "caching": "Wrapped with React cache()",
+        "called_from": [
+          "src/app/(post-list)/chu-de/[[...slug]]/page.tsx - generateStaticParams"
+        ]
+      },
+      {
+        "name": "getAuthors()",
+        "returns": "Promise<Author[]>",
+        "implementation": "Calls getUnofficialDatabase() from notion-x/src/lib/db",
+        "called_from": [
+          "Every route that displays posts or uses author info"
+        ]
+      }
+    ],
+    "functions_in_notion_x_db": [
+      {
+        "name": "getUnofficialDatabase(opts)",
+        "returns": "Promise<CollectionInstance>",
+        "api_type": "Unofficial Notion API (requires token_v2, x-notion-active-user-header)",
+        "uses_memoize": true,
+        "environment_vars": [
+          "SPACE_ID",
+          "SOURCE_ID (or AUTHOR_COLLECTION_ID for authors)",
+          "COLLECTION_VIEW_ID (or AUTHOR_VIEW_ID)",
+          "NOTION_TOKEN_V2",
+          "NOTION_ACTIVE_USER",
+          "NOTION_API_WEB"
+        ]
+      },
+      {
+        "name": "queryDatabase(opts)",
+        "returns": "Promise<QueryDatabaseResponse>",
+        "api_type": "Official Notion API v1",
+        "pagination": "Recursive pagination - loops through all results if has_more=true",
+        "environment_vars": [
+          "NOTION_TOKEN",
+          "NOTION_VERSION"
+        ],
+        "called_by": "getPosts()"
+      },
+      {
+        "name": "retrieveDatabase(dbId)",
+        "returns": "Promise<DatabaseResponse>",
+        "api_type": "Official Notion API v1",
+        "purpose": "Get database schema (properties, multi_select options, etc.)",
+        "called_by": "getTags() to extract tag options"
+      },
+      {
+        "name": "searchNotionPersonal(searchParams, personalToken, dbId)",
+        "returns": "Promise<SearchResult[]>",
+        "api_type": "Unofficial personal search API",
+        "implementation": "POSTs to notionApiWeb + '/search'",
+        "called_by": "POST /api/search-notion"
+      }
+    ],
+    "data_flow": {
+      "static_build": [
+        "getAllPosts() -> queryDatabase(NOTION_DB_POSTS) -> official API",
+        "getAuthors() -> getUnofficialDatabase(AUTHOR_COLLECTION_ID) -> unofficial API",
+        "getTags() -> retrieveDatabase(NOTION_DB_POSTS) -> official API",
+        "getCategories() -> predefined hardcoded list",
+        "For each post in generateStaticParams -> getPage(postId) -> NotionAPI from notion-client"
+      ],
+      "runtime_isr": [
+        "All pages have revalidate=20, so Vercel's ISR rerenders every 20 seconds on next request"
+      ]
+    }
+  },
+  "style_system": {
+    "global_styles": "src/app/globals.scss",
+    "globals_scss_content": [
+      "@tailwind base, components, utilities",
+      "@layer utilities - custom wave backgrounds, rainbow text",
+      ".saphire-blue - custom background section styling",
+      ".m2it-prose - custom heading styles"
+    ],
+    "tailwind_config": "tailwind.config.ts",
+    "tailwind_extends": {
+      "typography": "DEFAULT css color #2e343e",
+      "backgroundImage": [
+        "gradient-radial, gradient-conic",
+        "wave: custom SVG wave pattern"
+      ],
+      "colors": [
+        "success: #0070f3",
+        "cyan: #79FFE1",
+        "main: #1e293b"
+      ],
+      "animation": [
+        "fadeIn (500ms)",
+        "wave (2s linear infinite)",
+        "toTop (0.3s alternate ease infinite)"
+      ],
+      "keyframes": "for fadeIn, wave, toTop",
+      "spacing": "28: 7rem",
+      "letterSpacing": "tighter: -.04em",
+      "lineHeight": "tight: 1.2",
+      "fontSize": "custom 5xl, 6xl, 7xl, 8xl",
+      "boxShadow": "small, medium with rgba shadows"
+    },
+    "tailwind_content": [
+      "src/pages/**",
+      "src/components/**",
+      "src/app/**",
+      "src/app/lib/config.ts",
+      "src/app/lib/helpers.ts",
+      "notion-x/**" <- CRITICAL: notion-x styles are scanned during build
+    ],
+    "tailwind_plugins": [
+      "@tailwindcss/typography"
+    ],
+    "postcss_config": "postcss.config.js - tailwindcss + autoprefixer",
+    "notion_x_styles": "notion-x/src/style/notion-x.scss - imported in layout.tsx",
+    "font_system": "src/app/lib/fonts.ts - local fonts loaded (Righteous, Lobster, Comfortaa)",
+    "encapsulation_assessment": "WELL-ENCAPSULATED: All styles use Tailwind classes or scoped SCSS modules. No global CSS imports from notion-x except notion-x.scss which is intentional. Notion block styles come from notion-types library CSS.",
+    "migration_impact": "Styles are framework-agnostic and can be preserved during refactor. notion-x.scss will need to be copied into src/ if notion-x is removed."
+  },
+  "search_implementation": {
+    "exists": true,
+    "type": "Client-side modal with server-side API",
+    "implementation_details": {
+      "client_component": "src/app/components/nav/NavSearch.tsx - 'use client'",
+      "search_modal": "SearchModal from notion-x/src/components/SearchModal",
+      "keyboard_shortcut": "Ctrl+K (or Cmd+K on Mac)",
+      "api_endpoint": "POST /api/search-notion",
+      "api_location": "src/app/api/search-notion/route.ts",
+      "search_backend": "searchNotionPersonal() from notion-x/src/lib/db - uses unofficial personal search API"
+    },
+    "flow": "User opens SearchModal -> POST to /api/search-notion -> searchNotionPersonal() queries Notion -> parseSearchResults() -> returns SearchResult[] with highlights",
+    "blockers_for_static_export": [
+      "API route /api/search-notion cannot exist in static export",
+      "searchNotionPersonal() uses unofficial personal search API requiring authentication",
+      "Solution: Pre-build static search index (JSON, Pagefind, Algolia, etc.) during build, remove API route"
+    ]
+  },
+  "dynamic_widgets_and_integrations": {
+    "giscus": {
+      "component": "src/app/components/Comments.tsx",
+      "library": "@giscus/react@3.0.0",
+      "repo": "math2it/math2it-comments",
+      "category": "Comments",
+      "features": "Lazy-loaded, reactions enabled, light theme, Vietnamese language",
+      "usage": "Rendered at bottom of single post pages via SinglePostTemplate",
+      "static_build_impact": "Client-side component, works fine in static export"
+    },
+    "mermaid": {
+      "component": "notion-x/src/components/Mermaid.tsx",
+      "library": "mermaid@10.4.0",
+      "usage": "Renders diagram blocks from Notion content",
+      "initialization": "mermaid.initialize() called in componentDidMount, mermaid.contentLoaded() on render",
+      "class_component": "Class component with react lifecycle hooks",
+      "static_build_impact": "Client-side rendering, works fine in static export"
+    },
+    "katex_math": {
+      "component_block": "notion-x/src/components/BlockEquation.tsx",
+      "component_inline": "notion-x/src/components/BlockInlineEquation.tsx",
+      "library": "@matejmazur/react-katex@3.1.3",
+      "peer_dependency": "katex@0.16.8",
+      "settings": "throwOnError: false, strict: false",
+      "usage": "Renders math equations from Notion equation blocks",
+      "static_build_impact": "Client-side rendering, works fine in static export"
+    },
+    "medium_zoom": {
+      "library": "@fisch0920/medium-zoom@1.0.7",
+      "usage": "Image zoom effect on click",
+      "integration": "Used in notion-x/src/lib/renderer.tsx",
+      "static_build_impact": "Client-side effect, works fine in static export"
+    },
+    "all_dynamic_widgets_verdict": "All are client-side components and will work fine in static export. No blocking dependencies on runtime APIs."
+  },
+  "math_rendering": {
+    "library": "@matejmazur/react-katex@3.1.3",
+    "peer_dependency": "katex@0.16.8",
+    "components": [
+      {
+        "file": "notion-x/src/components/BlockEquation.tsx",
+        "type": "Block-level math",
+        "usage": "Renders Notion equation blocks",
+        "settings": {
+          "throwOnError": false,
+          "strict": false
+        }
+      },
+      {
+        "file": "notion-x/src/components/BlockInlineEquation.tsx",
+        "type": "Inline math",
+        "usage": "Renders inline equation rich text items from official Notion API",
+        "integration": "Client-side, renders with annotation classes for styling"
+      }
+    ],
+    "rendering_location": "Inside PostBody component when rendering Notion blocks",
+    "configuration": "Both components use identical KaTeX settings: throwOnError=false (renders raw math on error), strict=false (lenient mode)"
+  },
+  "image_handling": {
+    "sharp_usage": {
+      "version": "0.32.5",
+      "used_in": "scripts/ud_images.ts - image optimization and uploading to Notion"
+    },
+    "scripts_ud_images": {
+      "file": "scripts/ud_images.ts",
+      "purpose": "Sync optimized images to Notion database",
+      "usage": [
+        "yarn ud-cover [--pid] - update featured image for post",
+        "yarn ud-cover-all - update all featured images",
+        "yarn ud-book-cover [--pid] - update book cover for post",
+        "yarn ud-header [--pid] - update header image",
+        "yarn ud-images-post [--pid] - update all images within post content"
+      ],
+      "implementation": [
+        "Fetches post/blocks from Notion using @notionhq/client",
+        "Downloads images from imgur/Notion",
+        "Optimizes with sharp",
+        "Uploads to Notion via official API"
+      ],
+      "dependencies": [
+        "@notionhq/client",
+        "sharp",
+        "got (HTTP client)",
+        "yargs (CLI)"
+      ]
+    },
+    "notion_image_proxy": {
+      "file": "notion-x/src/lib/map-image-url.ts",
+      "function": "defaultMapImageUrl(url, block)",
+      "logic": [
+        "Pass through data: URLs",
+        "Pass through Unsplash URLs",
+        "If S3 signed URL (X-Amz-Credential present), use as-is",
+        "Otherwise, wrap with Notion proxy: https://www.notion.so/image/... + query params (table, id, cache=v2)"
+      ],
+      "called_by": "NotionRenderer via blockOptions"
+    },
+    "fetcher_image_parsing": {
+      "file": "src/app/lib/fetcher.ts - parseImage(), parseImgurUrl(), parseNotionImageUrl()",
+      "features": [
+        "Handles imgur URLs with size suffix (.h, .l, .m, .t for different sizes)",
+        "Extracts blur data URLs for image placeholders",
+        "Falls back to category featured image if post has no image",
+        "Sets defaultBlurData for next/image optimization"
+      ]
+    },
+    "next_image_config": {
+      "images_optimized": false,
+      "remotePatterns": [
+        "**.gravatar.com",
+        "**.math2it.com",
+        "**.imgur.com",
+        "**.notion.so",
+        "**.unsplash.com",
+        "**.amazonaws.com"
+      ],
+      "note": "images.unoptimized is commented out, so Next.js Image Optimization IS enabled"
+    },
+    "vercel_specific_setup": "No special Vercel image config. Uses standard Next.js Image component with remote patterns. Next.js Image Optimization happens during build by Vercel's build servers.",
+    "static_export_impact": "PROBLEM: Next.js Image Optimization (ISR-based on-demand optimization) does NOT work with static export. Must either (1) disable optimization (images.unoptimized=true), or (2) pre-optimize all images during build."
+  },
+  "next_config_analysis": {
+    "file": "next.config.mjs",
+    "critical_findings": [
+      "Line 2: 'output: export' is COMMENTED OUT - currently using Vercel SSR/ISR, not static export",
+      "trailingSlash: true - adds / to all routes",
+      "poweredByHeader: false",
+      "transpilePackages: react-syntax-highlighter",
+      "experimental.scrollRestoration: true",
+      "experimental.esmExternals: false (workaround for react-medium-image-zoom ESM issues)",
+      "headers() - adds X-Robots-Tag: noindex for preview deployments",
+      "images.unoptimized: false (commented) - Image Optimization IS enabled",
+      "images.remotePatterns: configured for gravatar, imgur, notion, unsplash, amazonaws"
+    ],
+    "conflicts_with_static_export": [
+      "CONFLICT 1: images.unoptimized NOT set true. Static export cannot do on-demand optimization. Must set images.unoptimized=true for static export.",
+      "CONFLICT 2: rewrites/redirects might exist in headers() function - these are not supported in static export but current code only sets X-Robots-Tag so no conflict here.",
+      "CONFLICT 3: /api routes cannot exist in static export (already identified search API as blocker)"
+    ],
+    "changes_needed_for_static_export": [
+      "Uncomment 'output: export'",
+      "Set images.unoptimized: true (or pre-optimize all images)",
+      "Remove /api/search-notion route - replace with static search index",
+      "Verify no dynamic headers/redirects needed at runtime"
+    ]
+  },
+  "git_submodule_config": {
+    "file": ".gitmodules",
+    "submodule_name": "notion-x",
+    "url": "https://github.com/dinhanhthi/notion-x.git",
+    "path": "notion-x",
+    "branch": "not specified (uses default branch of origin)",
+    "note": "To specify branch, would need [submodule \"notion-x\"] branch = main (or other branch)",
+    "current_state": "Submodule is checked out but branch tracking not configured in .gitmodules"
+  },
+  "deployment_artifacts": {
+    "github_workflows": "DOES NOT EXIST - .github/ directory not found",
+    "vercel_config": "NOT ACCESSIBLE (blocked by security policy)",
+    "netlify_config": "DOES NOT EXIST",
+    "current_deployment_flow": "No GitHub Actions - direct deploy to Vercel (likely via Vercel CLI or git push integration)",
+    "planned_flow": "GitHub Actions builds static site -> artifact -> Vercel deploy pre-built site"
+  },
+  "project_conventions_and_memory": {
+    "claude_md": "NOT FOUND in /Users/thi/git/math2it.com/",
+    "docs_memory": "docs/memory/ directory exists but is EMPTY",
+    "docs_plans": "docs/plans/ directory exists but is EMPTY",
+    "docs_research": "docs/research/ directory exists but is EMPTY",
+    "conclusion": "No prior project memory/conventions documented. This exploration is starting fresh."
+  },
+  "refactor_requirements_summary": {
+    "phase_1_remove_notion_x_submodule": {
+      "tasks": [
+        "Extract top 20 most-imported components from notion-x/src/components/ into src/components/ or src/notion-components/",
+        "Copy notion-x/src/lib/ files (notionx.ts, db.ts, context.tsx, renderer.tsx, helpers.ts, hooks.ts) to src/lib/ or src/notion-lib/",
+        "Copy notion-x/src/style/notion-x.scss to src/app/styles/",
+        "Update all import paths from '@notion-x/src/' to './src/' or appropriate relative paths",
+        "Keep icons, interfaces, types intact",
+        "Test all data fetching paths (getPosts, getTags, getAuthors, getPage)"
+      ]
+    },
+    "phase_2_switch_to_static_export": {
+      "tasks": [
+        "Enable 'output: export' in next.config.mjs",
+        "Set images.unoptimized: true OR pre-optimize all images during build",
+        "Remove revalidate exports from all page.tsx files",
+        "Remove /api/search-notion route",
+        "Create static search index during build (build-time JSON or Pagefind)",
+        "Update SearchModal to use pre-built index instead of API call",
+        "Pre-generate all pages via generateStaticParams() for dynamic routes",
+        "Verify all data fetching happens at build time (move to getStaticProps equivalent in App Router)"
+      ]
+    },
+    "phase_3_github_actions_build": {
+      "tasks": [
+        "Create .github/workflows/build.yml to run next build and export",
+        "Upload .next/static and out/ artifacts",
+        "Deploy to Vercel using artifacts (vercel-cli --prebuilt or manual static deploy)"
+      ]
+    }
+  },
+  "critical_blockers": [
+    {
+      "blocker": "/api/search-notion runtime API route",
+      "impact": "Cannot exist in static export",
+      "solution": "Replace with pre-built static search index (JSON, Pagefind, or similar)"
+    },
+    {
+      "blocker": "Next.js Image Optimization on-demand",
+      "impact": "Static export cannot optimize images at request time",
+      "solution": "Either set images.unoptimized=true and serve unoptimized images, or pre-optimize all images during build"
+    },
+    {
+      "blocker": "notion-x submodule dependency throughout codebase",
+      "impact": "Cannot build without notion-x checked out",
+      "solution": "Extract all notion-x code into src/ before removing submodule"
+    },
+    {
+      "blocker": "revalidate=20 ISR configuration on all pages",
+      "impact": "ISR does not work with static export",
+      "solution": "Remove all revalidate exports, rely on generateStaticParams() for pre-generation, use GitHub Actions to trigger rebuilds on schedule/content change"
+    }
+  ],
+  "data_fetching_summary": {
+    "build_time_fetching": [
+      "getPosts() - called in generateStaticParams() for all post-list pages",
+      "getTags() - called in generateStaticParams() for tag pages",
+      "getAuthors() - called in generateStaticParams() for author pages",
+      "getPage(postId) - called in default export of single post page to fetch Notion page content"
+    ],
+    "runtime_fetching_currently": [
+      "revalidate=20 on all pages causes Vercel ISR to refetch data every 20 seconds",
+      "SearchModal POSTs to /api/search-notion at runtime"
+    ],
+    "static_export_strategy": [
+      "Move all data fetching to build time (already using generateStaticParams correctly)",
+      "Remove ISR revalidate exports",
+      "Build-time only: fetch all posts, authors, tags, page content",
+      "No runtime data fetching except client-side JavaScript (comments, widgets)"
+    ]
+  },
+  "environment_variables_required": [
+    "NOTION_TOKEN - official Notion API token",
+    "NOTION_TOKEN_V2 - unofficial Notion API token_v2",
+    "NOTION_ACTIVE_USER - for unofficial API",
+    "NOTION_API_WEB - unofficial API endpoint",
+    "NOTION_VERSION - Notion API version",
+    "NOTION_DB_POSTS - database ID for posts",
+    "NOTION_API_PERSONAL - for personal search API",
+    "SPACE_ID - for unofficial API",
+    "SOURCE_ID - for posts collection",
+    "COLLECTION_VIEW_ID - for posts view",
+    "AUTHOR_COLLECTION_ID - for authors collection",
+    "AUTHOR_VIEW_ID - for authors view",
+    "NEXT_PUBLIC_ID_SLUG - property ID for slug field",
+    "NEXT_PUBLIC_ID_PUBLISHED - property ID for published field",
+    "NEXT_PUBLIC_SEARCH_BOLD_KEY - for search highlight formatting",
+    "NEXT_PUBLIC_ID_BOOK_COVER - property ID for book cover",
+    "NEXT_PUBLIC_ID_AUTHORS - property ID for authors relation",
+    "NEXT_PUBLIC_ENV_MODE - 'prod' or 'dev'",
+    "NEXT_PUBLIC_VERCEL_ENV - 'production', 'preview', or 'development'",
+    "ENV_MODE - same as NEXT_PUBLIC_ENV_MODE (private version)",
+    "ABOUT_PAGE - Notion page ID for about page",
+    "WRITING_GUIDELINES_PAGE - Notion page ID for writing guidelines",
+    "WRITE_WITH_US_PAGE - Notion page ID for write with us page",
+    "POSTS_PER_PAGE - pagination size"
+  ]
+}
