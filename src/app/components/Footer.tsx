@@ -1,5 +1,5 @@
 import { getSlugPrefix, postWidthContainer } from '@app/lib/config'
-import TbExternalLink from '@notion-x/src/icons/TbExternalLink'
+import TbExternalLink from '@/src/components/icons/TbExternalLink'
 import cn from 'classnames'
 import Link from 'next/link'
 

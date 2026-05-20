@@ -133,6 +133,8 @@ export interface OptionalCatchAllProps {
   params: Promise<{ slug?: string[] }>
 }
 
+export type OptionalCatchAllParams = { slug: string[] }
+
 export interface DynamicSegmentParamsProps {
   params: Promise<{ slug: string }>
 }

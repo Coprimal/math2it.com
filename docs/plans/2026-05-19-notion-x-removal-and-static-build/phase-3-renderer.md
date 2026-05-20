@@ -50,13 +50,13 @@ The `notion-x/` directory remains on disk during this phase as a reference; it's
 
 | Status  | Task                                                                                       |
 | ------- | ------------------------------------------------------------------------------------------ |
-| ⬜ TODO | 3.1 Vendor `notion-x/src/lib/{helpers,context,renderer,next,utils,map-*}.ts` → `src/lib/notion/` |
-| ⬜ TODO | 3.2 Vendor `notion-x/src/style/notion-x.scss` → `src/app/styles/notion.scss`               |
-| ⬜ TODO | 3.3 Vendor `notion-x/src/components/*` → `src/components/notion/*`                          |
-| ⬜ TODO | 3.4 Vendor `notion-x/src/post-types/*` → `src/components/notion/post-types/*`              |
-| ⬜ TODO | 3.5 Vendor `notion-x/src/icons/*` (only used ones) → `src/components/icons/*`              |
-| ⬜ TODO | 3.6 Sweep import paths in all vendored files; remove `notion-client` references            |
-| ⬜ TODO | 3.7 Compile + smoke test of vendored renderer in a `_debug` route                          |
+| ✅ DONE | 3.1 Vendor `notion-x/src/lib/{helpers,context,renderer,next,utils,map-*}.ts` → `src/lib/notion/` |
+| ✅ DONE | 3.2 Vendor `notion-x/src/style/notion-x.scss` → `src/app/styles/notion.scss`               |
+| ✅ DONE | 3.3 Vendor `notion-x/src/components/*` → `src/components/notion/*`                          |
+| ✅ DONE | 3.4 Vendor `notion-x/src/post-types/*` → `src/components/notion/post-types/*`              |
+| ✅ DONE | 3.5 Vendor `notion-x/src/icons/*` (only used ones) → `src/components/icons/*`              |
+| ✅ DONE | 3.6 Sweep import paths in all vendored files; remove `notion-client` references            |
+| ✅ DONE | 3.7 Compile + smoke test of vendored renderer in a `_debug` route                          |
 
 Process per task: `git mv` (preserves git blame) wherever possible, then mass-rewrite imports with a small sed/codemod script. Do NOT manually rewrite component bodies — the goal is a 1:1 vendor with import-path edits only.
 

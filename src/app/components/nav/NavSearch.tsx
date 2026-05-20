@@ -1,7 +1,7 @@
 'use client'
 
-import SearchModal from '@notion-x/src/components/SearchModal'
-import FiSearch from '@notion-x/src/icons/FiSearch'
+import SearchModal from '@/src/components/notion/SearchModal'
+import FiSearch from '@/src/components/icons/FiSearch'
 import cn from 'classnames'
 import { useEffect, useState } from 'react'
 

@@ -5,8 +5,8 @@ import {
   getSlugPrefix,
   predefinedCategories
 } from '@app/lib/config'
-import { Author, Category, Post, Tag } from '@notion-x/src/interface'
-import { idToUuid, makeSlugText, mapTag } from '@notion-x/src/lib/helpers'
+import { Author, Category, Post, Tag } from '@/src/types/notion'
+import { idToUuid, makeSlugText, mapTag } from '@/src/lib/notion/helpers'
 import { QueryDatabaseParameters } from '@notionhq/client/build/src/api-endpoints'
 import { ImgurUrlType, SlugTypeLabels } from '@src/interface'
 import { get, intersectionWith } from 'lodash'

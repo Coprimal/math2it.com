@@ -2,7 +2,7 @@
  * Official Notion API wrapper using `@notionhq/client`.
  *
  * Replaces the `queryDatabase` / `retrieveDatabase` functions that live in
- * `notion-x/src/lib/db.ts`.  Signatures and return shapes are matched
+ * the original `db.ts` in notion-x.  Signatures and return shapes are matched
  * byte-for-byte so that `src/app/lib/fetcher.ts` can swap its import path
  * in Phase 4 with no other changes.
  *
@@ -17,7 +17,7 @@ import type {
 } from '@notionhq/client/build/src/api-endpoints'
 import pMemoize from 'p-memoize'
 
-import type { NotionSorts } from '@notion-x/src/interface'
+import type { NotionSorts } from './types'
 
 // ---------------------------------------------------------------------------
 // Singleton client — auth is read once at module load time.
@@ -71,7 +71,7 @@ async function withBackoff<T>(fn: () => Promise<T>, maxRetries = 5): Promise<T> 
 /**
  * Query a Notion database and auto-paginate through all results.
  *
- * Pagination behaviour matches `notion-x/src/lib/db.ts#queryDatabaseImpl`:
+ * Pagination behaviour matches the original `queryDatabaseImpl` in notion-x db.ts:
  * - When `pageSize >= notionMaxRequest (100)` and the response has
  *   `has_more === true`, subsequent pages are fetched automatically and their
  *   results are appended.
@@ -152,7 +152,7 @@ export const queryDatabase = pMemoize(queryDatabaseImpl, {
 /**
  * Retrieve a Notion database schema.
  *
- * Matches `notion-x/src/lib/db.ts#retrieveDatabaseImpl` signature —
+ * Matches the original `retrieveDatabaseImpl` in notion-x db.ts signature —
  * `(dbId: string)` only; auth is encapsulated in the singleton client.
  *
  * Used by `fetcher.ts#getTags()` to extract `tag.multi_select.options`.

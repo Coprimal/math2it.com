@@ -1,6 +1,6 @@
 import Footer from '@c/Footer'
 import Nav from '@c/nav/Nav'
-import '@notion-x/src/style/notion-x.scss'
+import './styles/notion.scss'
 import '@src/fontello/css/fontello.css'
 import Script from 'next/script'
 

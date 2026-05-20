@@ -2,11 +2,11 @@ import { defaultBlockOptions } from '@app/lib/config'
 import { getAuthors, getCategories, getPosts } from '@app/lib/fetcher'
 import SinglePostTemplate from '@app/templates/SinglePostTemplate'
 import { DynamicSegmentParamsProps } from '@/src/types/notion'
-import { getJoinedRichText } from '@notion-x/src/lib/helpers'
+import { getJoinedRichText } from '@/src/lib/notion/helpers'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
-import { getPage } from '@notion-x/src/lib/notionx'
+import { getPage } from '@/src/lib/notion/api'
 import { generateMetaTitle, getRelatedPosts } from '../../lib/helpers'
 
 export const revalidate = 20

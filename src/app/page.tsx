@@ -1,7 +1,7 @@
 import WavingHand from '@/public/waving_hand.webp'
 import { comfortaa, lobster, righteous } from '@app/lib/fonts'
 import Container from '@c/Container'
-import ImageComponent from '@notion-x/src/components/ImageComponent'
+import ImageComponent from '@/src/components/notion/ImageComponent'
 import cn from 'classnames'
 import Link from 'next/link'
 

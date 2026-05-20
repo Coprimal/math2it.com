@@ -16,13 +16,13 @@ import { Client } from '@notionhq/client'
 import * as fs from 'fs'
 import * as path from 'path'
 
-import { getPage } from '../notion-x/src/lib/notionx'
+import { getPage } from '../src/lib/notion/api'
 
 // ---------------------------------------------------------------------------
 // Known block-type coverage lists
 // ---------------------------------------------------------------------------
 
-/** Types with an explicit case in notion-x/src/components/block.tsx */
+/** Types with an explicit case in src/components/notion/block.tsx */
 const HANDLED_IN_BLOCK_TSX = new Set([
   'page',
   'collection_view_page',
@@ -181,11 +181,9 @@ async function main() {
       const recordMap = await getPage(postId)
 
       for (const [_blockId, blockRecord] of Object.entries(recordMap.block)) {
-        // The notion-client unofficial API returns a doubly-nested structure:
-        //   recordMap.block[id] = { spaceId?, value: { value: Block, role: string } }
-        // So the actual Block is at .value.value, not .value.
-        // (The TypeScript type says .value but the runtime has the extra nesting.)
-        const block = (blockRecord as any)?.value?.value
+        // api.ts normalizes the record map to v2 format, so the Block is at .value
+        // (not the doubly-nested .value.value that the raw unofficial API returned).
+        const block = (blockRecord as any)?.value
         if (!block) continue
 
         const type: string = block.type ?? 'unknown'
@@ -291,10 +289,10 @@ async function main() {
   const phase3Implication =
     missingTypes.length === 0
       ? 'Every block type found in math2it\'s posts is already covered by an explicit `case` in ' +
-        '`notion-x/src/components/block.tsx`. Vendoring is mechanical: copy components, rewrite import ' +
+        '`src/components/notion/block.tsx`. Vendoring is mechanical: copy components, rewrite import ' +
         'paths, and no new switch-case arms are required.'
       : `The following block type(s) appear in posts but have NO explicit case in ` +
-        `\`notion-x/src/components/block.tsx\` (they fall through to the \`default\` renderer which ` +
+        `\`src/components/notion/block.tsx\` (they fall through to the \`default\` renderer which ` +
         `logs and returns an empty \`<div>\`): ${missingTypes.map(t => `\`${t}\``).join(', ')}. ` +
         `These must receive explicit handling during Phase 3 vendoring.`
 
@@ -315,7 +313,7 @@ notion-x static-build refactor.
 |------------|-------|--------------|
 ${tableRows}
 
-## Covered by notion-x (explicit case in block.tsx)
+## Covered (explicit case in src/components/notion/block.tsx)
 
 ${coveredStr}
 
@@ -343,7 +341,7 @@ ${phase3Implication}
 
 ### Reference: notion-x block.tsx switch-case coverage
 
-The following types have an explicit \`case\` arm in \`notion-x/src/components/block.tsx\`:
+The following types have an explicit \`case\` arm in \`src/components/notion/block.tsx\`:
 
 ${Array.from(HANDLED_IN_BLOCK_TSX)
   .sort()

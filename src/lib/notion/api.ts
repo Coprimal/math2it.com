@@ -273,7 +273,7 @@ export async function getBlocks(
 /**
  * POST to Notion's unofficial /queryCollection endpoint.
  *
- * Body shape mirrors notion-x/src/lib/db.ts `getUnofficialDatabaseImpl` (the version
+ * Body shape mirrors the original `getUnofficialDatabaseImpl` in notion-x db.ts (the version
  * currently in production at math2it) rather than dinhanhthi's variant, so that the
  * Phase-4 import-path swap requires zero body changes.
  *
@@ -346,7 +346,7 @@ export async function queryCollection(opts: {
 /**
  * Unofficial API for getting all pages in a database.
  *
- * Signature matches `notion-x/src/lib/db.ts#getUnofficialDatabase` EXACTLY so that
+ * Signature matches the original `getUnofficialDatabase` in notion-x db.ts EXACTLY so that
  * Phase 4 can swap the import path with no other changes.
  *
  * Memoized with `pMemoize` keyed on all args (JSON.stringify) — same pattern as
@@ -441,7 +441,7 @@ export const getUnofficialDatabase = pMemoize(getUnofficialDatabaseImpl, {
 /**
  * Search Notion using the public personal site search endpoint.
  *
- * Signature matches `notion-x/src/lib/db.ts#searchNotionPersonal` EXACTLY.
+ * Signature matches the original `searchNotionPersonal` in notion-x db.ts EXACTLY.
  * Called by `src/app/api/search-notion/route.ts` as:
  *   `searchNotionPersonal(searchParams, process.env.NOTION_API_PERSONAL, process.env.NOTION_DB_POSTS)`
  *

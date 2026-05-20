@@ -1,4 +1,4 @@
-import { notionX } from '@notion-x/src/lib/notionx'
+import { getPage } from '@/src/lib/notion/api'
 import { notFound } from 'next/navigation'
 
 import { defaultBlockOptions } from '../../lib/config'
@@ -24,7 +24,7 @@ export const metadata = {
 
 export default async function AboutPage() {
   try {
-    const recordMap = await notionX.getPage(process.env.ABOUT_PAGE as string)
+    const recordMap = await getPage(process.env.ABOUT_PAGE as string)
     const authors = await getAuthors()
     return (
       <SinglePostTemplate
@@ -35,7 +35,7 @@ export default async function AboutPage() {
       />
     )
   } catch (error) {
-    console.log(' Lỗi khi load trang "Giới thiệu"', error)
+    console.log('🚨 Lỗi khi load trang "Giới thiệu"', error)
     notFound()
   }
 }
