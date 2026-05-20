@@ -1,14 +1,12 @@
 /**
  * Centralized domain types for the math2it project.
  *
- * Domain interfaces (`Post`, `Category`, `Tag`, `Author`, …) are copied verbatim
- * from `notion-x/src/interface.ts` so that the rest of `src/` can import from a
- * single place rather than reaching into the submodule.
+ * Domain interfaces (`Post`, `Category`, `Tag`, `Author`, …) were originally
+ * defined in the `notion-x` submodule (`notion-x/src/interface.ts`), which has
+ * been removed. They now live here as the single canonical source.
  *
  * Route-param helpers (`OptionalCatchAllProps`, `DynamicSegmentParamsProps`) use
- * `Promise<...>` params to match Next 15/16's async dynamic-route API — this is an
- * intentional deviation from the sync versions in `notion-x/src/interface.ts`.
- * notion-x is a git submodule; edits there would not persist in math2it commits.
+ * `Promise<...>` params to match Next 15/16's async dynamic-route API.
  *
  * `notion-types` primitives (`Block`, `ExtendedRecordMap`, …) are re-exported as
  * type-only so the rest of the codebase has a single canonical import point.
@@ -33,9 +31,8 @@ export type {
 } from 'notion-types'
 
 // ---------------------------------------------------------------------------
-// PostType / PostTypeOpts — inlined from notion-x/src/components/PostsList.tsx
-// and notion-x/src/post-types/* to avoid importing from the soon-to-be-deleted
-// notion-x submodule (Phase 7 drop).
+// PostType / PostTypeOpts — originally from notion-x/src/components/PostsList.tsx
+// and notion-x/src/post-types/*.
 // ---------------------------------------------------------------------------
 
 export type PostType =

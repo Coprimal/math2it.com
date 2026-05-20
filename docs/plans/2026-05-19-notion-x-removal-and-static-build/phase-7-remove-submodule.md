@@ -46,9 +46,9 @@ Pre-flight: confirm Phase 4 task 5 (no remaining `notion-x/` paths, no `notion-c
 
 | Status  | Task                                                                       |
 | ------- | -------------------------------------------------------------------------- |
-| ⬜ TODO | 7.1 Verify zero `notion-x/` paths + zero `notion-client` imports          |
-| ⬜ TODO | 7.2 Remove the `notion-x` git submodule cleanly                            |
-| ⬜ TODO | 7.3 Uninstall `notion-client`; keep `notion-types` + `notion-utils`; audit other deps |
+| ✅ DONE | 7.1 Verify zero `notion-x/` paths + zero `notion-client` imports          |
+| ✅ DONE | 7.2 Remove the `notion-x` git submodule cleanly                            |
+| ✅ DONE | 7.3 Uninstall `notion-client`; keep `notion-types` + `notion-utils`; audit other deps |
 
 ## Tasks
 

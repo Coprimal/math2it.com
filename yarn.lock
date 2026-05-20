@@ -3354,13 +3354,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"data-uri-to-buffer@npm:^4.0.0":
-  version: 4.0.1
-  resolution: "data-uri-to-buffer@npm:4.0.1"
-  checksum: 10c0/20a6b93107597530d71d4cb285acee17f66bcdfc03fd81040921a81252f19db27588d87fc8fc69e1950c55cfb0bf8ae40d0e5e21d907230813eb5d5a7f9eb45b
-  languageName: node
-  linkType: hard
-
 "data-view-buffer@npm:^1.0.2":
   version: 1.0.2
   resolution: "data-view-buffer@npm:1.0.2"
@@ -3522,7 +3515,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dequal@npm:^2.0.0, dequal@npm:^2.0.3":
+"dequal@npm:^2.0.0":
   version: 2.0.3
   resolution: "dequal@npm:2.0.3"
   checksum: 10c0/f98860cdf58b64991ae10205137c0e97d384c3a4edc7f807603887b7c4b850af1224a33d88012009f150861cbee4fa2d322c4cc04b9313bee312e47f6ecaa888
@@ -4403,13 +4396,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"extend@npm:~1.2.1":
-  version: 1.2.1
-  resolution: "extend@npm:1.2.1"
-  checksum: 10c0/820d1c6b6ca76e1c65a706757923eb836b40c72039177e0460f196ef52d3a1baa32e25ee5ba6bd175c54323178c85c512dead19958e1b416bec3c4342ca177dd
-  languageName: node
-  linkType: hard
-
 "fast-deep-equal@npm:^3.1.1, fast-deep-equal@npm:^3.1.3":
   version: 3.1.3
   resolution: "fast-deep-equal@npm:3.1.3"
@@ -4498,16 +4484,6 @@ __metadata:
     picomatch:
       optional: true
   checksum: 10c0/e345083c4306b3aed6cb8ec551e26c36bab5c511e99ea4576a16750ddc8d3240e63826cc624f5ae17ad4dc82e68a253213b60d556c11bfad064b7607847ed07f
-  languageName: node
-  linkType: hard
-
-"fetch-blob@npm:^3.1.2, fetch-blob@npm:^3.1.4":
-  version: 3.2.0
-  resolution: "fetch-blob@npm:3.2.0"
-  dependencies:
-    node-domexception: "npm:^1.0.0"
-    web-streams-polyfill: "npm:^3.0.3"
-  checksum: 10c0/60054bf47bfa10fb0ba6cb7742acec2f37c1f56344f79a70bb8b1c48d77675927c720ff3191fa546410a0442c998d27ab05e9144c32d530d8a52fbe68f843b69
   languageName: node
   linkType: hard
 
@@ -4622,15 +4598,6 @@ __metadata:
   version: 0.2.2
   resolution: "format@npm:0.2.2"
   checksum: 10c0/6032ba747541a43abf3e37b402b2f72ee08ebcb58bf84d816443dd228959837f1cddf1e8775b29fa27ff133f4bd146d041bfca5f9cf27f048edf3d493cf8fee6
-  languageName: node
-  linkType: hard
-
-"formdata-polyfill@npm:^4.0.10":
-  version: 4.0.10
-  resolution: "formdata-polyfill@npm:4.0.10"
-  dependencies:
-    fetch-blob: "npm:^3.1.2"
-  checksum: 10c0/5392ec484f9ce0d5e0d52fb5a78e7486637d516179b0eb84d81389d7eccf9ca2f663079da56f761355c0a65792810e3b345dc24db9a8bbbcf24ef3c8c88570c6
   languageName: node
   linkType: hard
 
@@ -4750,15 +4717,6 @@ __metadata:
   version: 1.0.0-beta.2
   resolution: "gensync@npm:1.0.0-beta.2"
   checksum: 10c0/782aba6cba65b1bb5af3b095d96249d20edbe8df32dbf4696fd49be2583faf676173bf4809386588828e4dd76a3354fcbeb577bab1c833ccd9fc4577f26103f8
-  languageName: node
-  linkType: hard
-
-"geopattern@npm:1":
-  version: 1.2.3
-  resolution: "geopattern@npm:1.2.3"
-  dependencies:
-    extend: "npm:~1.2.1"
-  checksum: 10c0/1fc8aaad70cbf5871966cb455355d909e2a284d588090f85b4ef406822adc53ec4a813b4c2dc3a24545118a5dabf24d1590b03dd74ad37962256fb4c71d5f830
   languageName: node
   linkType: hard
 
@@ -5983,13 +5941,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ky@npm:^1.8.1":
-  version: 1.8.2
-  resolution: "ky@npm:1.8.2"
-  checksum: 10c0/81edb33f4397b4a23a085ab0c54c0efd7baad0c8eeaabbbec4e7147202627a20d80114595d03647fc1ae465d682de30e2e04805e6888e5650e5a93684cf86e93
-  languageName: node
-  linkType: hard
-
 "language-subtag-registry@npm:^0.3.20":
   version: 0.3.23
   resolution: "language-subtag-registry@npm:0.3.23"
@@ -6255,7 +6206,6 @@ __metadata:
     eslint-plugin-unicorn: "npm:^64.0.0"
     eslint-plugin-unused-imports: "npm:^4.4.1"
     fs: "npm:^0.0.1-security"
-    geopattern: "npm:1"
     got: "npm:^12.6.0"
     katex: "npm:^0.16.8"
     lodash: "npm:^4.17.21"
@@ -6263,8 +6213,6 @@ __metadata:
     moment: "npm:^2.29.4"
     next: "npm:^16.2.6"
     next-sitemap: "npm:^4.1.8"
-    node-fetch: "npm:^3.3.1"
-    notion-client: "npm:^7.4.3"
     notion-types: "npm:^7.4.3"
     notion-utils: "npm:^7.4.3"
     open-graph-scraper: "npm:^6.2.2"
@@ -6279,7 +6227,6 @@ __metadata:
     react-copy-to-clipboard: "npm:^5.1.0"
     react-dom: "npm:^19.0.0"
     react-fast-compare: "npm:^3.2.2"
-    react-geopattern: "npm:^2.0.0"
     react-hotkeys-hook: "npm:^4.4.1"
     react-image: "npm:^4.1.0"
     react-lazy-images: "npm:^1.1.0"
@@ -6290,7 +6237,6 @@ __metadata:
     sass: "npm:^1.63.3"
     sharp: "npm:^0.32.5"
     slugify: "npm:^1.6.6"
-    swr: "npm:^2.4.1"
     tailwindcss: "npm:^3.4.0"
     typescript: "npm:5.1.3"
     yargs: "npm:^17.7.2"
@@ -6998,13 +6944,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-domexception@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "node-domexception@npm:1.0.0"
-  checksum: 10c0/5e5d63cda29856402df9472335af4bb13875e1927ad3be861dc5ebde38917aecbf9ae337923777af52a48c426b70148815e890a5d72760f1b4d758cc671b1a2b
-  languageName: node
-  linkType: hard
-
 "node-exports-info@npm:^1.6.0":
   version: 1.6.0
   resolution: "node-exports-info@npm:1.6.0"
@@ -7028,17 +6967,6 @@ __metadata:
     encoding:
       optional: true
   checksum: 10c0/b55786b6028208e6fbe594ccccc213cab67a72899c9234eb59dba51062a299ea853210fcf526998eaa2867b0963ad72338824450905679ff0fa304b8c5093ae8
-  languageName: node
-  linkType: hard
-
-"node-fetch@npm:^3.3.1":
-  version: 3.3.2
-  resolution: "node-fetch@npm:3.3.2"
-  dependencies:
-    data-uri-to-buffer: "npm:^4.0.0"
-    fetch-blob: "npm:^3.1.4"
-    formdata-polyfill: "npm:^4.0.10"
-  checksum: 10c0/f3d5e56190562221398c9f5750198b34cf6113aa304e34ee97c94fd300ec578b25b2c2906edba922050fce983338fde0d5d34fcb0fc3336ade5bd0e429ad7538
   languageName: node
   linkType: hard
 
@@ -7122,18 +7050,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"notion-client@npm:^7.4.3":
-  version: 7.4.3
-  resolution: "notion-client@npm:7.4.3"
-  dependencies:
-    ky: "npm:^1.8.1"
-    notion-types: "npm:7.4.3"
-    notion-utils: "npm:7.4.3"
-    p-map: "npm:^7.0.3"
-  checksum: 10c0/07a4cc20dbcaf02caa6fd3aff8f20097b1de30176b395afa1dc9dd3fb92d1b582b1f8fa6ccc2fb570f2afd46fe9eff56886fa322a315dd25ec918c10fd3f665a
-  languageName: node
-  linkType: hard
-
 "notion-types@npm:7.4.3, notion-types@npm:^7.4.3":
   version: 7.4.3
   resolution: "notion-types@npm:7.4.3"
@@ -7141,7 +7057,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"notion-utils@npm:7.4.3, notion-utils@npm:^7.4.3":
+"notion-utils@npm:^7.4.3":
   version: 7.4.3
   resolution: "notion-utils@npm:7.4.3"
   dependencies:
@@ -7359,13 +7275,6 @@ __metadata:
   dependencies:
     aggregate-error: "npm:^3.0.0"
   checksum: 10c0/592c05bd6262c466ce269ff172bb8de7c6975afca9b50c975135b974e9bdaafbfe80e61aaaf5be6d1200ba08b30ead04b88cfa7e25ff1e3b93ab28c9f62a2c75
-  languageName: node
-  linkType: hard
-
-"p-map@npm:^7.0.3":
-  version: 7.0.3
-  resolution: "p-map@npm:7.0.3"
-  checksum: 10c0/46091610da2b38ce47bcd1d8b4835a6fa4e832848a6682cf1652bc93915770f4617afc844c10a77d1b3e56d2472bb2d5622353fa3ead01a7f42b04fc8e744a5c
   languageName: node
   linkType: hard
 
@@ -8000,16 +7909,6 @@ __metadata:
   version: 3.2.2
   resolution: "react-fast-compare@npm:3.2.2"
   checksum: 10c0/0bbd2f3eb41ab2ff7380daaa55105db698d965c396df73e6874831dbafec8c4b5b08ba36ff09df01526caa3c61595247e3269558c284e37646241cba2b90a367
-  languageName: node
-  linkType: hard
-
-"react-geopattern@npm:2.0.0":
-  version: 2.0.0
-  resolution: "react-geopattern@npm:2.0.0"
-  peerDependencies:
-    geopattern: ^1.2.3
-    react: ^18.0.0
-  checksum: 10c0/4506066f34d0e10d619de4842be90e3cc3fc2449a250e6b6d08b364d1dcf735948c1e20d058476ada129980ca91eb0696c83fef5599452acaa2c695f2814e64b
   languageName: node
   linkType: hard
 
@@ -9147,18 +9046,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"swr@npm:^2.4.1":
-  version: 2.4.1
-  resolution: "swr@npm:2.4.1"
-  dependencies:
-    dequal: "npm:^2.0.3"
-    use-sync-external-store: "npm:^1.6.0"
-  peerDependencies:
-    react: ^16.11.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-  checksum: 10c0/34d61fb4653ac8875ad24e7c6da37e210b0e90fce0815dc59f013b7554a0bd267e79aac0f8ae5fbf04992e2a1815ee3da581b0dab3ed6ac4c2ce0e82b351320f
-  languageName: node
-  linkType: hard
-
 "synckit@npm:^0.11.12, synckit@npm:^0.11.4":
   version: 0.11.12
   resolution: "synckit@npm:0.11.12"
@@ -9717,13 +9604,6 @@ __metadata:
   version: 13.11.0
   resolution: "validator@npm:13.11.0"
   checksum: 10c0/0107da3add5a4ebc6391dac103c55f6d8ed055bbcc29a4c9cbf89eacfc39ba102a5618c470bdc33c6487d30847771a892134a8c791f06ef0962dd4b7a60ae0f5
-  languageName: node
-  linkType: hard
-
-"web-streams-polyfill@npm:^3.0.3":
-  version: 3.2.1
-  resolution: "web-streams-polyfill@npm:3.2.1"
-  checksum: 10c0/70ed6b5708e14afa2ab699221ea197d7c68ec0c8274bbe0181aecc5ba636ca27cbd383d2049f0eb9d529e738f5c088825502b317f3df24d18a278e4cc9a10e8b
   languageName: node
   linkType: hard
 

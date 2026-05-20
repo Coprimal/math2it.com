@@ -5,7 +5,6 @@ import PostList from '@/src/components/notion/PostsList'
 import { Post, PostTypeOpts } from '@/src/types/notion'
 import cn from 'classnames'
 import { StaticImageData } from 'next/image'
-// import { useGeoPattern } from 'react-geopattern'
 
 import { defaultFeaturedImage, defaultPostTypeOpts } from '../lib/config'
 
@@ -17,7 +16,6 @@ type PageOfPostsListTemplateProps = {
   totalPages: number
   currentPage: number
   iconComponent?: React.ReactNode
-  patternColor?: string
   titleColor?: string
   cover?: StaticImageData
   postTypeOpts?: PostTypeOpts
@@ -27,15 +25,10 @@ export const heightCoverPostList = 'min-h-[25vh]'
 export const spacingCoverPostList = 'py-12'
 
 export default function PageOfPostsListTemplate(props: PageOfPostsListTemplateProps) {
-  // const pattern = useGeoPattern(props.title, {
-  //   color: props.patternColor
-  // })
-
   return (
     <>
       <div
         className={cn('mx-auto flex w-full items-center justify-between', 'relative')}
-        // style={props.cover ? undefined : { backgroundImage: pattern.toDataUrl() }}
       >
         {props.cover && (
           <div
@@ -68,7 +61,6 @@ export default function PageOfPostsListTemplate(props: PageOfPostsListTemplatePr
           <Container maxWidthClass="max-w-5xl">
             <h2
               className="w-fit text-2xl md:text-3xl font-bold drop-shadow-sm"
-              // style={{ color: props.titleColor ? props.titleColor : props.cover ? '#fff' : '#fff' }}
             >
               {props.iconComponent && (
                 <span className="mr-1 opacity-90 text-[#ff88c3]">{props.iconComponent}</span>
