@@ -46,11 +46,11 @@ At the end of this phase, NOTHING in `src/` imports from `notion-x/` paths OR fr
 
 | Status  | Task                                                                              |
 | ------- | --------------------------------------------------------------------------------- |
-| ⬜ TODO | 4.1 Verify Phase 3's codemod hit every consumer; hand-fix stragglers              |
-| ⬜ TODO | 4.2 Rewrite `src/app/lib/fetcher.ts` to use the new `src/lib/notion/` modules    |
-| ⬜ TODO | 4.3 Update `SinglePostTemplate.tsx` import paths                                  |
-| ⬜ TODO | 4.4 Update list templates + home + (single-page) routes                            |
-| ⬜ TODO | 4.5 Compile-check: zero `notion-x/` paths and zero `notion-client` imports         |
+| ✅ DONE | 4.1 Verify Phase 3's codemod hit every consumer; hand-fix stragglers              |
+| ✅ DONE | 4.2 Rewrite `src/app/lib/fetcher.ts` to use the new `src/lib/notion/` modules    |
+| ✅ DONE | 4.3 Update `SinglePostTemplate.tsx` import paths                                  |
+| ✅ DONE | 4.4 Update list templates + home + (single-page) routes                            |
+| ✅ DONE | 4.5 Compile-check: zero `notion-x/` paths and zero `notion-client` imports         |
 
 ## Tasks
 
