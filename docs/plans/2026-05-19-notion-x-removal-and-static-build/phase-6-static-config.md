@@ -46,10 +46,10 @@ Reminder: we are NOT setting `output: 'export'`. Standard Next prerendering, dep
 
 | Status  | Task                                                                          |
 | ------- | ----------------------------------------------------------------------------- |
-| ⬜ TODO | 6.1 Remove every `export const revalidate = …` from `src/app/`                 |
-| ⬜ TODO | 6.2 Add `export const dynamicParams = false` to every dynamic route            |
-| ⬜ TODO | 6.3 Edit `next.config.mjs`: add `staticPageGenerationTimeout: 600`, keep image config |
-| ⬜ TODO | 6.4 Edit `tailwind.config.ts` content paths: remove `notion-x/**`              |
+| ✅ DONE | 6.1 Remove every `export const revalidate = …` from `src/app/`                 |
+| ✅ DONE | 6.2 Add `export const dynamicParams = false` to every dynamic route            |
+| ✅ DONE | 6.3 Edit `next.config.mjs`: add `staticPageGenerationTimeout: 600`, keep image config |
+| ✅ DONE | 6.4 Edit `tailwind.config.ts` content paths: remove `notion-x/**`              |
 
 ## Tasks
 

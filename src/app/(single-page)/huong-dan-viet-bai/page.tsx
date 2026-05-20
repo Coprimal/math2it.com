@@ -6,8 +6,6 @@ import { getAuthors } from '../../lib/fetcher'
 import { generateMetaTitle } from '../../lib/helpers'
 import SinglePostTemplate from '../../templates/SinglePostTemplate'
 
-export const revalidate = 20
-
 export const metadata = {
   title: generateMetaTitle('Hướng dẫn viết bài'),
   description: 'Tiêu chuẩn chung khi viết bài trên Math2IT.',

@@ -5,9 +5,9 @@ import PageOfPostsListTemplate from '@app/templates/PageOfPostsListTemplate'
 import { OptionalCatchAllParams, OptionalCatchAllProps } from '@/src/types/notion'
 import { getStartCursorForCurrentPage } from '@/src/lib/notion/helpers'
 import { Metadata } from 'next'
-import { notFound, redirect } from 'next/navigation'
+import { notFound } from 'next/navigation'
 
-export const revalidate = 20
+export const dynamicParams = false
 
 export async function generateMetadata(props: OptionalCatchAllProps): Promise<Metadata> {
   const params = await props.params;
@@ -57,8 +57,6 @@ export default async function SelectedPostsPage(props: OptionalCatchAllProps) {
 
   console.log(`\n👉 uri: /${getSlugPrefix('selected')}/${getSlugPrefix('page')}/${currentPage}/`)
 
-  const notRootPage = !!params.slug
-
   const categories = getCategories()
   const authors = await getAuthors()
 
@@ -68,10 +66,6 @@ export default async function SelectedPostsPage(props: OptionalCatchAllProps) {
     filter: getFilterOf('selected')
   })
   const totalPages = Math.ceil(allPosts.length / +process.env.POSTS_PER_PAGE!)
-
-  if (notRootPage && currentPage === 1) {
-    redirect(`/${getSlugPrefix('selected')}/`)
-  }
 
   if (currentPage !== 1 && currentPage > totalPages) {
     notFound()

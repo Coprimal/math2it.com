@@ -7,7 +7,7 @@ export default {
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/lib/config.ts',
     './src/app/lib/helpers.ts',
-    './notion-x/**/*.{js,ts,jsx,tsx,mdx,css,scss}'
+    './src/lib/notion/**/*.{js,ts,jsx,tsx}'
   ],
   theme: {
     extend: {

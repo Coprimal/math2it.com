@@ -9,7 +9,7 @@ import { notFound } from 'next/navigation'
 import { getPage } from '@/src/lib/notion/api'
 import { generateMetaTitle, getRelatedPosts } from '../../lib/helpers'
 
-export const revalidate = 20
+export const dynamicParams = false
 
 export async function generateMetadata(props: DynamicSegmentParamsProps): Promise<Metadata> {
   const params = await props.params;

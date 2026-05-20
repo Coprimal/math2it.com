@@ -1,13 +1,10 @@
 const nextConfig = {
-  // output: 'export', // Update 25/9/13: use notion-x & auto build on vercel
-  trailingSlash: true, // use "/about/" instead of "/about" (not supported yet by --turbo)
-  poweredByHeader: false, // remove "Powered by Next.js" from the header
+  trailingSlash: true,
+  poweredByHeader: false,
   transpilePackages: ['react-syntax-highlighter'],
+  staticPageGenerationTimeout: 600,
   experimental: {
-    scrollRestoration: true, // not supported yet by --turbo,
-    esmExternals: false
-    // 👇 https://nextjs.org/docs/messages/import-esm-externals (error: react-medium-image-zoom)
-    // esmExternals: 'loose'
+    scrollRestoration: true
   },
   headers: async () => {
     const headers = []

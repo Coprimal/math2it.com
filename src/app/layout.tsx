@@ -6,8 +6,6 @@ import Script from 'next/script'
 
 import './globals.scss'
 
-export const revalidate = 20
-
 export const metadata = {
   metadataBase: new URL('https://math2it.com'),
   robots: {

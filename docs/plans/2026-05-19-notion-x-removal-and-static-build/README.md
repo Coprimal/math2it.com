@@ -89,8 +89,8 @@ This plan was created with `--auto`. When resuming or continuing this plan, foll
 | ✅ DONE | Phase 2: Internalize Notion data layer (`src/lib/notion`)        | [phase-2-data-layer.md](./phase-2-data-layer.md)             | 6 tasks |
 | ✅ DONE | Phase 3: Block renderer & components (`src/components/notion`)    | [phase-3-renderer.md](./phase-3-renderer.md)                 | 7 tasks |
 | ✅ DONE | Phase 4: Swap page templates to new renderer                     | [phase-4-templates.md](./phase-4-templates.md)               | 5 tasks |
-| 🔄 IN PROGRESS | Phase 5: Search via Pagefind                                     | [phase-5-search.md](./phase-5-search.md)                     | 3 tasks |
-| ⬜ TODO | Phase 6: Static config (remove ISR, tailwind/next.config cleanup) | [phase-6-static-config.md](./phase-6-static-config.md)       | 4 tasks |
+| ✅ DONE | Phase 5: Search via Pagefind                                     | [phase-5-search.md](./phase-5-search.md)                     | 3 tasks |
+| 🔄 IN PROGRESS | Phase 6: Static config (remove ISR, tailwind/next.config cleanup) | [phase-6-static-config.md](./phase-6-static-config.md)       | 4 tasks |
 | ⬜ TODO | Phase 7: Remove `notion-x` submodule + drop deps                 | [phase-7-remove-submodule.md](./phase-7-remove-submodule.md) | 3 tasks |
 | ⬜ TODO | Phase 8: GitHub Actions workflow + Vercel project settings       | [phase-8-github-actions.md](./phase-8-github-actions.md)     | 4 tasks |
 | ⬜ TODO | Phase 9: Verification, cutover, and docs                         | [phase-9-cutover.md](./phase-9-cutover.md)                   | 4 tasks |
