@@ -46,12 +46,12 @@ At the end of this phase, `src/lib/notion/api.ts` exports the same function surf
 
 | Status  | Task                                                                              |
 | ------- | --------------------------------------------------------------------------------- |
-| ⬜ TODO | 2.1 Add `src/types/notion.ts` (re-export domain types from notion-x/interface.ts) |
-| ⬜ TODO | 2.2 Add `src/lib/notion/api.ts` — `notionFetch` + `loadPageChunk`/`syncRecordValuesMain` |
-| ⬜ TODO | 2.3 Add `getPage` + `getBlocks` with v3→v2 normalize and pending-blocks loop      |
-| ⬜ TODO | 2.4 Add `queryCollection` + `getUnofficialDatabase` + `searchNotionPersonal`      |
-| ⬜ TODO | 2.5 Add `src/lib/notion/db-official.ts` (official `@notionhq/client` queries)     |
-| ⬜ TODO | 2.6 Side-by-side parity test: new `getPage` vs `notion-client`'s `NotionAPI`      |
+| ✅ DONE | 2.1 Add `src/types/notion.ts` (re-export domain types from notion-x/interface.ts) |
+| ✅ DONE | 2.2 Add `src/lib/notion/api.ts` — `notionFetch` + `loadPageChunk`/`syncRecordValuesMain` |
+| ✅ DONE | 2.3 Add `getPage` + `getBlocks` with v3→v2 normalize and pending-blocks loop      |
+| ✅ DONE | 2.4 Add `queryCollection` + `getUnofficialDatabase` + `searchNotionPersonal`      |
+| ✅ DONE | 2.5 Add `src/lib/notion/db-official.ts` (official `@notionhq/client` queries)     |
+| ✅ DONE | 2.6 Side-by-side parity test: new `getPage` vs `notion-client`'s `NotionAPI`      |
 
 ## Tasks
 
