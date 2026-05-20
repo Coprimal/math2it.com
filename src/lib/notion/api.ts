@@ -4,8 +4,8 @@
  * Replaces `notion-client`'s NotionAPI class.
  */
 
-import type { CollectionInstance, ExtendedRecordMap, SearchParams } from 'notion-types'
-import { getPageContentBlockIds, idToUuid, parsePageId } from 'notion-utils'
+import type { CollectionInstance, ExtendedRecordMap } from 'notion-types'
+import { getPageContentBlockIds, parsePageId } from 'notion-utils'
 import pMemoize from 'p-memoize'
 
 // Read env vars at module top — does NOT crash if missing; defers to first use.
@@ -267,7 +267,7 @@ export async function getBlocks(
 }
 
 // ---------------------------------------------------------------------------
-// Task 2.4 — queryCollection / getUnofficialDatabase / searchNotionPersonal
+// Task 2.4 — queryCollection / getUnofficialDatabase
 // ---------------------------------------------------------------------------
 
 /**
@@ -437,68 +437,3 @@ export async function getUnofficialDatabaseImpl(opts: {
 export const getUnofficialDatabase = pMemoize(getUnofficialDatabaseImpl, {
   cacheKey: (...args) => JSON.stringify(args)
 })
-
-/**
- * Search Notion using the public personal site search endpoint.
- *
- * Signature matches the original `searchNotionPersonal` in notion-x db.ts EXACTLY.
- * Called by `src/app/api/search-notion/route.ts` as:
- *   `searchNotionPersonal(searchParams, process.env.NOTION_API_PERSONAL, process.env.NOTION_DB_POSTS)`
- *
- * Uses the public personal.notion.site endpoint — no auth tokens required.
- * Does NOT use `notionFetch` to avoid sending Cookie / active-user headers.
- */
-export async function searchNotionPersonal(
-  params: SearchParams,
-  apiUrl: string,
-  dbId: string
-): Promise<any> {
-  if (!apiUrl) throw new Error('apiUrl is not defined')
-  if (!dbId) throw new Error('dbId is not defined')
-
-  const headers: Record<string, string> = {
-    'Content-Type': 'application/json'
-  }
-
-  const body = {
-    type: 'BlocksInAncestor',
-    query: params.query,
-    ancestorId: idToUuid(dbId),
-    source: 'quick_find_input_change',
-    sort: {
-      field: 'relevance'
-    },
-    limit: params.limit || 100,
-    filters: {
-      isDeletedOnly: false,
-      excludeTemplates: false,
-      navigableBlockContentOnly: false,
-      requireEditPermissions: false,
-      includePublicPagesWithoutExplicitAccess: true,
-      ancestors: [],
-      createdBy: [],
-      editedBy: [],
-      lastEditedTime: {},
-      createdTime: {},
-      inTeams: [],
-      ...params.filters
-    }
-  }
-
-  const url = `${apiUrl}/search`
-
-  const res = await fetch(url, {
-    method: 'POST',
-    headers,
-    body: JSON.stringify(body)
-  })
-
-  if (!res.ok) {
-    const errBody = await res.text().catch(() => '')
-    throw new Error(
-      `searchNotionPersonal failed: ${res.status} ${res.statusText} — ${sanitizeErrorBody(errBody)}`
-    )
-  }
-
-  return res.json()
-}

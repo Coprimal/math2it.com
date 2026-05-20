@@ -44,9 +44,9 @@ Goal: replace the runtime `/api/search-notion` route + notion-x's `SearchModal` 
 
 | Status  | Task                                                                |
 | ------- | ------------------------------------------------------------------- |
-| ⬜ TODO | 5.1 Add `pagefind` dev dep + `postbuild` script + exclusions         |
-| ⬜ TODO | 5.2 Implement new `<NavSearch/>` consuming `pagefind.js`            |
-| ⬜ TODO | 5.3 Delete `src/app/api/search-notion/` and old `SearchModal` usage |
+| ✅ DONE | 5.1 Add `pagefind` dev dep + `postbuild` script + exclusions         |
+| ✅ DONE | 5.2 Implement new `<NavSearch/>` consuming `pagefind.js`            |
+| ✅ DONE | 5.3 Delete `src/app/api/search-notion/` and old `SearchModal` usage |
 
 ## Tasks
 

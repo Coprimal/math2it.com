@@ -25,12 +25,14 @@ export default async function WriteWithUsPage() {
     const recordMap = await getPage(process.env.WRITE_WITH_US_PAGE as string)
     const authors = await getAuthors()
     return (
-      <SinglePostTemplate
-        recordMap={recordMap}
-        isPage={true}
-        authors={authors}
-        blockOptions={defaultBlockOptions}
-      />
+      <div data-pagefind-ignore="all">
+        <SinglePostTemplate
+          recordMap={recordMap}
+          isPage={true}
+          authors={authors}
+          blockOptions={defaultBlockOptions}
+        />
+      </div>
     )
   } catch (error) {
     console.log('🚨 Lỗi khi load trang "Viết bài cùng Math2IT"', error)

@@ -105,18 +105,6 @@ export type NotionSorts = {
 // Vendored from interface.ts — needed by BlockText, BlockRichText
 export type TextIgnoreField = 'hyperlink' | AnnotationIgnoreField
 
-// Vendored from interface.ts — needed by SearchModal
-export type SearchResult = {
-  id: string
-  title: string
-  slug: string
-  titleHighlighted: string
-  textHighlighted: string
-  isPublished: boolean
-  isBookPost?: boolean
-  isFake?: boolean // used to not perform the request
-}
-
 // Moved from PostBody.tsx — needed by renderer.tsx and context.tsx
 // (keeps dependency direction unidirectional: components/* → lib/notion/*)
 export type DiscreteColsType = 'single' | 'multiple'

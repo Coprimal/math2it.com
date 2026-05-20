@@ -12,7 +12,7 @@
   "scripts": {
     "dev": "next dev --port 3003",
     "build": "next build",
-    "postbuild": "next-sitemap",
+    "postbuild": "next-sitemap && npx pagefind --site .next/server/app --output-path public/pagefind",
     "start": "next start --port 3003",
     "lint": "eslint src --ext .ts,.tsx",
     "getlib": "git submodule update --recursive --remote",
@@ -99,6 +99,7 @@
     "eslint-plugin-tailwindcss": "^3.18.3",
     "eslint-plugin-unicorn": "^64.0.0",
     "eslint-plugin-unused-imports": "^4.4.1",
+    "pagefind": "^1.5.2",
     "postcss": "8.4.24",
     "prettier": "^3.0.0",
     "prettier-plugin-organize-imports": "^3.2.4",

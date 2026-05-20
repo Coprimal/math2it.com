@@ -27,12 +27,14 @@ export default async function AboutPage() {
     const recordMap = await getPage(process.env.WRITING_GUIDELINES_PAGE as string)
     const authors = await getAuthors()
     return (
-      <SinglePostTemplate
-        recordMap={recordMap}
-        isPage={true}
-        authors={authors}
-        blockOptions={defaultBlockOptions}
-      />
+      <div data-pagefind-ignore="all">
+        <SinglePostTemplate
+          recordMap={recordMap}
+          isPage={true}
+          authors={authors}
+          blockOptions={defaultBlockOptions}
+        />
+      </div>
     )
   } catch (error) {
     console.log('🚨 Lỗi khi load trang "Hướng dẫn viết bài"', error)

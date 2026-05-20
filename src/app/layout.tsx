@@ -37,11 +37,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </Script>
       <body suppressHydrationWarning={true}>
         <div className="flex min-h-screen flex-col justify-between">
-          <Nav />
+          <div data-pagefind-ignore>
+            <Nav />
+          </div>
           <div className="mb-auto">
             <main>{children}</main>
           </div>
-          <Footer />
+          <div data-pagefind-ignore>
+            <Footer />
+          </div>
         </div>
       </body>
     </html>
