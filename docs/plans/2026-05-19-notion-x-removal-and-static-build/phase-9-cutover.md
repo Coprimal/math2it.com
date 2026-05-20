@@ -44,9 +44,9 @@ Goal: confirm the rewritten site is visually + behaviorally indistinguishable fr
 
 | Status  | Task                                                                          |
 | ------- | ----------------------------------------------------------------------------- |
-| ✅ DONE | 9.1 Functional checklist on `dev` preview (search, OG, sitemap, pagination)  |
-| ✅ DONE | 9.2 Visual diff — 10 representative posts side-by-side with current prod     |
-| ✅ DONE | 9.3 Merge `dev` → `main`, dispatch the workflow against `main`               |
+| ⬜ TODO | 9.1 Functional checklist on `dev` preview (search, OG, sitemap, pagination)  |
+| ⬜ TODO | 9.2 Visual diff — 10 representative posts side-by-side with current prod     |
+| ⬜ TODO | 9.3 Merge `dev` → `main`, dispatch the workflow against `main`               |
 | ✅ DONE | 9.4 Post-cutover monitoring + write `docs/memory/` notes for future sessions |
 
 ## Tasks
