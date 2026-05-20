@@ -1,0 +1,101 @@
+name: Build and Deploy to Vercel
+
+on:
+  schedule:
+    - cron: '0 0 */5 * *'    # every 5 days
+  push:
+    branches:
+      - main
+      - dev
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Required GitHub secrets:
+  #   VERCEL_TOKEN      — Vercel personal access token
+  #   VERCEL_ORG_ID     — Vercel team/org ID (from vercel.json or project settings)
+  #   VERCEL_PROJECT_ID — Vercel project ID (from .vercel/project.json after linking)
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Enable Corepack and activate Yarn 4
+        run: |
+          corepack enable
+          corepack prepare yarn@4.1.1 --activate
+
+      - name: Cache Yarn Berry
+        uses: actions/cache@v4
+        with:
+          path: ~/.yarn/berry/cache
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Cache Next.js build
+        uses: actions/cache@v4
+        with:
+          path: .next/cache
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/yarn.lock') }}-${{ hashFiles('**/*.ts', '**/*.tsx') }}
+          restore-keys: |
+            ${{ runner.os }}-nextjs-${{ hashFiles('**/yarn.lock') }}-
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Rebuild sharp
+        run: yarn rebuild sharp
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+
+      - name: Determine environment
+        id: env
+        env:
+          GITHUB_REF: ${{ github.ref }}
+        run: |
+          if [[ "$GITHUB_REF" == "refs/heads/main" ]]; then
+            echo "ENV_MODE=prod" >> $GITHUB_OUTPUT
+            echo "NEXT_PUBLIC_ENV_MODE=prod" >> $GITHUB_OUTPUT
+            echo "VERCEL_ARGS=--prod" >> $GITHUB_OUTPUT
+          else
+            echo "ENV_MODE=dev" >> $GITHUB_OUTPUT
+            echo "NEXT_PUBLIC_ENV_MODE=dev" >> $GITHUB_OUTPUT
+            echo "VERCEL_ARGS=" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Pull Vercel environment
+        run: vercel pull --yes --environment=${{ steps.env.outputs.ENV_MODE == 'prod' && 'production' || 'preview' }}
+
+      - name: Verify Vercel environment
+        run: |
+          if [ ! -d .vercel ]; then
+            echo "ERROR: vercel pull did not create .vercel directory"
+            exit 1
+          fi
+          echo "Vercel environment pulled successfully"
+
+      - name: Build
+        env:
+          ENV_MODE: ${{ steps.env.outputs.ENV_MODE }}
+          NEXT_PUBLIC_ENV_MODE: ${{ steps.env.outputs.NEXT_PUBLIC_ENV_MODE }}
+        run: vercel build ${{ steps.env.outputs.VERCEL_ARGS }}
+
+      - name: Deploy to Vercel
+        run: vercel deploy --prebuilt --archive=tgz ${{ steps.env.outputs.VERCEL_ARGS }}

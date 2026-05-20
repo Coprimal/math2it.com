@@ -44,10 +44,10 @@ Goal: port dinhanhthi's `deploy-vercel.yml` to math2it (yarn 4 instead of pnpm),
 
 | Status  | Task                                                                                  |
 | ------- | ------------------------------------------------------------------------------------- |
-| ⬜ TODO | 8.1 Create `.github/workflows/deploy-vercel.yml` (yarn 4 + 5-day cron)                |
-| ⬜ TODO | 8.2 Add `vercel.json` (framework: nextjs, minimal)                                    |
-| ⬜ TODO | 8.3 Configure Vercel project: secrets + env vars + "Ignored Build Step"               |
-| ⬜ TODO | 8.4 Dry-run on `dev` via `workflow_dispatch` and verify Vercel preview deploy succeeds |
+| ✅ DONE | 8.1 Create `.github/workflows/deploy-vercel.yml` (yarn 4 + 5-day cron)                |
+| ✅ DONE | 8.2 Add `vercel.json` (framework: nextjs, minimal)                                    |
+| ✅ DONE | 8.3 Configure Vercel project: secrets + env vars + "Ignored Build Step"               |
+| ✅ DONE | 8.4 Dry-run on `dev` via `workflow_dispatch` and verify Vercel preview deploy succeeds |
 
 ## Tasks
 
