@@ -6576,9 +6576,9 @@ __metadata:
     next: "npm:14.2.35"
     next-sitemap: "npm:^4.1.8"
     node-fetch: "npm:^3.3.1"
-    notion-client: "npm:^7.4.3"
-    notion-types: "npm:^7.4.3"
-    notion-utils: "npm:^7.4.3"
+    notion-client: "npm:7.4.3"
+    notion-types: "npm:7.4.3"
+    notion-utils: "npm:7.4.3"
     open-graph-scraper: "npm:^6.2.2"
     p-memoize: "npm:^7.1.1"
     postcss: "npm:8.4.24"
@@ -7389,7 +7389,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"notion-client@npm:^7.4.3":
+"notion-client@npm:7.4.3":
   version: 7.4.3
   resolution: "notion-client@npm:7.4.3"
   dependencies:
@@ -7401,14 +7401,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"notion-types@npm:7.4.3, notion-types@npm:^7.4.3":
+"notion-types@npm:7.4.3":
   version: 7.4.3
   resolution: "notion-types@npm:7.4.3"
   checksum: 10c0/08d1e5419d1edf09921ceb91b388f4dcf21f17694515d4fdcc3da68d9ab6fb42280601aa03ec4d312879d09e6f83ee3778c6d284d71e1d22986d812bb0c81eb5
   languageName: node
   linkType: hard
 
-"notion-utils@npm:7.4.3, notion-utils@npm:^7.4.3":
+"notion-utils@npm:7.4.3":
   version: 7.4.3
   resolution: "notion-utils@npm:7.4.3"
   dependencies:
