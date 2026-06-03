@@ -15,7 +15,6 @@
     "postbuild": "next-sitemap",
     "start": "next start --port 3003",
     "lint": "next lint",
-    "getlib": "git submodule update --recursive --remote",
     "check": "yarn run prettier && yarn run build",
     "prettier": "prettier --write \"**/*.{tsx,ts,css,scss}\"",
     "clean": "rimraf .next && rimraf .vercel && rimraf .netlify",
