@@ -16,6 +16,45 @@ import { cleanText, defaultBlurData, idToUuid } from './helpers'
 export const notionMaxRequest = 100
 
 /**
+ * Normalize Notion API v3 recordMap format back to v2 format.
+ *
+ * In v3 (`__version__: 3`), each entry in `block`, `collection`, etc. is wrapped as:
+ *   `{ value: { value: <actual data>, role: "..." } }`
+ * In v2, it was:
+ *   `{ value: <actual data> }`
+ *
+ * This function unwraps v3 to v2 so all downstream code works unchanged.
+ */
+function normalizeRecordMap(recordMap: any): any {
+  if (!recordMap || recordMap.__version__ !== 3) return recordMap
+
+  const tablesToNormalize = [
+    'block',
+    'collection',
+    'collection_view',
+    'notion_user',
+    'space',
+    'custom_emoji'
+  ]
+
+  for (const table of tablesToNormalize) {
+    const entries = recordMap[table]
+    if (!entries) continue
+
+    for (const id of Object.keys(entries)) {
+      const entry = entries[id]
+      // v3 pattern: entry.value = { value: actualData, role: "..." }
+      // v2 pattern: entry.value = actualData (which has id, type, properties, etc.)
+      if (entry?.value?.value && entry.value.role !== undefined) {
+        entries[id] = { value: entry.value.value, role: entry.value.role }
+      }
+    }
+  }
+
+  return recordMap
+}
+
+/**
  * Unofficial API for getting all pages in a database
  */
 export async function getUnofficialDatabaseImpl(opts: {
@@ -52,11 +91,6 @@ export async function getUnofficialDatabaseImpl(opts: {
       spaceId
     },
     loader: {
-      filter: {
-        operator: 'and',
-        filters: []
-      },
-      type: 'reducer',
       reducers: {
         collection_group_results: {
           type: 'results',
@@ -70,17 +104,22 @@ export async function getUnofficialDatabaseImpl(opts: {
           }
         }
       },
-      sort: []
+      userTimeZone: 'America/Chicago'
     }
   }
 
   const url = `${notionApiWeb}/queryCollection`
 
-  return await fetch(url, {
+  const data = await fetch(url, {
     method: 'POST',
     headers,
     body: JSON.stringify(body)
   }).then(res => res.json())
+
+  if (data?.recordMap) {
+    data.recordMap = normalizeRecordMap(data.recordMap)
+  }
+  return data
 }
 
 export const getUnofficialDatabase = pMemoize(getUnofficialDatabaseImpl, {
