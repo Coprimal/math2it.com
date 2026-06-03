@@ -1,6 +1,6 @@
-import { getAuthors, getCategories, getPosts } from '@app/lib/fetcher'
 import PostList from '@/src/components/notion/PostsList'
 import { Post, PostType, PostTypeOpts } from '@/src/types/notion'
+import { getAuthors, getCategories, getPosts } from '@app/lib/fetcher'
 
 import { getFilterOf } from '../lib/helpers'
 import { PostListStyle } from './PostListForHomeSection'
@@ -20,20 +20,20 @@ export const postListHomeCount = 8
 export default async function PostListForHome(props: PostListForHomeProps) {
   const categories = getCategories()
   const authors = await getAuthors()
-  /* ###Thi */ console.log(`👉👉👉 authors: `, JSON.stringify(authors));
 
   let posts: Post[] = []
 
   switch (props.type) {
-    case 'latest':
+    case 'latest': {
       posts = await getPosts({
         categories,
         authors,
         pageSize: postListHomeCount
       })
       break
+    }
 
-    case 'selected':
+    case 'selected': {
       posts = await getPosts({
         categories,
         authors,
@@ -41,6 +41,7 @@ export default async function PostListForHome(props: PostListForHomeProps) {
         filter: getFilterOf('selected')
       })
       break
+    }
 
     case 'byCategory': {
       if (!props.categorySlug) throw new Error('categorySlug is required if type === "byCategory"')
