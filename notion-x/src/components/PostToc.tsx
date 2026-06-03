@@ -87,7 +87,7 @@ export default function PostToc(props: PostTocProps) {
             const isH2 = toc.indentLevel === 0
             const isH3 = toc.indentLevel === 1
 
-            const block = props.recordMap?.block?.[toc.id]?.value
+            const block = props.recordMap?.block?.[toc.id]?.value as types.Block
 
             return (
               <a
