@@ -2,6 +2,7 @@ import {
   defaultCategoryBgColor,
   defaultCategoryTextColor,
   defaultCustomSizeFM,
+  defaultPostDate,
   getSlugPrefix,
   predefinedCategories
 } from '@app/lib/config'
@@ -258,6 +259,16 @@ export function getRelatedPosts(allPosts: Post[], post: Post, numPost: number): 
   return []
 }
 
+/**
+ * Safely convert a value to an ISO date string.
+ * Falls back to `defaultPostDate` when the value is missing or not a valid date,
+ * avoiding "RangeError: Invalid time value" from `new Date(invalid).toISOString()`.
+ */
+function toIsoDate(value: any): string {
+  const date = new Date(value)
+  return isNaN(date.getTime()) ? new Date(defaultPostDate).toISOString() : date.toISOString()
+}
+
 export function getPostProperties(post: Block): Post {
   const block = post
   const id = post.id
@@ -267,10 +278,10 @@ export function getPostProperties(post: Block): Post {
   const rawTitle = properties?.title
   const date =
     properties?.[`${process.env.NEXT_PUBLIC_ID_LAST_MODIFIED}`]?.[0]?.[1]?.[0]?.[1]?.start_date ??
-    new Date(post?.last_edited_time).toISOString()
+    toIsoDate(post?.last_edited_time)
   const createdDate =
     properties?.[`${process.env.NEXT_PUBLIC_ID_CREATED_DATE}`]?.[0]?.[1]?.[0]?.[1]?.start_date ??
-    new Date(post?.created_time).toISOString()
+    toIsoDate(post?.created_time)
   const tags = properties?.[`${process.env.NEXT_PUBLIC_ID_TAGS}`]?.[0]?.[0]
     .split(',')
     ?.map((tagName: string) => mapTag(tagName, getSlugPrefix('tag')))
