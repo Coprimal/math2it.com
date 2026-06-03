@@ -71,7 +71,7 @@ export default function PostBody(props: PostBodyProps) {
   let showUpdatedIndicator = props.showUpdatedIndicator
 
   const id = Object.keys(props.recordMap.block)[0]
-  const block = props.recordMap.block[id]?.value
+  const block = props.recordMap.block[id]?.value as Block
   const { createdDate, modifiedDate } = getPostProperties(
     block,
     props.lastModifiedIdKey,
