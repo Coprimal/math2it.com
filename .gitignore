@@ -37,4 +37,9 @@ next-env.d.ts
 
 public/sitemap.xml
 
+# pagefind (search index, generated at build)
+public/pagefind/
+
 .yarn/install-state.gz
+
+bk.env.local
