@@ -43,3 +43,5 @@ public/pagefind/
 .yarn/install-state.gz
 
 bk.env.local
+
+docs/

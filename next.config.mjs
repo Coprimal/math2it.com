@@ -45,6 +45,10 @@ const nextConfig = {
       },
       {
         protocol: 'https',
+        hostname: '**.notion.com'
+      },
+      {
+        protocol: 'https',
         hostname: '**.unsplash.com'
       },
       {
