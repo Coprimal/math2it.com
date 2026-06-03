@@ -29,9 +29,6 @@ npm install -g fontello-cli
 
 # install
 yarn
-
-# clone submodule too
-git submodule update --init --recursive
 ```
 
 Daily dev,
@@ -46,9 +43,6 @@ yarn start # port 3003
 
 # lint
 yarn prettier
-
-# ud notion-x lib
-yarn getlib
 ```
 
 ## imgur
