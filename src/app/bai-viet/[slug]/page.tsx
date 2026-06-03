@@ -7,6 +7,7 @@ import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
 import { getPage } from '@notion-x/src/lib/notionx'
+// import { writeFileSync } from 'node:fs'
 import { generateMetaTitle, getRelatedPosts } from '../../lib/helpers'
 
 export const revalidate = 20
@@ -59,6 +60,8 @@ export default async function SinglePostPage({ params }: DynamicSegmentParamsPro
     if (!pageIdwithDash) notFound()
 
     const recordMap = await getPage(pageIdwithDash)
+    // Save recordMap to a file
+    // writeFileSync('/Users/thi/Downloads/recordMap.json', JSON.stringify(recordMap, null, 2))
     const relatedPosts = getRelatedPosts(allPosts, post, 8)
 
     return (

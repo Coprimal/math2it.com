@@ -1,5 +1,6 @@
 import { NotionAPI } from 'notion-client'
 import { ExtendedRecordMap } from 'notion-types'
+import { getPageContentBlockIds } from 'notion-utils'
 
 export const notionX = new NotionAPI({
   activeUser: process.env.NOTION_ACTIVE_USER,
@@ -25,10 +26,37 @@ export const notionX = new NotionAPI({
 })
 
 export async function getPage(pageId: string) {
-  const recordMap = await notionX.getPage(pageId, )
+  const recordMap = await notionX.getPage(pageId, {
+    fetchMissingBlocks: true,
+    signFileUrls: true,
+  })
   const normalizedRecordMap = normalizeRecordMap(recordMap)
-  const newRecordMap = await fixMissingBlocks(normalizedRecordMap)
+  const withContentBlocks = await fixMissingContentBlocks(normalizedRecordMap)
+  const newRecordMap = await fixMissingBlocks(withContentBlocks)
   return newRecordMap
+}
+
+// notion-client only returns the first chunk of a long page, so content blocks
+// at the end of the post are referenced but never loaded. Iteratively fetch the
+// missing content blocks via notionX.getBlocks() (keeps auth + signed_urls)
+// until every referenced child is present.
+async function fixMissingContentBlocks(
+  recordMap: ExtendedRecordMap,
+): Promise<ExtendedRecordMap> {
+  let working = recordMap
+  const maxIterations = 10
+  for (let i = 0; i < maxIterations; i++) {
+    const pendingBlockIds = getPageContentBlockIds(working).filter(
+      id => !working.block[id]?.value,
+    )
+    if (!pendingBlockIds.length) {
+      break
+    }
+    const fetched = await notionX.getBlocks(pendingBlockIds)
+    const block = { ...working.block, ...fetched?.recordMap?.block }
+    working = normalizeRecordMap({ ...working, block })
+  }
+  return working
 }
 
 // Some block entries come back double-wrapped as `{ value: { value, role } }`
