@@ -26,8 +26,25 @@ export const notionX = new NotionAPI({
 
 export async function getPage(pageId: string) {
   const recordMap = await notionX.getPage(pageId, )
-  const newRecordMap = await fixMissingBlocks(recordMap)
+  const normalizedRecordMap = normalizeRecordMap(recordMap)
+  const newRecordMap = await fixMissingBlocks(normalizedRecordMap)
   return newRecordMap
+}
+
+// Some block entries come back double-wrapped as `{ value: { value, role } }`
+// instead of `{ value, role }`, so `entry.value` is a `{ value, role }` wrapper
+// rather than a real block. Unwrap the extra layer once at the source so every
+// consumer (post header, template, renderer, toc) reads a real block from `.value`.
+function normalizeRecordMap(recordMap: ExtendedRecordMap): ExtendedRecordMap {
+  const block = { ...recordMap.block } as any
+  for (const blockId of Object.keys(block)) {
+    const entry = block[blockId]
+    const inner = entry?.value as any
+    if (inner?.value && inner?.role && !inner?.id) {
+      block[blockId] = { ...entry, value: inner.value, role: inner.role }
+    }
+  }
+  return { ...recordMap, block }
 }
 
 async function fixMissingBlocks(recordMap: ExtendedRecordMap): Promise<ExtendedRecordMap> {
