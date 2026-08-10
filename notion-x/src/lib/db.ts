@@ -16,6 +16,22 @@ import { cleanText, defaultBlurData, idToUuid } from './helpers'
 export const notionMaxRequest = 100
 
 /**
+ * Cloudflare blocks Notion unofficial API calls that omit User-Agent (403 HTML).
+ * Use a browser-like UA so server-side fetch/ky requests succeed.
+ */
+const NOTION_UNOFFICIAL_USER_AGENT =
+  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'
+
+function unofficialNotionHeaders(tokenV2: string, activeUser: string) {
+  return {
+    'Content-Type': 'application/json',
+    cookie: `token_v2=${tokenV2}`,
+    'x-notion-active-user-header': activeUser,
+    'user-agent': NOTION_UNOFFICIAL_USER_AGENT
+  }
+}
+
+/**
  * Normalize Notion API v3 recordMap format back to v2 format.
  *
  * In v3 (`__version__: 3`), each entry in `block`, `collection`, etc. is wrapped as:
@@ -74,11 +90,7 @@ export async function getUnofficialDatabaseImpl(opts: {
   if (!notionActiveUser) throw new Error('notionActiveUser is not defined')
   if (!notionApiWeb) throw new Error('notionApiWeb is not defined')
 
-  const headers: any = {
-    'Content-Type': 'application/json',
-    cookie: `token_v2=${notionTokenV2}`,
-    'x-notion-active-user-header': notionActiveUser
-  }
+  const headers = unofficialNotionHeaders(notionTokenV2, notionActiveUser)
 
   const body = {
     collectionView: {
@@ -304,11 +316,7 @@ export async function getCustomEmojiBlock(opts: {
   if (!activeUser) throw new Error('activeUser is not defined')
 
   try {
-    const headers: any = {
-      'Content-Type': 'application/json',
-      cookie: `token_v2=${tokenV2}`,
-      'x-notion-active-user-header': activeUser
-    }
+    const headers = unofficialNotionHeaders(tokenV2, activeUser)
     const body = {
       requests: [
         {
@@ -484,11 +492,7 @@ export async function searchNotion(
   if (!tokenV2) throw new Error('tokenV2 is not defined')
   if (!activeUser) throw new Error('activeUser is not defined')
 
-  const headers: any = {
-    'Content-Type': 'application/json',
-    cookie: `token_v2=${tokenV2}`,
-    'x-notion-active-user-header': activeUser
-  }
+  const headers = unofficialNotionHeaders(tokenV2, activeUser)
 
   if (!dbId) {
     throw new Error('dbId is not defined')
@@ -536,8 +540,9 @@ export async function searchNotionPersonal(
 ): Promise<any> {
   if (!apiUrl) throw new Error('apiUrl is not defined')
 
-  const headers: any = {
-    'Content-Type': 'application/json'
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    'user-agent': NOTION_UNOFFICIAL_USER_AGENT
   }
 
   if (!dbId) {

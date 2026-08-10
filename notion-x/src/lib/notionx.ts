@@ -2,10 +2,17 @@ import { NotionAPI } from 'notion-client'
 import { ExtendedRecordMap } from 'notion-types'
 import { getPageContentBlockIds } from 'notion-utils'
 
+// Cloudflare returns 403 HTML when unofficial Notion API requests omit User-Agent.
+const NOTION_UNOFFICIAL_USER_AGENT =
+  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'
+
 export const notionX = new NotionAPI({
   activeUser: process.env.NOTION_ACTIVE_USER,
   authToken: process.env.NOTION_TOKEN_V2,
   kyOptions: {
+    headers: {
+      'user-agent': NOTION_UNOFFICIAL_USER_AGENT,
+    },
     hooks: {
       beforeRequest: [
         (request, options) => {
