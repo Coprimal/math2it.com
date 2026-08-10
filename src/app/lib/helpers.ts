@@ -11,7 +11,33 @@ import { idToUuid, makeSlugText, mapTag } from '@notion-x/src/lib/helpers'
 import { QueryDatabaseParameters } from '@notionhq/client/build/src/api-endpoints'
 import { ImgurUrlType, SlugTypeLabels } from '@src/interface'
 import { get, intersectionWith } from 'lodash'
-import { Block } from 'notion-types'
+import { Block, ExtendedRecordMap } from 'notion-types'
+
+/**
+ * Read a real Notion block from a recordMap entry.
+ * notion-client sometimes returns double-wrapped entries `{ value: { role, value } }`;
+ * after one unwrap `.value` is still a wrapper without `.id` / `.properties`.
+ */
+export function unwrapRecordMapBlock(raw: any): Block | undefined {
+  if (!raw) return undefined
+  if (raw?.value && raw?.role && !raw?.id) return raw.value as Block
+  return raw as Block
+}
+
+/**
+ * Root page block of a recordMap (same source normal posts use for header meta).
+ * Prefers type `page` / `collection_view_page` over Object.keys insertion order.
+ */
+export function getRecordMapRootBlock(recordMap: ExtendedRecordMap): Block | undefined {
+  for (const entry of Object.values(recordMap.block || {})) {
+    const block = unwrapRecordMapBlock((entry as any)?.value)
+    if (block && (block.type === 'page' || block.type === 'collection_view_page')) {
+      return block
+    }
+  }
+  const firstId = Object.keys(recordMap.block || {})[0]
+  return unwrapRecordMapBlock(recordMap.block?.[firstId]?.value)
+}
 
 /**
  * We use "null" to avoid the "undefined" error when parsing to a JSON format!
@@ -282,10 +308,14 @@ export function getPostProperties(post: Block): Post {
   const createdDate =
     properties?.[`${process.env.NEXT_PUBLIC_ID_CREATED_DATE}`]?.[0]?.[1]?.[0]?.[1]?.start_date ??
     toIsoDate(post?.created_time)
-  const tags = properties?.[`${process.env.NEXT_PUBLIC_ID_TAGS}`]?.[0]?.[0]
-    .split(',')
-    ?.map((tagName: string) => mapTag(tagName, getSlugPrefix('tag')))
-  const _cats = properties?.[`${process.env.NEXT_PUBLIC_ID_CATEGORIES}`]?.[0]?.[0].split(',')
+  const tagsRaw = properties?.[`${process.env.NEXT_PUBLIC_ID_TAGS}`]?.[0]?.[0]
+  const tags = tagsRaw
+    ? String(tagsRaw)
+        .split(',')
+        .map((tagName: string) => mapTag(tagName, getSlugPrefix('tag')))
+    : undefined
+  const catsRaw = properties?.[`${process.env.NEXT_PUBLIC_ID_CATEGORIES}`]?.[0]?.[0]
+  const _cats = catsRaw ? String(catsRaw).split(',') : undefined
   const categories = getPredefinedCategories(_cats?.map((cat: string) => ({ name: cat })))
   const isPublished = properties?.[`${process.env.NEXT_PUBLIC_ID_PUBLISHED}`]?.[0]?.[0] === 'Yes'
   const isPage = properties?.[`${process.env.NEXT_PUBLIC_ID_IS_PAGE}`]?.[0]?.[0] === 'Yes'

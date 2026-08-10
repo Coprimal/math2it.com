@@ -15,6 +15,7 @@ import PostList from '../../../notion-x/src/components/PostsList'
 import Comments from '../components/Comments'
 import { defaultBlockOptions, defaultPostTypeOpts } from '../lib/config'
 import { lobster } from '../lib/fonts'
+import { getRecordMapRootBlock } from '../lib/helpers'
 
 type SinglePostTemplateProps = {
   recordMap: ExtendedRecordMap
@@ -22,6 +23,7 @@ type SinglePostTemplateProps = {
   relatedPosts?: Post[]
   blockOptions?: BlockOptionsContextType
   hideWriteWithUs?: boolean
+  /** Static DB page (isPage=Yes): same content pipeline as posts, slightly simpler header. */
   isPage?: boolean
 }
 
@@ -30,14 +32,17 @@ type SinglePostTemplateProps = {
 const asideClass = cn('hidden 2xl:block flex-1', 'h-[calc(100vh-130px)] sticky top-[70px] pt-8')
 
 export default function SinglePostTemplate(props: SinglePostTemplateProps) {
-  const id = Object.keys(props.recordMap.block)[0]
-  const block = props.recordMap.block[id]?.value
+  // Same root-block resolution as normal posts (unwrap double-wrap; prefer type=page).
+  const block = getRecordMapRootBlock(props.recordMap)
 
   const authorIds = block?.properties?.[`${process.env.NEXT_PUBLIC_ID_AUTHORS}`]
     ?.filter((aBlock: any) => aBlock?.length > 1)
     ?.map((aBlock: any) => idToUuid(aBlock?.[1]?.[0]?.[1]))
   const authorsOfPost = props.authors.filter(author => authorIds?.includes(idToUuid(author.id)))
-  const tocs = getPageTableOfContents(block as PageBlock, props.recordMap)
+  const tocs = block ? getPageTableOfContents(block as PageBlock, props.recordMap) : []
+
+  // isPage: same body as a post; header hides "Viết bài cùng Math2IT" by default.
+  const hideWriteWithUs = props.hideWriteWithUs ?? !!props.isPage
 
   return (
     <>
@@ -45,7 +50,8 @@ export default function SinglePostTemplate(props: SinglePostTemplateProps) {
         <PostHeader
           recordMap={props.recordMap}
           authors={authorsOfPost}
-          hideWriteWithUs={props.hideWriteWithUs}
+          hideWriteWithUs={hideWriteWithUs}
+          isPage={props.isPage}
         />
         <div className={cn('flex justify-center px-5')}>
           <aside className={cn(asideClass)}>

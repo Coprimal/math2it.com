@@ -20,7 +20,7 @@ import Link from 'next/link'
 import { ExtendedRecordMap } from 'notion-types'
 import { getTextContent } from 'notion-utils'
 
-import { getPostProperties } from '../lib/helpers'
+import { getPostProperties, getRecordMapRootBlock } from '../lib/helpers'
 import Container from './Container'
 
 export const fullWidthPostCoverHeight = 'h-[25vh] max-h-[25vh] min-h-[25vh]'
@@ -30,6 +30,8 @@ type PostHeaderProps = {
   recordMap: ExtendedRecordMap
   authors: Author[]
   hideWriteWithUs?: boolean
+  /** Static page: same header fields as a post, without post-only chrome (categories/tags/new badge). */
+  isPage?: boolean
 }
 
 export const containerHeaderClass = 'max-w-full bg-slate-50 drop-shadow-sm py-4'
@@ -37,13 +39,14 @@ export const containerHeaderClass = 'max-w-full bg-slate-50 drop-shadow-sm py-4'
 const pageCoverStyleCache: Record<string, object> = {}
 
 export default function PostHeader(props: PostHeaderProps) {
-  const { authors, recordMap, hideWriteWithUs } = props
+  const { authors, recordMap, hideWriteWithUs, isPage } = props
 
   const ctx = useNotionContext()
   const { mapImageUrl } = ctx
 
-  const id = Object.keys(recordMap.block)[0]
-  const block = recordMap.block[id]?.value
+  // Same meta source as normal posts: root page block (+ unwrap double-wrapped entries).
+  const block = getRecordMapRootBlock(recordMap)
+  if (!block) return null
 
   const {
     rawTitle: title,
@@ -70,15 +73,18 @@ export default function PostHeader(props: PostHeaderProps) {
     get(defaultPostTypeOpts, 'maxDaysWinthin', 7)
   )
 
+  const coverUrl = pageCover ? mapImageUrl(pageCover as any, block) : null
+
   return (
     <>
-      {block?.format?.page_cover && (
+      {coverUrl && (
         <div className="flex w-full items-center justify-center h-[25vh] max-h-[25vh] min-h-[25vh]">
           <div className="relative flex h-full w-full items-center overflow-hidden">
             <SimpleImage
-              src={mapImageUrl(pageCover as any, block)}
-              alt={getTextContent(title)}
+              src={coverUrl}
+              alt={getTextContent(title) || ''}
               className="notion-page-cover absolute"
+              style={pageCoverStyle}
               imagePlaceholder={ImagePlaceholderPostHeader()}
             />
           </div>
@@ -88,8 +94,8 @@ export default function PostHeader(props: PostHeaderProps) {
       {/* Main header with infos */}
       <Container className={containerHeaderClass} maxWidthClass={postWidthContainer}>
         <header className="pb-4 pt-8">
-          {/* Categories */}
-          {!!categories && !!categories.length && (
+          {/* Categories — posts only (pages usually have none / not relevant) */}
+          {!isPage && !!categories && !!categories.length && (
             <div className={cn('w-full', gapHeaderItems)}>
               <PostHeaderTopics
                 categories={categories}
@@ -184,7 +190,8 @@ export default function PostHeader(props: PostHeaderProps) {
                 </div>
               )}
 
-              {status === 'new' && (
+              {/* "bài mới" is post chrome — hide on static pages */}
+              {!isPage && status === 'new' && (
                 <div
                   className={cn(
                     'px-3 py-0.5 text-[0.8rem] rounded-xl whitespace-nowrap',
@@ -212,8 +219,8 @@ export default function PostHeader(props: PostHeaderProps) {
             )}
           </div>
 
-          {/* Tags */}
-          {tags && (
+          {/* Tags — posts only */}
+          {!isPage && tags && (
             <div className="justify-left flex items-center pb-2 pt-0">
               <PostHeaderTopics className="justify-left" tags={tags} />
             </div>

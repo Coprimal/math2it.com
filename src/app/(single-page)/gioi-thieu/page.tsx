@@ -1,4 +1,4 @@
-import { notionX } from '@notion-x/src/lib/notionx'
+import { getPage } from '@notion-x/src/lib/notionx'
 import { notFound } from 'next/navigation'
 
 import { defaultBlockOptions } from '../../lib/config'
@@ -24,7 +24,7 @@ export const metadata = {
 
 export default async function AboutPage() {
   try {
-    const recordMap = await notionX.getPage(process.env.ABOUT_PAGE as string)
+    const recordMap = await getPage(process.env.ABOUT_PAGE as string)
     const authors = await getAuthors()
     return (
       <SinglePostTemplate
