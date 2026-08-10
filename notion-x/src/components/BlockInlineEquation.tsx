@@ -1,10 +1,10 @@
 'use client'
 
-import Katex from '@matejmazur/react-katex'
 import { EquationRichTextItemResponse } from '@notionhq/client/build/src/api-endpoints'
 import React from 'react'
 
 import { generateTextAnnotationClasses } from '../lib/helpers'
+import Katex from './Katex'
 
 type BlockInlineEquationProps = {
   equation: EquationRichTextItemResponse
@@ -17,10 +17,6 @@ export default function BlockInlineEquation(props: BlockInlineEquationProps) {
       <Katex
         className={props.fontSize ?? 'text-base'}
         math={props.equation.plain_text}
-        settings={{
-          throwOnError: false,
-          strict: false
-        }}
       />
     </span>
   )

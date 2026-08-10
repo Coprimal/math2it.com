@@ -1,15 +1,10 @@
-import Katex from '@matejmazur/react-katex'
 import { EquationBlock } from 'notion-types'
 import { getBlockTitle } from 'notion-utils'
 import * as React from 'react'
 
 import { useNotionContext } from '../lib/context'
 import { cs } from '../lib/utils'
-
-const katexSettings = {
-  throwOnError: false,
-  strict: false
-}
+import Katex from './Katex'
 
 export default function BlockEquation(props: {
   block?: EquationBlock
@@ -37,7 +32,7 @@ export default function BlockEquation(props: {
       )}
     >
       {!!props.updatedBlock && !inline && props.updatedBlock}
-      <Katex math={math2Use} settings={katexSettings} block={!inline} />
+      <Katex math={math2Use} block={!inline} />
     </span>
   )
 }

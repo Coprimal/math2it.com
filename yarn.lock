@@ -2387,6 +2387,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/katex@npm:^0.16.8":
+  version: 0.16.8
+  resolution: "@types/katex@npm:0.16.8"
+  checksum: 10c0/0661609353f4f5e62bd2dc78da99e842761c6474b19f2268b195bbe9dbf20e6f766a31155d79eec2e7c3eff4e7eba4b30f4f519e9c6a11c75bb45e257a2ddb69
+  languageName: node
+  linkType: hard
+
 "@types/lodash@npm:^4.14.195":
   version: 4.14.199
   resolution: "@types/lodash@npm:4.14.199"
@@ -6543,6 +6550,7 @@ __metadata:
     "@notionhq/client": "npm:2.2.11"
     "@tailwindcss/typography": "npm:^0.5.9"
     "@trivago/prettier-plugin-sort-imports": "npm:^4.1.1"
+    "@types/katex": "npm:^0.16.8"
     "@types/lodash": "npm:^4.14.195"
     "@types/node": "npm:20.2.5"
     "@types/prismjs": "npm:^1.26.0"
