@@ -1,5 +1,7 @@
 # Math2IT with Next.js
 
+**Math2IT belongs to [Coprimal](https://coprimal.dev).** It is a Coprimal project, and this repository lives in the [Coprimal GitHub org](https://github.com/Coprimal).
+
 - Domain: https://math2it.com
 
 ## Repository & deployment
