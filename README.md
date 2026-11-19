@@ -2,6 +2,13 @@
 
 - Domain: https://math2it.com
 
+## Repository & deployment
+
+- The repo lives at [github.com/Coprimal/math2it.com](https://github.com/Coprimal/math2it.com). It moved from `dinhanhthi/math2it.com` on 2026-11-18. GitHub redirects the old path, so never create a repo named `dinhanhthi/math2it.com` again (that breaks the redirect).
+- Vercel builds and deploys every push to `main` through its GitHub App, which must keep access to this repo in the Coprimal org.
+- The repo must stay **public** while the Vercel project is on the Hobby plan: Hobby does not deploy private repos owned by a GitHub organization. Making it private again needs Vercel Pro.
+- The site stays on `www.math2it.com` (Cloudflare DNS → Vercel); `math2it.com` redirects to it.
+
 ## ‼️ Rules & Notes
 
 1. **BEFORE PUSHING**: run `yarn run check` to check if there are errors!
